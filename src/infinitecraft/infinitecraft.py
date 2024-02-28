@@ -1,7 +1,7 @@
 import os
 import json
 import aiohttp
-from typing import Callable, Any, Optional, Coroutine
+from typing import Callable
 
 from .element   import Element
 from .logger    import Logger
