@@ -26,14 +26,18 @@ from . import (
 
 parser = argparse.ArgumentParser(
     prog = __title__,
-    description = __cli_description__,
-    epilog = f"""subcommands:
-  reset  reset discovered and emoji cache json files
-""",
+    description = f"{__display_version__}\n"
+                  f"{__copyright__}\n"
+                  f"License: {__license__}"
+                   "\n"
+                   "This program comes with ABSOLUTELY NO WARRANTY.\n"
+                   "This is free software, and you are welcome to redistribute it\n"
+                   "under certain conditions.\n"
+                   "\n"
+                  f"For more information, see: {__homepage__}?tab=readme-ov-file#license",
     allow_abbrev = False,
     formatter_class = argparse.RawDescriptionHelpFormatter
 )
-subparser = parser.add_subparsers(help="subcommands")
 
 
 def main(args: argparse.Namespace) -> None:
@@ -41,8 +45,8 @@ def main(args: argparse.Namespace) -> None:
         print(__display_version__)
     
     elif args.information:
-        print(__copyright__)
         print(__display_version__)
+        print(__copyright__)
         print("Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/")
         print("License: " + __license__)
         print()
@@ -50,7 +54,7 @@ def main(args: argparse.Namespace) -> None:
         print("This is free software, and you are welcome to redistribute it")
         print("under certain conditions.")
         print()
-        print(f"For more information, see: {__homepage__}?tab=readme-ov-file#license""")
+        print(f"For more information, see: {__homepage__}?tab=readme-ov-file#license")
     
     else:
         parser.print_usage()
@@ -61,15 +65,18 @@ parser.add_argument(
     action = "store_true",
     help = "display the version and exit"
 )
+
 parser.add_argument(
     "-I", "--information",
     action = "store_true",
     help = "display program information and exit"
 )
+
 parser.set_defaults(func=main)
 
+
 def reset_subcommand(args: argparse.Namespace):
-    discoveries_storage = os.path.expandvars(os.path.expanduser(args.disocveries))
+    discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
     emoji_cache = os.path.expandvars(os.path.expanduser(args.emoji_cache))
     
     if not os.path.exists(discoveries_storage):
@@ -86,12 +93,19 @@ def reset_subcommand(args: argparse.Namespace):
     print(f'"{discoveries_storage}" file contents reset successfully.')
     print(f'"{emoji_cache}" file contents reset successfully.')
 
-reset = subparser.add_parser(
+
+reset_parser = parser.add_subparsers(
+    help = "reset discovered and emoji cache json files",
+    metavar = "reset"
+)
+
+reset = reset_parser.add_parser(
     "reset",
     prog = "reset",
     description = "reset discovered and emoji cache json files",
     allow_abbrev = False
 )
+
 reset.add_argument(
     "-d", "--discoveries",
     action = "store",
@@ -99,6 +113,7 @@ reset.add_argument(
     help = "Path to discoveries.json file (default: discoveries.json)",
     default = "discoveries.json"
 )
+
 reset.add_argument(
     "-e", "--emoji-cache", 
     action = "store",
@@ -106,6 +121,7 @@ reset.add_argument(
     help = "Path to emoji_cache.json file (default: emoji_cache.json)",
     default = "emoji_cache.json"
 )
+
 reset.set_defaults(func=reset_subcommand)
 
 
