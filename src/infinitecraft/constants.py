@@ -3,6 +3,7 @@ __all__ = (
     "starting_emoji_cache"
 )
 
+
 starting_discoveries = [
     {
         "name": "Water",
