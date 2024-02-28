@@ -1,8 +1,10 @@
 import os
 import json
 import aiohttp
+import asyncio
 from typing import Callable
 
+from .          import utils
 from .element   import Element
 from .logger    import Logger
 from .constants import *
@@ -34,14 +36,14 @@ class InfiniteCraft:
     
     def __init__(
         self, *,
-        api_url: str             = "https://neal.fun",
-        discoveries_storage: str = "discoveries.json",
-        emoji_cache: str         = "emoji_cache.json",
-        encoding: str            = "utf-8",
-        do_reset: bool           = False,
-        headers: dict            = {},
-        element_cls: Element     = Element,
-        logger                   = Logger()
+        api_url: str               = "https://neal.fun",
+        discoveries_storage: str   = "discoveries.json",
+        emoji_cache: str           = "emoji_cache.json",
+        encoding: str              = "utf-8",
+        do_reset: bool             = False,
+        headers: dict              = {},
+        element_cls: type[Element] = Element,
+        logger                     = Logger()
     ) -> None:
         
         if not os.path.exists(discoveries_storage):
@@ -72,6 +74,9 @@ class InfiniteCraft:
         self.discoveries: list[Element] = self._discoveries.copy()
         self.get_discoveries(set_value=True)
 
+        self._session: aiohttp.ClientSession = aiohttp.ClientSession() # Dummy session
+        self._session.request = utils.session_not_started
+        self._session.get = utils.session_not_started
         self._headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -89,16 +94,8 @@ class InfiniteCraft:
         }
         self._headers.update(headers)
 
-        self._session = aiohttp.ClientSession(
-            api_url,
-            headers = self._headers,
-            skip_auto_headers = ["User-Agent", "Content-Type"],
-            raise_for_status = True,
-            timeout = aiohttp.ClientTimeout(60)
-        )
-        
-        self._closed = False
-        self.closed = self._closed
+        self._closed = None
+        self.closed = None
 
     def __str__(self) -> str:
         try:
@@ -113,14 +110,38 @@ class InfiniteCraft:
 
     async def __aenter__(self) -> None:
         self._logger.debug("Entering InfiniteCraft")
+        await self.start()
 
     async def __aexit__(self, *args) -> None:
         self._logger.debug("Exiting InfiniteCraft")
         await self.close()
-    
+
+    def run_session(self) -> None:
+        """Start the session using `asyncio.run(InfiniteCraft.start())`"""
+        asyncio.run(self.start())
+
+    async def start(self) -> None:
+        """Start the Infinite Craft session"""
+        if self._closed:
+            raise RuntimeError("Cannot start session; Session has been closed")
+        
+        elif self._closed is None:
+            await self._build_session(
+                self._api_url,
+                headers = self._headers,
+                skip_auto_headers = ["User-Agent", "Content-Type"],
+                raise_for_status = True
+            )
+        
+        else:
+            raise RuntimeError("Session is already running")
+
     async def close(self) -> None:
-        """Close the Infinite Craft session."""
-        if not self._closed:
+        """Close the Infinite Craft session"""
+        if self._closed is None:
+            raise RuntimeError("Cannot close session; Session has not been started yet")
+
+        elif not self._closed:
             await self._session.close()
             self._closed = True
             self.closed = True
@@ -174,7 +195,7 @@ class InfiniteCraft:
             self._logger.debug(f"Unable to mix {first} + {second}")
             return None
         
-        result: Element = self._element_cls(
+        result = self._element_cls(
             name               = result.get("result"),
             emoji              = result.get("emoji"),
             is_first_discovery = result.get("isNew")
@@ -201,7 +222,7 @@ class InfiniteCraft:
         if discoveries is None:
             discoveries = self._get_raw_discoveries()
 
-        discoveries: list[Element] = [
+        discoveries = [
             self._element_cls(
                 name = discovery.get("name"),
                 emoji = emojis.get(discovery.get("name")),
@@ -266,7 +287,7 @@ class InfiniteCraft:
         raw_discoveries = self._get_raw_discoveries()
         emojis = self._get_emojis()
         
-        discoveries = []
+        discoveries: list[Element] = []
         for discovery in raw_discoveries:
             element: Element = self._element_cls(
                 name = discovery.get("name"),
@@ -287,30 +308,27 @@ class InfiniteCraft:
         
         return discoveries
     
-    def get_discovery(self, *, set_value: bool = False) -> list[Element]:
-        """Get a `list` containing all discovered elements
+    def get_discovery(self, name: str, *, from_file: bool = False) -> Element | None:
+        """Get a discovered `Element`
 
         ## Arguments:
-            `set_value` (`bool`): Whether to set the value for the `InfiniteCraft.discoveries` attribute after getting it
+            `name` (`str`): Name of element to get
+            `from_file` (`bool`): Whether to check the discoveries JSON file for the element. Defaults to `False`
 
         ## Returns:
-            `list[Element]`: The `list` containing every `Element` discovered   
+            `Element | None`: The discovered `Element` or `None` if it wasn't discovered
         """
-        raw_discoveries = self._get_raw_discoveries()
-        emojis = self._get_emojis()
-        discoveries: list[Element] = [
-            self._element_cls(
-                name = discovery.get("name"),
-                emoji = emojis.get(discovery.get("name")),
-                is_first_discovery = discovery.get("is_first_discovery")
-            ) for discovery in raw_discoveries
-        ]
-        
-        if set_value:
-            self._discoveries = discoveries
-            self.discoveries = self._discoveries.copy()
-        
-        return discoveries
+
+        dummy = Element(name=name, emoji=None, is_first_discovery=None)
+
+        if from_file:
+            discovery = self.get_discoveries(check=lambda e: e.name == dummy)
+            return discovery[0] if discovery else None
+
+        return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
+
+    async def _build_session(self, *args, **kwargs) -> None:
+        self._session = aiohttp.ClientSession(*args, **kwargs)
 
     def _update_discoveries(self, *, name: str, is_first_discovery: bool) -> None | list:
         """Update the discoveries JSON file with a new element
@@ -342,7 +360,7 @@ class InfiniteCraft:
         
         return discoveries
 
-    def _get_raw_discoveries(self) -> list:
+    def _get_raw_discoveries(self) -> list[dict]:
         """Get a `list` containing all discovered elements where each element is a `dict` without the emoji property
 
         Please do not use this method as it is meant for `internal use` and should not be used directly.
