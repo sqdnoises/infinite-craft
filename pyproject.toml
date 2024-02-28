@@ -28,8 +28,8 @@ dependencies = [
 Homepage = "https://github.com/sqdnoises/infinite-craft"
 
 [project.scripts]
-infinite_craft = "infinite_craft.start:main"
-infinitecraft = "infinitecraft.start:main"
+infinite-craft = "infinitecraft.__main__:parse"
+infinitecraft = "infinitecraft.__main__:parse"
 
 [project.optional-dependencies]
 windows = [
