@@ -1,0 +1,59 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "infinite-craft"
+version = "0.0.0"
+authors = [
+    { name = "sqdnoises" }
+]
+description = "An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs."
+readme = "README.md"
+license = { file = "COPYING.LESSER" }
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "aiohttp"
+]
+
+[project.urls]
+Homepage = "https://github.com/sqdnoises/infinite-craft"
+
+[project.scripts]
+infinite_craft = "infinite_craft.start:main"
+infinitecraft = "infinitecraft.start:main"
+
+[project.optional-dependencies]
+windows = [
+    "pyreadline3"
+]
+
+dev = [
+    "setuptools", "bumpver", "pip-tools",
+    "build", "twine"
+]
+
+[tool.bumpver]
+current_version = "0.0.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "bump version {old_version} -> {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
+commit = true
+tag = true
+push = true
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"README.md" = ["{version}"]
+"src/ahuri/__init__.py" = ['__version__ = "{version}"']
