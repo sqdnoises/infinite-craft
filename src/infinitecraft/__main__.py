@@ -43,6 +43,7 @@ def main(args: argparse.Namespace) -> None:
     elif args.information:
         print(__copyright__)
         print(__display_version__)
+        print("Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/")
         print("License: " + __license__)
         print()
         print("This program comes with ABSOLUTELY NO WARRANTY.")
