@@ -50,8 +50,8 @@ class InfiniteCraft:
         if not os.path.exists(emoji_cache):
             raise FileNotFoundError(f"File '{emoji_cache}' not found")
         
-        if not isinstance(element_cls, Element):
-            raise TypeError("element_cls must be an instance of 'Element'")
+        if not issubclass(element_cls, Element):
+            raise TypeError("element_cls must be a subclass of 'Element'")
         
         self._api_url = api_url
         self._discoveries_location = discoveries_storage
