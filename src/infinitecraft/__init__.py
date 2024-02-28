@@ -12,7 +12,7 @@ __author__ = "SqdNoises"
 __license__ = "GNU Lesser General Public License v3.0 (GNU LGPL-3.0)"
 __copyright__ = "Copyright (C) 2024-present SqdNoises, Neal Agarwal"
 __homepage__ = "https://github.com/sqdnoises/infinite-craft"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 __display_version__ = __title__ + " " + __version__
 
 from .element import *
