@@ -28,7 +28,7 @@ class InfiniteCraft:
         `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`
         `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON
         `headers` (`dict`): Headers to send to the API. Defaults to `{}`
-        `element_cls` (`Element`): Class to be used for creating elements (MUST BE AN INSTANCE OF `Element`)
+        `element_cls` (`Element`): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`)
         `logger` (`class`): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`
     """
     
