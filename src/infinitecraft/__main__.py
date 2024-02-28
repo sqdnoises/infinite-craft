@@ -52,7 +52,7 @@ def main(args: argparse.Namespace) -> None:
         print(f"For more information, see: {__homepage__}?tab=readme-ov-file#license""")
     
     else:
-        parser.error("Specify a subcommand to run.")
+        parser.print_usage()
 
 
 parser.add_argument(
@@ -67,7 +67,7 @@ parser.add_argument(
 )
 parser.set_defaults(func=main)
 
-def reset_command(args: argparse.Namespace):
+def reset_subcommand(args: argparse.Namespace):
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.disocveries))
     emoji_cache = os.path.expandvars(os.path.expanduser(args.emoji_cache))
     
@@ -105,7 +105,7 @@ reset.add_argument(
     help = "Path to emoji_cache.json file (default: emoji_cache.json)",
     default = "emoji_cache.json"
 )
-reset.set_defaults(func=reset_command)
+reset.set_defaults(func=reset_subcommand)
 
 
 def parse():
