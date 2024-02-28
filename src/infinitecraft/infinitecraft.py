@@ -3,12 +3,16 @@ import json
 import atexit
 import aiohttp
 from typing import Callable, Any, Optional, Coroutine
-from . import Element, Logger
+
+from .element   import Element
+from .logger    import Logger
 from .constants import *
+
 
 __all__ = (
     "InfiniteCraft",
 )
+
 
 class InfiniteCraft:
     """
