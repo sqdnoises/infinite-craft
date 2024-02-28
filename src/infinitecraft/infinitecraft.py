@@ -252,7 +252,7 @@ class InfiniteCraft:
         """
         return await self.pair(first=first, second=second)
 
-    def get_discoveries(self, *, set_value: bool = False, check: Optional[Callable[..., Coroutine[bool, bool, bool]]] = None) -> list[Element]:
+    def get_discoveries(self, *, set_value: bool = False, check: Callable = None) -> list[Element]:
         """Get a `list` containing all discovered elements
 
         ## Arguments:
