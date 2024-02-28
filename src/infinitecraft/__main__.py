@@ -109,4 +109,4 @@ reset.set_defaults(func=reset_command)
 
 
 def parse():
-    args = parser.parse_args(args)
+    args = parser.parse_args()
