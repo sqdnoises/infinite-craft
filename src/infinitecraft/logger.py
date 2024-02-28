@@ -9,13 +9,18 @@ __all__ = (
 
 class Logger:
     """
-    Log Levels:
-    0 - Nothing
-    1 - info
-    2 - warn
-    3 - error
-    4 - fatal
-    5 - debug
+    #### Log Levels:
+    `0` - nothing
+
+    `1` - info
+    
+    `2` - warn
+    
+    `3` - error
+    
+    `4` - fatal
+    
+    `5` - debug
     """
 
     def __init__(self, prefix: Callable = None, log_level: int = 4) -> None:
