@@ -56,4 +56,4 @@ push = true
 [tool.bumpver.file_patterns]
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
 "README.md" = ["{version}"]
-"src/ahuri/__init__.py" = ['__version__ = "{version}"']
+"src/infinitecraft/__init__.py" = ['__version__ = "{version}"']
