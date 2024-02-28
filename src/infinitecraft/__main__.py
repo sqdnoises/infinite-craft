@@ -49,7 +49,7 @@ def main(args: argparse.Namespace) -> None:
         print("This is free software, and you are welcome to redistribute it")
         print("under certain conditions.")
         print()
-        print(f"For more information, see: {__homepage__}#license""")
+        print(f"For more information, see: {__homepage__}?tab=readme-ov-file#license""")
     
     else:
         parser.error("Specify a subcommand to run.")
