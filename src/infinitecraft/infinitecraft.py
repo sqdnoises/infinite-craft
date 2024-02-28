@@ -1,6 +1,5 @@
 import os
 import json
-import atexit
 import aiohttp
 from typing import Callable, Any, Optional, Coroutine
 
@@ -119,7 +118,6 @@ class InfiniteCraft:
         self._logger.debug("Exiting InfiniteCraft")
         await self.close()
     
-    @atexit.register
     async def close(self) -> None:
         """Close the Infinite Craft session."""
         if not self._closed:
