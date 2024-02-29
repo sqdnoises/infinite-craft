@@ -78,8 +78,8 @@ class InfiniteCraft:
         self.get_discoveries(set_value=True)
 
         self._session: aiohttp.ClientSession = aiohttp.ClientSession() # Dummy session
-        self._session.request = utils.session_not_started
-        self._session.get = utils.session_not_started
+        setattr(self._session, "request", utils.session_not_started)
+        setattr(self._session, "get", utils.session_not_started)
         self._headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -97,8 +97,8 @@ class InfiniteCraft:
         }
         self._headers.update(headers)
 
-        self._closed = None
-        self.closed = None
+        self._closed: bool | None = None
+        self.closed: bool | None = None
 
     def __str__(self) -> str:
         try:
