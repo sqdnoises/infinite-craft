@@ -120,10 +120,10 @@ class InfiniteCraft:
 
     async def __aexit__(self, *args) -> None:
         if not self._manual_control:
-            self._logger.debug("EXIT:  Manual control is OFF; Stopping session")
+            self._logger.debug("EXIT: Manual control is OFF; Stopping session")
             await self.close()
         else:
-            self._logger.debug("EXIT:  Manual control is ON;")
+            self._logger.debug("EXIT: Manual control is ON;")
 
     async def start(self) -> None:
         """Start the Infinite Craft session"""
