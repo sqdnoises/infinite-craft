@@ -132,6 +132,7 @@ class InfiniteCraft:
                 skip_auto_headers = ["User-Agent", "Content-Type"],
                 raise_for_status = True
             )
+            self._closed = False
         
         else:
             raise RuntimeError("Session is already running")
@@ -328,6 +329,7 @@ class InfiniteCraft:
         return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
 
     async def _build_session(self, *args, **kwargs) -> None:
+        await self._session.close()
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
     def _update_discoveries(self, *, name: str, is_first_discovery: bool) -> None | list:
