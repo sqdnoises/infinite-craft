@@ -6,7 +6,7 @@ def session_not_started(*args, **kwargs):
     raise RuntimeError("Session has not been started")
 
 
-async def maybe_couroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args, **kwargs) -> Any | None:
+async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args, **kwargs) -> Any | None:
     """An asynchronous function that runs a callable or a coroutine with the given arguments
 
     ## Arguments:
