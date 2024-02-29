@@ -23,7 +23,7 @@ class Logger:
     `5` - debug
     """
 
-    def __init__(self, prefix: Callable = None, log_level: int = 4) -> None:
+    def __init__(self, prefix: Callable | None = None, log_level: int = 4) -> None:
         self._prefix = prefix
         self.log_level = log_level
 
@@ -43,7 +43,7 @@ class Logger:
             log_level = 5
 
         if log_level <= self.log_level:
-            prefix = str(self._prefix(log_type))
+            prefix = str(self._prefix(log_type)) # type: ignore
             print(prefix + message, end="\033[0m\n")
     
     def info(self, message) -> None:
