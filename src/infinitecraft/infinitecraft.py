@@ -126,7 +126,11 @@ class InfiniteCraft:
             self._logger.debug("EXIT: Manual control is ON;")
 
     async def start(self) -> None:
-        """Start the Infinite Craft session"""
+        """Start the Infinite Craft session
+        
+        ## Raises:
+            `RuntimeError`: Raises when session is closed or is already running
+        """
         if self._closed:
             raise RuntimeError("Cannot start session; Session has been closed")
         
@@ -143,7 +147,11 @@ class InfiniteCraft:
             raise RuntimeError("Session is already running")
 
     async def close(self) -> None:
-        """Close the Infinite Craft session"""
+        """Close the Infinite Craft session
+        
+        ## Raises:
+            `RuntimeError`: Raises when session has not been started or is already closed
+        """
         if self._closed is None:
             raise RuntimeError("Cannot close session; Session has not been started yet")
 
@@ -159,7 +167,11 @@ class InfiniteCraft:
     async def stop(self) -> None:
         """Close the Infinite Craft session.
 
-        Alias for `InfiniteCraft.close()`"""
+        Alias for `InfiniteCraft.close()`
+        
+        ## Raises:
+            `RuntimeError`: Raises when session has not been started or is already closed
+        """
         await self.close()
 
     async def pair(self, first: Element, second: Element) -> Element | None:
@@ -213,16 +225,16 @@ class InfiniteCraft:
             self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
         
         emojis = self._update_emojis(
-            name = result.name,
-            emoji = result.emoji
+            name = result.name,                           # type: ignore
+            emoji = result.emoji                          # type: ignore
         )
         
         if emojis is None:
             emojis = self._get_emojis()
 
         discoveries = self._update_discoveries(
-            name = result.name,
-            is_first_discovery = result.is_first_discovery
+            name = result.name,                            # type: ignore
+            is_first_discovery = result.is_first_discovery # type: ignore
         )
         
         if discoveries is None:
@@ -230,9 +242,9 @@ class InfiniteCraft:
 
         discoveries = [
             self._element_cls(
-                name = discovery.get("name"),
-                emoji = emojis.get(discovery.get("name")),
-                is_first_discovery = discovery.get("is_first_discovery")
+                name = discovery.get("name"),                            # type: ignore
+                emoji = emojis.get(discovery.get("name")),               # type: ignore
+                is_first_discovery = discovery.get("is_first_discovery") # type: ignore
             ) for discovery in discoveries
         ]
         
@@ -279,7 +291,7 @@ class InfiniteCraft:
         """
         return await self.pair(first=first, second=second)
 
-    def get_discoveries(self, *, set_value: bool = False, check: Callable = None) -> list[Element]:
+    def get_discoveries(self, *, set_value: bool = False, check: Callable | None = None) -> list[Element]:
         """Get a `list` containing all discovered elements
 
         ## Arguments:
@@ -296,9 +308,9 @@ class InfiniteCraft:
         discoveries: list[Element] = []
         for discovery in raw_discoveries:
             element: Element = self._element_cls(
-                name = discovery.get("name"),
-                emoji = emojis.get(discovery.get("name")),
-                is_first_discovery = discovery.get("is_first_discovery")
+                name = discovery.get("name"),                            # type: ignore
+                emoji = emojis.get(discovery.get("name")),               # type: ignore
+                is_first_discovery = discovery.get("is_first_discovery") # type: ignore
             )
 
             if check is not None:
