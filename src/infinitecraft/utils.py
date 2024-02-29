@@ -17,7 +17,10 @@ async def maybe_couroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *arg
     ## Returns:
         `Any | None`: Returns the returned value of the callable or coroutine
     """
+    
     if inspect.iscoroutine(__func):
+        return await __func
+    elif inspect.iscoroutinefunction(__func):
         return await __func(*args, **kwargs)
     else:
         return __func(*args, **kwargs)
