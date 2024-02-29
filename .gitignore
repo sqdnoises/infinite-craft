@@ -3,4 +3,3 @@
 src/**.egg-info/
 dist/
 tests/
-.pypirc
