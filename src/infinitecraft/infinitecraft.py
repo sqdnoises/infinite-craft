@@ -116,10 +116,6 @@ class InfiniteCraft:
         self._logger.debug("Exiting InfiniteCraft")
         await self.close()
 
-    def run_session(self) -> None:
-        """Start the session using `asyncio.run(InfiniteCraft.start())`"""
-        asyncio.run(self.start())
-
     async def start(self) -> None:
         """Start the Infinite Craft session"""
         if self._closed:
