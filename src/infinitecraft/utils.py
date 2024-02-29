@@ -1,8 +1,8 @@
 import inspect
-from typing import Callable, Coroutine, Any
+from typing import Callable, Coroutine, Any, NoReturn
 
 
-def session_not_started(*args, **kwargs):
+def session_not_started(*args, **kwargs) -> NoReturn:
     raise RuntimeError("Session has not been started")
 
 
