@@ -24,11 +24,12 @@ class InfiniteCraft:
         `closed` (`bool`): Whether the Infinite Craft session is closed or not
 
     ## Arguments:
-        `api_url` (str): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`
+        `api_url` (`str`): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`
+        `manual_control` (`bool`): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`
         `discoveries_storage` (`str`): Path to discoveries storage JSON. Defaults to `"discoveries.json"`
         `emoji_cache` (`str`): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`
         `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`
-        `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON
+        `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`
         `headers` (`dict`): Headers to send to the API. Defaults to `{}`
         `element_cls` (`Element`): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`)
         `logger` (`class`): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`
@@ -37,6 +38,7 @@ class InfiniteCraft:
     def __init__(
         self, *,
         api_url: str               = "https://neal.fun",
+        manual_control: bool       = False,
         discoveries_storage: str   = "discoveries.json",
         emoji_cache: str           = "emoji_cache.json",
         encoding: str              = "utf-8",
@@ -56,6 +58,7 @@ class InfiniteCraft:
             raise TypeError("element_cls must be a subclass of 'Element'")
         
         self._api_url = api_url
+        self._manual_control = manual_control
         self._discoveries_location = discoveries_storage
         self._emoji_cache = emoji_cache
         self._encoding = encoding
@@ -109,12 +112,18 @@ class InfiniteCraft:
         return "InfiniteCraft()"
 
     async def __aenter__(self) -> None:
-        self._logger.debug("Entering InfiniteCraft")
-        await self.start()
+        if not self._manual_control:
+            self._logger.debug("ENTER: Manual control is OFF; Starting session")
+            await self.start()
+        else:
+            self._logger.debug("ENTER: Manual control is ON;")
 
     async def __aexit__(self, *args) -> None:
-        self._logger.debug("Exiting InfiniteCraft")
-        await self.close()
+        if not self._manual_control:
+            self._logger.debug("EXIT:  Manual control is OFF; Stopping session")
+            await self.close()
+        else:
+            self._logger.debug("EXIT:  Manual control is ON;")
 
     async def start(self) -> None:
         """Start the Infinite Craft session"""
@@ -325,14 +334,18 @@ class InfiniteCraft:
         return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
 
     async def _build_session(self, *args, **kwargs) -> None:
+        """Build `aiohttp.ClientSession`
+        
+        Do not use this method as it is meant for `internal use only` and should not be used by the user.
+        """
         await self._session.close()
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
     def _update_discoveries(self, *, name: str, is_first_discovery: bool) -> None | list:
         """Update the discoveries JSON file with a new element
 
-        Please do not use this method as it is meant for `internal use` and should not be used directly.
-        Use this if you know what you are doing.
+        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
 
         ## Arguments:
             `name` (`str`): Name of the new element
@@ -361,8 +374,8 @@ class InfiniteCraft:
     def _get_raw_discoveries(self) -> list[dict]:
         """Get a `list` containing all discovered elements where each element is a `dict` without the emoji property
 
-        Please do not use this method as it is meant for `internal use` and should not be used directly.
-        Use this if you know what you are doing.
+        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
 
         ## Returns:
             `list`: The `list` containing every element as a `dict` discovered
@@ -374,8 +387,8 @@ class InfiniteCraft:
     def _update_emojis(self, *, name: str, emoji: str) -> None | dict:
         """Update the emoji cache JSON file with a new element's emoji
 
-        Please do not use this method as it is meant for `internal use` and should not be used directly.
-        Use this if you know what you are doing.
+        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
 
         ## Arguments:
             `name` (`str`): Name of the element
@@ -399,8 +412,8 @@ class InfiniteCraft:
     def _get_emojis(self) -> dict:
         """Get a `dict` containing every element discovered's emoji
 
-        Please do not use this method as it is meant for `internal use` and should not be used directly.
-        Use this if you know what you are doing.
+        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
 
         Returns:
             list: The `list` containing every element's emoji
