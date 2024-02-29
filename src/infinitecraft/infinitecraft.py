@@ -90,7 +90,7 @@ class InfiniteCraft:
             "sec-fetch-site": "same-origin",
             "Referer": "https://neal.fun/infinite-craft/",
             "Referrer-Policy": "strict-origin-when-cross-origin",
-            "User-Agent": "Mozilla/5.0 (Linux) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
         }
         self._headers.update(headers)
 
@@ -99,7 +99,7 @@ class InfiniteCraft:
 
     def __str__(self) -> str:
         try:
-            discoveries = len(self.discoveries)
+            discoveries = len(self._discoveries)
         except:
             discoveries = None
         
