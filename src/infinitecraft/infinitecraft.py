@@ -210,7 +210,7 @@ class InfiniteCraft:
         if not result.is_first_discovery:
             self._logger.debug(f"Result: {result} (first: {first} + second: {second})")
         else:
-            self._logger.debug(f"NEW DISCOVERY: {result} (first: {first} + second: {second})")
+            self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
         
         emojis = self._update_emojis(
             name = result.name,
