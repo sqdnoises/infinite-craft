@@ -1,5 +1,4 @@
 import os
-import sys
 import argparse
 from . import (
     __title__,
@@ -24,22 +23,6 @@ from . import (
 #     import readline
 
 
-parser = argparse.ArgumentParser(
-    prog = __title__,
-    description = f"{__display_version__}\n"
-                  f"{__copyright__}\n"
-                  f"License: {__license__}"
-                   "\n"
-                   "This program comes with ABSOLUTELY NO WARRANTY.\n"
-                   "This is free software, and you are welcome to redistribute it\n"
-                   "under certain conditions.\n"
-                   "\n"
-                  f"For more information, see: {__homepage__}?tab=readme-ov-file#license",
-    allow_abbrev = False,
-    formatter_class = argparse.RawDescriptionHelpFormatter
-)
-
-
 def main(args: argparse.Namespace) -> None:
     if args.version:
         print(__display_version__)
@@ -60,21 +43,6 @@ def main(args: argparse.Namespace) -> None:
         parser.print_usage()
 
 
-parser.add_argument(
-    "-V", "--version",
-    action = "store_true",
-    help = "display the version and exit"
-)
-
-parser.add_argument(
-    "-I", "--information",
-    action = "store_true",
-    help = "display program information and exit"
-)
-
-parser.set_defaults(func=main)
-
-
 def reset_subcommand(args: argparse.Namespace):
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
     emoji_cache = os.path.expandvars(os.path.expanduser(args.emoji_cache))
@@ -92,6 +60,36 @@ def reset_subcommand(args: argparse.Namespace):
 
     print(f'"{discoveries_storage}" file contents reset successfully.')
     print(f'"{emoji_cache}" file contents reset successfully.')
+
+
+parser = argparse.ArgumentParser(
+    prog = __title__,
+    description = f"{__display_version__}\n"
+                  f"{__copyright__}\n"
+                  f"License: {__license__}"
+                   "\n"
+                   "This program comes with ABSOLUTELY NO WARRANTY.\n"
+                   "This is free software, and you are welcome to redistribute it\n"
+                   "under certain conditions.\n"
+                   "\n"
+                  f"For more information, see: {__homepage__}?tab=readme-ov-file#license",
+    allow_abbrev = False,
+    formatter_class = argparse.RawDescriptionHelpFormatter
+)
+
+parser.add_argument(
+    "-V", "--version",
+    action = "store_true",
+    help = "display the version and exit"
+)
+
+parser.add_argument(
+    "-I", "--information",
+    action = "store_true",
+    help = "display program information and exit"
+)
+
+parser.set_defaults(func=main)
 
 
 reset_parser = parser.add_subparsers(
