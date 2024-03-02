@@ -1,7 +1,6 @@
 import os
 import json
 import aiohttp
-import asyncio
 from typing import Callable
 
 from .          import utils
