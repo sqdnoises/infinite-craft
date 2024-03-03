@@ -114,7 +114,18 @@ class InfiniteCraft:
         return f"<InfiniteCraft discoveries={discoveries} closed={self._closed}>"
 
     def __repr__(self) -> str:
-        return "InfiniteCraft()"
+        return (
+            "InfiniteCraft("
+                f"api_url={repr(self._api_url)}, "
+                f"manual_control={repr(self._manual_control)}, "
+                f"discoveries_storage={repr(self._discoveries_location)}, "
+                f"emoji_cache={repr(self._emoji_cache)}, "
+                f"encoding={repr(self._encoding)}, "
+                f"headers={repr(self._headers)}, "
+                f"element_cls={repr(self._element_cls)}, "
+                f"logger={repr(self._logger)}"
+            ")"
+        )
 
     async def __aenter__(self) -> None:
         if not self._manual_control:
