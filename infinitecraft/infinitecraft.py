@@ -154,7 +154,11 @@ class InfiniteCraft:
         
         start = time.monotonic()
         async with self._session.get("/api/infinite-craft"):
-            return time.monotonic() - start
+            end = time.monotonic() - start
+
+        self._logger.debug(f"API response time: {end}s")
+
+        return end
 
     async def start(self) -> None:
         """Start the Infinite Craft session
