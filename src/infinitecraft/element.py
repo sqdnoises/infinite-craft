@@ -3,11 +3,13 @@ class Element:
     An element object that represents an element of Infinite Craft.
 
     ## Attributes:
-        `name` (`str`): Name of the element
-        `emoji` (`str`): Emoji of the element. Could be `None` if not found in the emoji cache
-        `first_discovery` (`bool`): Whether the current element was a first discovery or not
+        `name` (`str`): Name of the element.
+        `emoji` (`str`): Emoji of the element. Could be `None` if not found in the emoji cache.
+        `first_discovery` (`bool`): Whether the current element was a first discovery or not.
     
-    It is not recommended to use this class to make an Element.
+    You can make your own `Element` class by subclassing this one.
+    
+    NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by checking the emoji cache JSON file if you need it.
     """
 
     def __init__(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> None:
