@@ -27,10 +27,7 @@ class Element:
         return f"Element(name={repr(self.name)}, emoji={repr(self.emoji)}, is_first_discovery={repr(self.is_first_discovery)})"
     
     def __eq__(self, __value: object) -> bool:
-        if not bool(self):
-            return not bool(__value)
-        
-        elif isinstance(__value, Element) and __value.name == self.name:
+        if isinstance(__value, Element) and __value.name == self.name:
             return True
         
         else:
