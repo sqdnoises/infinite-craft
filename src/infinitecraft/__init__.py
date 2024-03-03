@@ -2,6 +2,7 @@
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 Copyright (C) 2024-present SqdNoises
 License: GNU Lesser General Public License v3.0
+To view the full license, visit https://github.com/sqdnoises/infinite-craft?tab=readme-ov-file#license
 """
 
 __title__ = "infinite-craft"
@@ -18,3 +19,4 @@ __display_version__ = __title__ + " " + __version__
 from .element import *
 from .infinitecraft import *
 from .logger import *
+from .errors import *
