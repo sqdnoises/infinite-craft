@@ -142,7 +142,7 @@ class InfiniteCraft:
         self._logger.debug(f"Pinging API: {self._api_url}")
         
         start = time.monotonic()
-        async with self._session.get("/api/"):
+        async with self._session.get("/api/infinite-craft"):
             return time.monotonic() - start
 
     async def start(self) -> None:
