@@ -28,15 +28,15 @@ class InfiniteCraft:
         `closed` (`bool | None`): Whether the Infinite Craft session is closed or not. `None` if session has not been started.
 
     ## Arguments:
-        `api_url` (`str`): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
-        `manual_control` (`bool`): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
-        `discoveries_storage` (`str`): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
-        `emoji_cache` (`str`): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
-        `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
-        `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`.
-        `headers` (`dict`): Headers to send to the API. Defaults to `{}`.
-        `element_cls` (`Element`): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
-        `logger` (`class`): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
+        `api_url` (`str`, optional): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
+        `manual_control` (`bool`, optional): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
+        `discoveries_storage` (`str`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
+        `emoji_cache` (`str`, optional): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
+        `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
+        `do_reset` (`bool`, optional): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`.
+        `headers` (`dict`, optional): Headers to send to the API. Defaults to `{}`.
+        `element_cls` (`Element`, optional): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
+        `logger` (`class`, optional): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
     """
     
     def __init__(
