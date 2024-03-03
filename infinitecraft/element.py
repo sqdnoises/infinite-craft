@@ -12,7 +12,7 @@ class Element:
     NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the emoji cache JSON file if you need it.
     """
 
-    def __init__(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> None:
+    def __init__(self, *, name: str | None = None, emoji: str | None = None, is_first_discovery: bool | None = None) -> None:
         self.name = name
         self.emoji = emoji
         self.is_first_discovery = is_first_discovery
