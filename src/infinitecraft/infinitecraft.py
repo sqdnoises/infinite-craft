@@ -19,19 +19,19 @@ class InfiniteCraft:
     Initialize an Infinite Craft session
 
     ## Attributes:
-        `discoveries` (`list`): List of `Element` objects that have been discovered
-        `closed` (`bool`): Whether the Infinite Craft session is closed or not
+        `discoveries` (`list`): List of `Element` objects that have been discovered.
+        `closed` (`bool`): Whether the Infinite Craft session is closed or not.
 
     ## Arguments:
-        `api_url` (`str`): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`
-        `manual_control` (`bool`): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`
-        `discoveries_storage` (`str`): Path to discoveries storage JSON. Defaults to `"discoveries.json"`
-        `emoji_cache` (`str`): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`
-        `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`
-        `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`
-        `headers` (`dict`): Headers to send to the API. Defaults to `{}`
-        `element_cls` (`Element`): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`)
-        `logger` (`class`): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`
+        `api_url` (`str`): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
+        `manual_control` (`bool`): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
+        `discoveries_storage` (`str`): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
+        `emoji_cache` (`str`): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
+        `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
+        `do_reset` (`bool`): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`.
+        `headers` (`dict`): Headers to send to the API. Defaults to `{}`.
+        `element_cls` (`Element`): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
+        `logger` (`class`): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
     """
     
     def __init__(
@@ -128,7 +128,7 @@ class InfiniteCraft:
         """Start the Infinite Craft session
         
         ## Raises:
-            `RuntimeError`: Raises when session is closed or is already running
+            `RuntimeError`: Raises when session is closed or is already.
         """
         if self._closed:
             raise RuntimeError("Cannot start session; Session has been closed")
@@ -149,7 +149,7 @@ class InfiniteCraft:
         """Close the Infinite Craft session
         
         ## Raises:
-            `RuntimeError`: Raises when session has not been started or is already closed
+            `RuntimeError`: Raises when session has not been started or is already closed.
         """
         if self._closed is None:
             raise RuntimeError("Cannot close session; Session has not been started yet")
@@ -169,7 +169,7 @@ class InfiniteCraft:
         Alias for `InfiniteCraft.close()`
         
         ## Raises:
-            `RuntimeError`: Raises when session has not been started or is already closed
+            `RuntimeError`: Raises when session has not been started or is already closed.
         """
         await self.close()
 
@@ -179,14 +179,14 @@ class InfiniteCraft:
         Returns `None` if the elements could not be paired.
 
         ## Arguments:
-            `first` (`Element`): The first element
-            `second` (`Element`): The second element
+            `first` (`Element`): The first element.
+            `second` (`Element`): The second element.
 
         ## Raises:
-            `TypeError`: if `first` or `second` is not an instance of `Element`
+            `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`
+            `Element | None`: The resulting element as an `Element` object or `None`.
         """
 
         if not isinstance(first, Element):
@@ -224,16 +224,16 @@ class InfiniteCraft:
             self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
         
         emojis = self._update_emojis(
-            name = result.name,                           # type: ignore
-            emoji = result.emoji                          # type: ignore
+            name = result.name,
+            emoji = result.emoji
         )
         
         if emojis is None:
             emojis = self._get_emojis()
 
         discoveries = self._update_discoveries(
-            name = result.name,                            # type: ignore
-            is_first_discovery = result.is_first_discovery # type: ignore
+            name = result.name,
+            is_first_discovery = result.is_first_discovery
         )
         
         if discoveries is None:
@@ -241,9 +241,9 @@ class InfiniteCraft:
 
         discoveries = [
             self._element_cls(
-                name = discovery.get("name"),                            # type: ignore
-                emoji = emojis.get(discovery.get("name")),               # type: ignore
-                is_first_discovery = discovery.get("is_first_discovery") # type: ignore
+                name = discovery.get("name"),
+                emoji = emojis.get(discovery.get("name")),
+                is_first_discovery = discovery.get("is_first_discovery")
             ) for discovery in discoveries
         ]
         
@@ -260,14 +260,14 @@ class InfiniteCraft:
         Alias for `InfiniteCraft.pair()`.
 
         ## Arguments:
-            `first` (`Element`): The first element
-            `second` (`Element`): The second element
+            `first` (`Element`): The first element.
+            `second` (`Element`): The second element.
 
         ## Raises:
-            `TypeError`: if `first` or `second` is not of type `Element`
+            `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`
+            `Element | None`: The resulting element as an `Element` object or `None`.
         """
         return await self.pair(first=first, second=second)
     
@@ -279,14 +279,14 @@ class InfiniteCraft:
         Alias for `InfiniteCraft.pair()`.
 
         ## Arguments:
-            `first` (`Element`): The first element
-            `second` (`Element`): The second element
+            `first` (`Element`): The first element.
+            `second` (`Element`): The second element.
 
         ## Raises:
-            `TypeError`: if `first` or `second` is not of type `Element`
+            `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`
+            `Element | None`: The resulting element as an `Element` object or `None`.
         """
         return await self.pair(first=first, second=second)
 
@@ -294,11 +294,11 @@ class InfiniteCraft:
         """Get a `list` containing all discovered elements
 
         ## Arguments:
-            `set_value` (`bool`): Whether to set the value for the `InfiniteCraft.discoveries` attribute after getting it
-            `check` (`Callable[..., Coroutine[Any, Any, Any]]`): A callable or a coroutine that accepts an argument `element` and returns a bool to whether add the element or not
+            `set_value` (`bool`, optional): Whether to set the value for the `InfiniteCraft.discoveries` attribute after getting it. Defaults to `None`.
+            `check` (`Callable[..., Coroutine[Any, Any, Any]]`, optional): A callable or a coroutine that accepts an argument `element` and returns a bool to whether add the element or not. Defaults to `None`.
 
         ## Returns:
-            `list[Element]`: The `list` containing every `Element` discovered   
+            `list[Element]`: The `list` containing every `Element` discovered.
         """
         
         raw_discoveries = self._get_raw_discoveries()
@@ -307,9 +307,9 @@ class InfiniteCraft:
         discoveries: list[Element] = []
         for discovery in raw_discoveries:
             element: Element = self._element_cls(
-                name = discovery.get("name"),                            # type: ignore
-                emoji = emojis.get(discovery.get("name")),               # type: ignore
-                is_first_discovery = discovery.get("is_first_discovery") # type: ignore
+                name = discovery.get("name"),
+                emoji = emojis.get(discovery.get("name")),
+                is_first_discovery = discovery.get("is_first_discovery")
             )
 
             if check is not None:
@@ -329,11 +329,11 @@ class InfiniteCraft:
         """Get a discovered `Element`
 
         ## Arguments:
-            `name` (`str`): Name of element to get
-            `from_file` (`bool`): Whether to check the discoveries JSON file for the element. Defaults to `False`
+            `name` (`str`): Name of element to get.
+            `from_file` (`bool`, optional): Whether to check the discoveries JSON file for the element. Defaults to `False`.
 
         ## Returns:
-            `Element | None`: The discovered `Element` or `None` if it wasn't discovered
+            `Element | None`: The discovered `Element` or `None` if it wasn't discovered.
         """
 
         dummy = Element(name=name, emoji=None, is_first_discovery=None)
@@ -352,18 +352,18 @@ class InfiniteCraft:
         await self._session.close()
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
-    def _update_discoveries(self, *, name: str, is_first_discovery: bool) -> None | list:
+    def _update_discoveries(self, *, name: str | None, is_first_discovery: bool | None) -> None | list:
         """Update the discoveries JSON file with a new element
 
-        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
         ## Arguments:
-            `name` (`str`): Name of the new element
-            `is_first_discovery` (`bool`): Whether the new element was first discovered
+            `name` (`str | None`): Name of the new element.
+            `is_first_discovery` (`bool | None`): Whether the new element was first discovered.
 
         ## Returns:
-            `None | list`: Returns `None` if element already exists and returns list of all discovered elements with this new element if the discoveries JSON file was updated successfully
+            `None | list`: Returns `None` if element already exists and returns list of all discovered elements with this new element if the discoveries JSON file was updated successfully.
         """
         
         element = {
@@ -385,28 +385,28 @@ class InfiniteCraft:
     def _get_raw_discoveries(self) -> list[dict]:
         """Get a `list` containing all discovered elements where each element is a `dict` without the emoji property
 
-        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
         ## Returns:
-            `list`: The `list` containing every element as a `dict` discovered
+            `list`: The `list` containing every element as a `dict` discovered.
         """
 
         with open(self._discoveries_location, encoding=self._encoding) as f:
             return json.load(f)
     
-    def _update_emojis(self, *, name: str, emoji: str) -> None | dict:
+    def _update_emojis(self, *, name: str | None, emoji: str | None) -> None | dict:
         """Update the emoji cache JSON file with a new element's emoji
 
-        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
         ## Arguments:
-            `name` (`str`): Name of the element
-            `emoji` (`str`): The emoji to save
+            `name` (`str | None`): Name of the element.
+            `emoji` (`str | None`): The emoji to save.
 
         ## Returns:
-            `None | list`: Returns `None` if element already exists and returns list of all elements' emojis with the added element if the emoji cache JSON file was updated successfully
+            `None | list`: Returns `None` if element already exists and returns list of all elements' emojis with the added element if the emoji cache JSON file was updated successfully.
         """
 
         emojis = self._get_emojis()
@@ -423,34 +423,59 @@ class InfiniteCraft:
     def _get_emojis(self) -> dict:
         """Get a `dict` containing every element discovered's emoji
 
-        Please do not use this method as it is meant for `internal use only` and should not be used by the user.
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
-        Returns:
-            list: The `list` containing every element's emoji
+        ## Returns:
+            `list`: The `list` containing every element's emoji.
         """
 
         with open(self._emoji_cache, encoding=self._encoding) as f:
             return json.load(f)
     
     @staticmethod
-    def reset(*, discoveries_storage: str = "discoveries.json", emoji_cache: str = "emoji_cache.json", encoding: str = "utf-8") -> None:
+    def reset(
+        *,
+        discoveries_storage: str | None = "discoveries.json",
+        emoji_cache: str | None = "emoji_cache.json",
+        encoding: str = "utf-8",
+        indent: int = 2,
+        make_file: bool = False
+    ) -> tuple[bool, bool]:
+        
         """Reset the discoveries storage JSON and emoji cache JSON
+        
+        This is a `@staticmethod`, hence it can be used using `InfiniteCraft.reset()` without initialising the class.
 
         ## Arguments:
-            `discoveries_storage` (`str`): Path to discoveries storage JSON. Defaults to `"discoveries.json"`
-            `emoji_cache` (`str`): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`
-            `encoding` (`str`): Encoding to use while reading or saving json files. Defaults to `"utf-8"`
+            `discoveries_storage` (`str | None`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
+            `emoji_cache` (`str | None`, optional): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
+            `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
+            `indent` (`int`, optional): Number of spaces to use as indents. Defaults to `2`.
+            `make_file` (`bool`, optional): Make the files if they don't exist. Defaults to `False`.
         """
-
-        if not os.path.exists(discoveries_storage):
-            raise FileNotFoundError(f"File '{discoveries_storage}' not found")
-
-        if not os.path.exists(emoji_cache):
-            raise FileNotFoundError(f"File '{emoji_cache}' not found")
         
-        with open(discoveries_storage, mode="w", encoding=encoding) as f:
-            json.dump(starting_discoveries, f, indent=2)
+        dsreset = False
+        ecreset = False
+        
+        if discoveries_storage is not None and not os.path.exists(discoveries_storage):
+            if make_file:
+                utils.check_file(discoveries_storage)
+            else:
+                raise FileNotFoundError(f"File '{discoveries_storage}' not found")
+        
+        if emoji_cache is not None and not os.path.exists(emoji_cache):
+            if make_file:
+                utils.check_file(emoji_cache)
+            else:
+                raise FileNotFoundError(f"File '{emoji_cache}' not found")
+        
+        if discoveries_storage is not None:
+            utils.dump_json(discoveries_storage, starting_discoveries, encoding=encoding, indent=indent)
+            dsreset = True
 
-        with open(emoji_cache, mode="w", encoding=encoding) as f:
-            json.dump(starting_emoji_cache, f, indent=2)
+        if emoji_cache is not None:
+            utils.dump_json(emoji_cache, starting_discoveries, encoding=encoding, indent=indent)
+            ecreset = True
+        
+        return (dsreset, ecreset)
