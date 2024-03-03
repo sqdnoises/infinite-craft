@@ -1,11 +1,40 @@
+import os
 import json
 import inspect
 from typing import Callable, Coroutine, Any, NoReturn, Mapping
+
+from . import errors
 
 
 def session_not_started(*args, **kwargs) -> NoReturn:
     raise RuntimeError("Session has not been started")
 
+
+def check_file(path: str) -> bool:
+    path = os.path.abspath(path)
+    
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            if not os.access(path, os.W_OK):
+                raise errors.NotWritableError(f"path '{path}' is not writable")
+            
+            return True
+        
+        else:
+            raise errors.NotFileError(f"path '{path}' is not a file")
+    
+    dir = os.path.dirname(path)
+    if not os.access(dir, os.R_OK):
+        return False
+    
+    if os.path.isdir(dir):
+        os.makedirs(path, exist_ok=True)
+    
+    else:
+        raise errors.NotDirectoryError(f"path '{dir}' is not a directory")
+    
+    return False
+    
 
 def dump_json(
     file: str,
