@@ -12,8 +12,8 @@ def dump_json(
     data: Any,
     encoding: str = "utf-8",
     indent: int = 2,
-    open_args: Mapping = {},
-    dump_args: Mapping = {}
+    open_args: Mapping[str, Any] = {},
+    dump_args: Mapping[str, Any] = {}
 ) -> None:
     """Dump JSON into a file
 
@@ -22,8 +22,8 @@ def dump_json(
         `data` (`Any`): JSON data to be dumped
         `encoding` (`str`, optional): Encoding of file to dump the JSON data in. Defaults to `"utf-8"`.
         `indent` (`int`, optional): Number of spaces to use as indents. Defaults to `2`.
-        `open_kwargs` (`Mapping`, optional): Keyword arguments to use for `open()`. Defaults to `{}`.
-        `dump_kwargs` (`Mapping`, optional): Keyword arguments to use for `json.dump()`. Defaults to `{}`.
+        `open_kwargs` (`Mapping[str, Any]`, optional): Keyword arguments to use for `open()`. Defaults to `{}`.
+        `dump_kwargs` (`Mapping[str, Any]`, optional): Keyword arguments to use for `json.dump()`. Defaults to `{}`.
     """
     
     with open(file, "w", encoding=encoding, **open_args) as f:
