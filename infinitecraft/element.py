@@ -7,6 +7,56 @@ class Element:
         `emoji` (`str`): Emoji of the element. Could be `None` if not found in the emoji cache.
         `first_discovery` (`bool`): Whether the current element was a first discovery or not.
     
+    ## Special Functions:
+        - `__str__`: Returns the Emoji (if exists) and Name of the element combined.
+        
+            - For example:
+            
+        ```py
+        >>> str(Element(name="Fire", emoji="🔥", is_first_discovery=False))
+        '🔥 Fire'
+        >>> str(Element(name="Water", emoji=None, is_first_discovery=True))
+        'Water'
+        ```
+        
+        - `__repr__`: Returns a string representing how the class was made.
+        
+            - For example:
+            
+        ```py
+        >>> repr(Element(name="Fire", emoji="🔥", is_first_discovery=False))
+        "Element(name='Fire', emoji='🔥', is_first_discovery=False)"
+        >>> repr(Element(name="Water", emoji=None, is_first_discovery=True))
+        "Element(name='Water', emoji=None, is_first_discovery=True)"
+        ```
+        
+        - `__eq__`: Checks if the element name is equal to another element's name.
+        
+            - For example:
+        
+        ```py
+        >>> fire1 = Element(name="Fire", emoji="🔥", is_first_discovery=False)
+        >>> fire2 = Element(name="Fire", emoji="❤️‍🔥", is_first_discovery=False)
+        >>> water = Element(name="Water", emoji="💧", is_first_discovery=True)
+        >>> fire1 == fire2
+        True
+        >>> fire1 == water 
+        False
+        ```
+        
+        - `__bool__`: If all attributes are `None` (not defined) `False` gets returned otherwise `True` gets returned.
+        
+            - For example:
+        
+        ```py
+        >>> bool(Element(name="Fire", emoji="🔥", is_first_discovery=False))
+        True
+        >>> bool(Element(name="Water", emoji=None, is_first_discovery=True))
+        True
+        >>> bool(Element(name=None, emoji=None, is_first_discovery=None))
+        False
+        ```
+    
     You can make your own `Element` class by subclassing this one.
     
     NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the emoji cache JSON file if you need it.
