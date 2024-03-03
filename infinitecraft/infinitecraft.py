@@ -181,8 +181,8 @@ class InfiniteCraft:
     async def pair(self, first: Element, second: Element) -> Element:
         """Pair two elements and return the resulting element
 
-        Returns `None` if the elements could not be paired.
-
+        Returns an `Element` with all attributes as `None` if they could not be paired.
+        
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
@@ -191,7 +191,7 @@ class InfiniteCraft:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`.
+            `Element`: The resulting element as an `Element` object or an `Element` with all attributes as `None` if they could not be paired.
         """
 
         if not isinstance(first, Element): # type: ignore
@@ -260,10 +260,10 @@ class InfiniteCraft:
     async def merge(self, first: Element, second: Element) -> Element | None:
         """Pair two elements and return the resulting element
 
-        Returns `None` if the elements could not be paired.
-
+        Returns an `Element` with all attributes as `None` if they could not be paired.
+        
         Alias for `InfiniteCraft.pair()`.
-
+        
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
@@ -272,17 +272,17 @@ class InfiniteCraft:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`.
+            `Element`: The resulting element as an `Element` object or an `Element` with all attributes as `None` if they could not be paired.
         """
         return await self.pair(first=first, second=second)
     
     async def combine(self, first: Element, second: Element) -> Element | None:
         """Pair two elements and return the resulting element
 
-        Returns `None` if the elements could not be paired.
-
+        Returns an `Element` with all attributes as `None` if they could not be paired.
+        
         Alias for `InfiniteCraft.pair()`.
-
+        
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
@@ -291,7 +291,7 @@ class InfiniteCraft:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
 
         ## Returns:
-            `Element | None`: The resulting element as an `Element` object or `None`.
+            `Element`: The resulting element as an `Element` object or an `Element` with all attributes as `None` if they could not be paired.
         """
         return await self.pair(first=first, second=second)
 
