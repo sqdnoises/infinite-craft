@@ -27,7 +27,16 @@ class Element:
         return f"Element(name={repr(self.name)}, emoji={repr(self.emoji)}, is_first_discovery={repr(self.is_first_discovery)})"
     
     def __eq__(self, __value: object) -> bool:
-        if isinstance(__value, Element) and __value.name == self.name:
+        if not bool(self):
+            return not bool(__value)
+        
+        elif isinstance(__value, Element) and __value.name == self.name:
             return True
+        
         else:
             return False
+    
+    def __bool__(self) -> bool:
+        return self.name               is not None and \
+               self.emoji              is not None and \
+               self.is_first_discovery is not None
