@@ -1,12 +1,17 @@
 import os
 import json
 import aiohttp
-from typing import Callable
+from typing import (
+    Callable,
+    MutableMapping,
+    Any, Never
+)
 
 from .          import utils
 from .element   import Element
 from .logger    import Logger
 from .constants import *
+from .types     import *
 
 
 __all__ = (
@@ -19,8 +24,8 @@ class InfiniteCraft:
     Initialize an Infinite Craft session
 
     ## Attributes:
-        `discoveries` (`list`): List of `Element` objects that have been discovered.
-        `closed` (`bool`): Whether the Infinite Craft session is closed or not.
+        `discoveries` (`list[Element]`): List of `Element` objects that have been discovered.
+        `closed` (`bool | None`): Whether the Infinite Craft session is closed or not. `None` if session has not been started.
 
     ## Arguments:
         `api_url` (`str`): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
@@ -36,15 +41,15 @@ class InfiniteCraft:
     
     def __init__(
         self, *,
-        api_url: str               = "https://neal.fun",
-        manual_control: bool       = False,
-        discoveries_storage: str   = "discoveries.json",
-        emoji_cache: str           = "emoji_cache.json",
-        encoding: str              = "utf-8",
-        do_reset: bool             = False,
-        headers: dict              = {},
-        element_cls: type[Element] = Element,
-        logger                     = Logger()
+        api_url: str                      = "https://neal.fun",
+        manual_control: bool              = False,
+        discoveries_storage: str          = "discoveries.json",
+        emoji_cache: str                  = "emoji_cache.json",
+        encoding: str                     = "utf-8",
+        do_reset: bool                    = False,
+        headers: MutableMapping[str, str] = {},
+        element_cls: type[Element]        = Element,
+        logger: Any                       = Logger()
     ) -> None:
         
         if not os.path.exists(discoveries_storage):
@@ -53,7 +58,7 @@ class InfiniteCraft:
         if not os.path.exists(emoji_cache):
             raise FileNotFoundError(f"File '{emoji_cache}' not found")
         
-        if not issubclass(element_cls, Element):
+        if not issubclass(element_cls, Element): # type: ignore
             raise TypeError("element_cls must be a subclass of 'Element'")
         
         self._api_url = api_url
@@ -72,8 +77,8 @@ class InfiniteCraft:
                 encoding=encoding
             )
 
-        self._discoveries: list[Element] = []
-        self.discoveries: list[Element] = self._discoveries.copy()
+        self._discoveries: Discoveries = []
+        self.discoveries: Discoveries = self._discoveries.copy()
         self.get_discoveries(set_value=True)
 
         self._session: aiohttp.ClientSession = aiohttp.ClientSession() # Dummy session
@@ -117,7 +122,7 @@ class InfiniteCraft:
         else:
             self._logger.debug("ENTER: Manual control is ON;")
 
-    async def __aexit__(self, *args) -> None:
+    async def __aexit__(self, *args: Never) -> None:
         if not self._manual_control:
             self._logger.debug("EXIT: Manual control is OFF; Stopping session")
             await self.close()
@@ -189,10 +194,10 @@ class InfiniteCraft:
             `Element | None`: The resulting element as an `Element` object or `None`.
         """
 
-        if not isinstance(first, Element):
+        if not isinstance(first, Element): # type: ignore
             raise TypeError("first must be an instance of 'Element'")
         
-        if not isinstance(second, Element):
+        if not isinstance(second, Element): # type: ignore
             raise TypeError("second must be an instance of 'Element'")
         
         self._logger.debug(f"Pairing {first} and {second}...")
@@ -290,12 +295,12 @@ class InfiniteCraft:
         """
         return await self.pair(first=first, second=second)
 
-    def get_discoveries(self, *, set_value: bool = False, check: Callable | None = None) -> list[Element]:
+    def get_discoveries(self, *, set_value: bool = False, check: Callable[[Element], bool] | None = None) -> Discoveries:
         """Get a `list` containing all discovered elements
 
         ## Arguments:
             `set_value` (`bool`, optional): Whether to set the value for the `InfiniteCraft.discoveries` attribute after getting it. Defaults to `None`.
-            `check` (`Callable[..., Coroutine[Any, Any, Any]]`, optional): A callable or a coroutine that accepts an argument `element` and returns a bool to whether add the element or not. Defaults to `None`.
+            `check` (`Callable[[Element], bool]`, optional): A callable functions that accepts an argument for `element` and returns a bool to whether add the element or not. Defaults to `None`.
 
         ## Returns:
             `list[Element]`: The `list` containing every `Element` discovered.
@@ -304,9 +309,9 @@ class InfiniteCraft:
         raw_discoveries = self._get_raw_discoveries()
         emojis = self._get_emojis()
         
-        discoveries: list[Element] = []
+        discoveries: Discoveries = []
         for discovery in raw_discoveries:
-            element: Element = self._element_cls(
+            element = self._element_cls(
                 name = discovery.get("name"),
                 emoji = emojis.get(discovery.get("name")),
                 is_first_discovery = discovery.get("is_first_discovery")
@@ -344,15 +349,15 @@ class InfiniteCraft:
 
         return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
 
-    async def _build_session(self, *args, **kwargs) -> None:
-        """Build `aiohttp.ClientSession`
+    async def _build_session(self, *args: Any, **kwargs: Any) -> None:
+        """Build `aiohttp.ClientSession(...)`
         
         Do not use this method as it is meant for `internal use only` and should not be used by the user.
         """
         await self._session.close()
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
-    def _update_discoveries(self, *, name: str | None, is_first_discovery: bool | None) -> None | list:
+    def _update_discoveries(self, *, name: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
         """Update the discoveries JSON file with a new element
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
@@ -363,39 +368,40 @@ class InfiniteCraft:
             `is_first_discovery` (`bool | None`): Whether the new element was first discovered.
 
         ## Returns:
-            `None | list`: Returns `None` if element already exists and returns list of all discovered elements with this new element if the discoveries JSON file was updated successfully.
+            `None | RawDiscoveries`: Returns `None` if element already exists and returns a `list` of all discovered elements with this new element if the discoveries JSON file was updated successfully.
         """
         
-        element = {
+        element: RawDiscovery = {
             "name": name,
             "is_first_discovery": is_first_discovery
         }
 
         discoveries = self._get_raw_discoveries()
-        if element in discoveries:
+        if element["name"] in [e["name"] for e in discoveries]:
             return None
         
         discoveries.append(element)
 
-        with open(self._discoveries_location, mode="w", encoding=self._encoding) as f:
+        with open(self._discoveries_location, "w", encoding=self._encoding) as f:
             json.dump(discoveries, f, indent=2)
         
         return discoveries
 
-    def _get_raw_discoveries(self) -> list[dict]:
+    def _get_raw_discoveries(self) -> RawDiscoveries:
+        
         """Get a `list` containing all discovered elements where each element is a `dict` without the emoji property
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
         ## Returns:
-            `list`: The `list` containing every element as a `dict` discovered.
+            `RawDiscoveries`: The `list` containing every element as a `dict` discovered.
         """
 
         with open(self._discoveries_location, encoding=self._encoding) as f:
             return json.load(f)
     
-    def _update_emojis(self, *, name: str | None, emoji: str | None) -> None | dict:
+    def _update_emojis(self, *, name: str | None, emoji: str | None) -> Emojis | None:
         """Update the emoji cache JSON file with a new element's emoji
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
@@ -406,7 +412,7 @@ class InfiniteCraft:
             `emoji` (`str | None`): The emoji to save.
 
         ## Returns:
-            `None | list`: Returns `None` if element already exists and returns list of all elements' emojis with the added element if the emoji cache JSON file was updated successfully.
+            `Emojis | None`: Returns `None` if element already exists and returns list of all elements' emojis including the added element as a `dict` if the emoji cache JSON file was updated successfully.
         """
 
         emojis = self._get_emojis()
@@ -420,14 +426,14 @@ class InfiniteCraft:
         
         return emojis
 
-    def _get_emojis(self) -> dict:
+    def _get_emojis(self) -> Emojis:
         """Get a `dict` containing every element discovered's emoji
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
         Only use this if you know what you are doing.
 
         ## Returns:
-            `list`: The `list` containing every element's emoji.
+            `Emojis`: The `dict` containing every element's emoji.
         """
 
         with open(self._emoji_cache, encoding=self._encoding) as f:

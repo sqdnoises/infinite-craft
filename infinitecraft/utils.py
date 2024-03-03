@@ -1,12 +1,16 @@
 import os
 import json
 import inspect
-from typing import Callable, Coroutine, Any, NoReturn, Mapping
+from typing import (
+    Callable, Coroutine,
+    Any, NoReturn, Never,
+    Mapping
+)
 
 from . import errors
 
 
-def session_not_started(*args, **kwargs) -> NoReturn: # type: ignore
+def session_not_started(*args: Never, **kwargs: Never) -> NoReturn:
     raise RuntimeError("Session has not been started")
 
 
@@ -60,7 +64,7 @@ def dump_json(
         json.dump(data, f, indent=indent, **dump_args)
 
 
-async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args: tuple[Any, ...], **kwargs: Mapping[str, Any]) -> Any | None:
+async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args: Any, **kwargs: Any) -> Any | None:
     """An asynchronous function that runs a callable or a coroutine with the given arguments
 
     ## Arguments:
