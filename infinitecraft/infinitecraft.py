@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import aiohttp
 from typing import (
     Callable,
@@ -128,6 +129,21 @@ class InfiniteCraft:
             await self.close()
         else:
             self._logger.debug("EXIT: Manual control is ON;")
+
+    async def ping(self) -> float:
+        """Ping the API and return the latency
+
+        Only works when the session has been started.
+
+        ## Returns:
+            `float`: The latency in seconds.
+        """
+        
+        self._logger.debug(f"Pinging API: {self._api_url}")
+        
+        start = time.monotonic()
+        async with self._session.get("/api/"):
+            return time.monotonic() - start
 
     async def start(self) -> None:
         """Start the Infinite Craft session
