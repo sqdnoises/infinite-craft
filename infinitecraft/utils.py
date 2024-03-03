@@ -3,14 +3,15 @@ import json
 import inspect
 from typing import (
     Callable, Coroutine,
-    Any, NoReturn, Never,
+    Any, NoReturn,
     Mapping
 )
 
-from . import errors
+from .      import errors
+from .types import *
 
 
-def session_not_started(*args: Never, **kwargs: Never) -> NoReturn:
+def session_not_started(*args: Unused, **kwargs: Unused) -> NoReturn:
     raise RuntimeError("Session has not been started")
 
 

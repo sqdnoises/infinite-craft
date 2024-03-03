@@ -5,7 +5,7 @@ import aiohttp
 from typing import (
     Callable,
     MutableMapping,
-    Any, Never
+    Any
 )
 
 from .          import utils
@@ -123,7 +123,7 @@ class InfiniteCraft:
         else:
             self._logger.debug("ENTER: Manual control is ON;")
 
-    async def __aexit__(self, *args: Never) -> None:
+    async def __aexit__(self, *args: Unused) -> None:
         if not self._manual_control:
             self._logger.debug("EXIT: Manual control is OFF; Stopping session")
             await self.close()
@@ -365,7 +365,7 @@ class InfiniteCraft:
 
         return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
 
-    async def _build_session(self, *args: Any, **kwargs: Any) -> None:
+    async def _build_session(self, *args: Unused, **kwargs: Unused) -> None:
         """Build `aiohttp.ClientSession(...)`
         
         Do not use this method as it is meant for `internal use only` and should not be used by the user.
