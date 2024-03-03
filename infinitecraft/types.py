@@ -1,12 +1,15 @@
 from .element import Element
-from typing import TypedDict, MutableMapping
+from typing import TypedDict, MutableMapping, Any
 
 __all__ = (
+    "Unused",
     "RawDiscovery",
     "Discoveries",
     "RawDiscoveries",
     "Emojis"
 )
+
+Unused = Any
 
 Discovery = Element
 Discoveries = list[Element]
