@@ -1,6 +1,6 @@
 **/__pycache__/
+venv/
 .venv/
-.mypy_cache/
-src/**.egg-info/
+*.egg-info/
 dist/
 tests/
