@@ -178,7 +178,7 @@ class InfiniteCraft:
         """
         await self.close()
 
-    async def pair(self, first: Element, second: Element) -> Element | None:
+    async def pair(self, first: Element, second: Element) -> Element:
         """Pair two elements and return the resulting element
 
         Returns `None` if the elements could not be paired.
@@ -215,7 +215,7 @@ class InfiniteCraft:
             "isNew": False
         }:
             self._logger.debug(f"Unable to mix {first} + {second}")
-            return None
+            return Element(name=None, emoji=None, is_first_discovery=None)
         
         result = self._element_cls(
             name               = result.get("result"),
