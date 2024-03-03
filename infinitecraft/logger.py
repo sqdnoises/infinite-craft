@@ -23,7 +23,7 @@ class Logger:
     `5` - debug
     """
 
-    def __init__(self, prefix: Callable | None = None, log_level: int = 4) -> None:
+    def __init__(self, prefix: Callable[[str], str] | None = None, log_level: int = 4) -> None:
         self._prefix = prefix
         self.log_level = log_level
 
@@ -46,19 +46,19 @@ class Logger:
             prefix = str(self._prefix(log_type)) # type: ignore
             print(prefix + message, end="\033[0m\n")
     
-    def info(self, message) -> None:
+    def info(self, message: str | Any) -> None:
         self.log("info", message)
     
-    def warn(self, message) -> None:
+    def warn(self, message: str | Any) -> None:
         self.log("warn", message)
     
-    def error(self, message) -> None:
+    def error(self, message: str | Any) -> None:
         self.log("error", message)
     
-    def fatal(self, message) -> None:
+    def fatal(self, message: str | Any) -> None:
         self.log("fatal", message)
     
-    def debug(self, message) -> None:
+    def debug(self, message: str | Any) -> None:
         self.log("debug", message)
     
     @staticmethod
