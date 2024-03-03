@@ -11,6 +11,7 @@ def session_not_started(*args, **kwargs) -> NoReturn:
 
 
 def check_file(path: str) -> bool:
+    """Check if a file exists or not"""
     path = os.path.abspath(path)
     
     if os.path.exists(path):
