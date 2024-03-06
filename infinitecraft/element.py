@@ -65,7 +65,7 @@ class Element:
     
     You can make your own `Element` class by subclassing this one.
     
-    NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the emoji cache JSON file if you need it.
+    NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the discoveries JSON file if you need it.
     """
 
     def __init__(self, name: str | None = None, emoji: str | None = None, is_first_discovery: bool | None = None) -> None:
