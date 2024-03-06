@@ -37,6 +37,7 @@ windows = [
 ]
 
 dev = [
+    "pytest", "pytest-asyncio",
     "setuptools", "bumpver", "pip-tools",
     "build", "twine"
 ]
