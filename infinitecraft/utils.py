@@ -34,7 +34,7 @@ def check_file(path: str) -> bool:
         return False
     
     if os.path.isdir(dir):
-        os.makedirs(path, exist_ok=True)
+        os.makedirs(dir, exist_ok=True)
     
     else:
         raise errors.NotDirectoryError(f"path '{dir}' is not a directory")

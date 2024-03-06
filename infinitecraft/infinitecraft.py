@@ -9,6 +9,7 @@ from typing import (
 )
 
 from .          import utils
+from .dummies   import DummyClientSession
 from .element   import Element
 from .logger    import Logger
 from .constants import *
@@ -48,16 +49,40 @@ class InfiniteCraft:
         emoji_cache: str                  = "emoji_cache.json",
         encoding: str                     = "utf-8",
         do_reset: bool                    = False,
+        make_file: bool                   = True,
         headers: MutableMapping[str, str] = {},
         element_cls: type[Element]        = Element,
         logger: Any                       = Logger()
     ) -> None:
         
-        if not os.path.exists(discoveries_storage):
-            raise FileNotFoundError(f"File '{discoveries_storage}' not found")
+        dsreset = False
+        ecreset = False
+                
+        if not utils.check_file(discoveries_storage):
+            if not make_file:
+                raise FileNotFoundError(f"File '{discoveries_storage}' not found")
+            
+            logger.warn(f"Resetting discoveries storage JSON file ({discoveries_storage})")
+            self.reset(
+                discoveries_storage=discoveries_storage,
+                emoji_cache=None,
+                encoding=encoding,
+                make_file=make_file
+            )
+            dsreset = True
         
-        if not os.path.exists(emoji_cache):
-            raise FileNotFoundError(f"File '{emoji_cache}' not found")
+        if not utils.check_file(emoji_cache):
+            if not make_file:
+                raise FileNotFoundError(f"File '{emoji_cache}' not found")
+            
+            logger.warn(f"Resetting emoji cache JSON file ({emoji_cache})")
+            self.reset(
+                discoveries_storage=None,
+                emoji_cache=emoji_cache,
+                encoding=encoding,
+                make_file=make_file
+            )
+            ecreset = True
         
         if not issubclass(element_cls, Element): # type: ignore
             raise TypeError("element_cls must be a subclass of 'Element'")
@@ -71,10 +96,10 @@ class InfiniteCraft:
         self._logger = logger
 
         if do_reset:
-            self._logger.warn("Resetting discoveries and emoji cache JSON files")
+            self._logger.warn(f"Resetting discoveries and emoji cache JSON files (discoveries: {discoveries_storage}, emoji cache: {emoji_cache})")
             self.reset(
-                discoveries_storage=discoveries_storage,
-                emoji_cache=emoji_cache,
+                discoveries_storage=discoveries_storage if not dsreset else None,
+                emoji_cache=emoji_cache if not ecreset else None,
                 encoding=encoding
             )
 
@@ -82,9 +107,7 @@ class InfiniteCraft:
         self.discoveries: Discoveries = self._discoveries.copy()
         self.get_discoveries(set_value=True)
 
-        self._session: aiohttp.ClientSession = aiohttp.ClientSession() # Dummy session
-        setattr(self._session, "request", utils.session_not_started)
-        setattr(self._session, "get", utils.session_not_started)
+        self._session: aiohttp.ClientSession = DummyClientSession() # Dummy session # type: ignore
         self._headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
@@ -176,7 +199,9 @@ class InfiniteCraft:
                 skip_auto_headers = ["User-Agent", "Content-Type"],
                 raise_for_status = True
             )
+            
             self._closed = False
+            self.closed = False
         
         else:
             raise RuntimeError("Session is already running")
@@ -381,11 +406,10 @@ class InfiniteCraft:
         return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
 
     async def _build_session(self, *args: Unused, **kwargs: Unused) -> None:
-        """Build `aiohttp.ClientSession(...)`
+        """Build `aiohttp.ClientSession(*args, **kwargs)`
         
         Do not use this method as it is meant for `internal use only` and should not be used by the user.
         """
-        await self._session.close()
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
     def _update_discoveries(self, *, name: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
@@ -512,7 +536,7 @@ class InfiniteCraft:
             dsreset = True
 
         if emoji_cache is not None:
-            utils.dump_json(emoji_cache, starting_discoveries, encoding=encoding, indent=indent)
+            utils.dump_json(emoji_cache, starting_emoji_cache, encoding=encoding, indent=indent)
             ecreset = True
         
         return (dsreset, ecreset)
