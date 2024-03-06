@@ -1,4 +1,4 @@
-# infinite-craft `0.2.1`
+# infinite-craft `0.2.2`
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 
 # Documentation
