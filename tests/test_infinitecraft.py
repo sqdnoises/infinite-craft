@@ -4,20 +4,15 @@ from typing import Any as Ignore
 from infinitecraft import InfiniteCraft, Element, Logger
 
 d = "tests/discoveries.json"
-e = "tests/emoji_cache.json"
 
 
 def remove():
     if os.path.exists(d):
         os.remove(d)
 
-    if os.path.exists(e):
-        os.remove(e)
-
 
 kwargs: Ignore = dict(
     discoveries_storage=d,
-    emoji_cache=e,
     logger=Logger(log_level=5)
 )
 
@@ -36,7 +31,6 @@ class TestInfiniteCraftFiles:
         InfiniteCraft(**kwargs, make_file=True)
 
         assert os.path.exists(d)
-        assert os.path.exists(e)
     
     @pytest.mark.asyncio
     async def test_make_file_and_do_reset_True(self):
@@ -53,7 +47,6 @@ class TestInfiniteCraftFiles:
         
         InfiniteCraft(**kwargs, do_reset=False, make_file=False)
         assert os.path.exists(d)
-        assert os.path.exists(e)
 
 
 @pytest.mark.asyncio
