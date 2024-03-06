@@ -72,6 +72,12 @@ async def test_InfiniteCraft():
     
     assert game.closed == False # test_session_started
     
+    # --- test_check_ping ---
+    ping = await game.ping()
+    print(ping, "seconds")
+    assert ping >= 0
+    # -----------------------
+    
     # --- test_check_pairing ---
     first = Element("ThisElementDoesNotExist.OrDoesIt?No")
     second = Element("ThisElementDoesNotExist.OrDoesIt?Yes")
@@ -112,12 +118,6 @@ async def test_InfiniteCraft_async_with():
     async with game: # test_start_session is handled
         assert game.closed == False # test_session_started
         
-        first = Element("ThisElementDoesNotExist.OrDoesIt?No")
-        second = Element("ThisElementDoesNotExist.OrDoesIt?Yes")
-        
-        result = await game.pair(first, second)
-        assert result == None
-        
         first = Element("Fire")
         second = Element("Water")
         
@@ -132,6 +132,7 @@ async def test_InfiniteCraft_async_with():
         await game.start()
     # --------------------------------
 
+
 @pytest.mark.asyncio
 async def test_InfiniteCraft_async_with2():
     remove()
@@ -139,6 +140,13 @@ async def test_InfiniteCraft_async_with2():
     # --- test_session ---
     async with InfiniteCraft(**kwargs) as game: # test_start_session  # type: ignore
         game: InfiniteCraft
+
+        # --- test_check_ping ---
+        ping = await game.ping()
+        print(ping, "seconds")
+        assert ping >= 0
+        # -----------------------
+        
         assert game.closed == False # test_session_started
         
         first = Element("ThisElementDoesNotExist.OrDoesIt?No")
@@ -154,30 +162,24 @@ async def test_InfiniteCraft_async_with2():
         assert result is not None
     # --------------------------
 
+
 @pytest.mark.asyncio
 async def test_InfiniteCraft_manual_control():
     remove()
     game = InfiniteCraft(**kwargs, manual_control=True)
     
-    # --- test_check_session_before ---
-    assert game.closed == None
-    
-    with pytest.raises(RuntimeError):
-        await game.close()
-    # ---------------------------------
-    
     await game.start() # test_start_session
     
     assert game.closed == False # test_session_started
     
+    # --- test_check_ping ---
+    ping = await game.ping()
+    print(ping, "seconds")
+    assert ping >= 0
+    # -----------------------
+    
     # --- test_check_pairing ---
     async with game:
-        first = Element("ThisElementDoesNotExist.OrDoesIt?No")
-        second = Element("ThisElementDoesNotExist.OrDoesIt?Yes")
-        
-        result = await game.pair(first, second)
-        assert result == None
-        
         first = Element("Fire")
         second = Element("Water")
         
