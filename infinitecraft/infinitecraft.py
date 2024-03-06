@@ -175,10 +175,15 @@ class InfiniteCraft:
             `float`: The latency in seconds.
         """
         
-        self._logger.debug(f"Pinging API: {self._api_url}")
+        self._logger.debug(f"Pinging API route: {self._api_url}/api/infinite-craft/pair with Fire + Water")
+        
+        params = {
+            "first":  "Fire",
+            "second": "Water"
+        }
         
         start = time.monotonic()
-        async with self._session.get("/api/infinite-craft"):
+        async with self._session.get(f"/api/infinite-craft/pair", params=params):
             end = time.monotonic() - start
 
         self._logger.debug(f"API response time: {end}s")
