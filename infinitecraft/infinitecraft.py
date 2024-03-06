@@ -5,7 +5,7 @@ import aiohttp
 from typing import (
     Callable,
     MutableMapping,
-    Any
+    Any, Self
 )
 
 from .          import utils
@@ -150,12 +150,14 @@ class InfiniteCraft:
             ")"
         )
 
-    async def __aenter__(self) -> None:
+    async def __aenter__(self) -> Self:
         if not self._manual_control:
             self._logger.debug("ENTER: Manual control is OFF; Starting session")
             await self.start()
         else:
             self._logger.debug("ENTER: Manual control is ON;")
+        
+        return self
 
     async def __aexit__(self, *args: Unused) -> None:
         if not self._manual_control:
