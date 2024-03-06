@@ -1,12 +1,11 @@
 from .element import Element
-from typing import TypedDict, MutableMapping, Any
+from typing import TypedDict, Any
 
 __all__ = (
     "Unused",
     "RawDiscovery",
     "Discoveries",
-    "RawDiscoveries",
-    "Emojis"
+    "RawDiscoveries"
 )
 
 Unused = Any
@@ -16,9 +15,7 @@ Discoveries = list[Element]
 
 class RawDiscovery(TypedDict):
     name: str | None
+    emoji: str | None
     is_first_discovery: bool| None
 
 RawDiscoveries = list[RawDiscovery]
-
-Emoji = MutableMapping[str | None, str | None]
-Emojis = Emoji

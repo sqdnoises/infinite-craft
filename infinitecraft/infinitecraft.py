@@ -33,7 +33,6 @@ class InfiniteCraft:
         `api_url` (`str`, optional): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
         `manual_control` (`bool`, optional): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
         `discoveries_storage` (`str`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
-        `emoji_cache` (`str`, optional): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
         `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
         `do_reset` (`bool`, optional): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`.
         `headers` (`dict`, optional): Headers to send to the API. Defaults to `{}`.
@@ -46,7 +45,6 @@ class InfiniteCraft:
         api_url: str                      = "https://neal.fun",
         manual_control: bool              = False,
         discoveries_storage: str          = "discoveries.json",
-        emoji_cache: str                  = "emoji_cache.json",
         encoding: str                     = "utf-8",
         do_reset: bool                    = False,
         make_file: bool                   = True,
@@ -56,7 +54,6 @@ class InfiniteCraft:
     ) -> None:
         
         dsreset = False
-        ecreset = False
                 
         if not utils.check_file(discoveries_storage):
             if not make_file:
@@ -65,24 +62,10 @@ class InfiniteCraft:
             logger.warn(f"Resetting discoveries storage JSON file ({discoveries_storage})")
             self.reset(
                 discoveries_storage=discoveries_storage,
-                emoji_cache=None,
                 encoding=encoding,
                 make_file=make_file
             )
             dsreset = True
-        
-        if not utils.check_file(emoji_cache):
-            if not make_file:
-                raise FileNotFoundError(f"File '{emoji_cache}' not found")
-            
-            logger.warn(f"Resetting emoji cache JSON file ({emoji_cache})")
-            self.reset(
-                discoveries_storage=None,
-                emoji_cache=emoji_cache,
-                encoding=encoding,
-                make_file=make_file
-            )
-            ecreset = True
         
         if not issubclass(element_cls, Element): # type: ignore
             raise TypeError("element_cls must be a subclass of 'Element'")
@@ -90,16 +73,14 @@ class InfiniteCraft:
         self._api_url = api_url
         self._manual_control = manual_control
         self._discoveries_location = discoveries_storage
-        self._emoji_cache = emoji_cache
         self._encoding = encoding
         self._element_cls = element_cls
         self._logger = logger
 
-        if do_reset:
-            self._logger.warn(f"Resetting discoveries and emoji cache JSON files (discoveries: {discoveries_storage}, emoji cache: {emoji_cache})")
+        if do_reset and not dsreset:
+            self._logger.warn(f"Resetting discoveries JSON file ({discoveries_storage})")
             self.reset(
-                discoveries_storage=discoveries_storage if not dsreset else None,
-                emoji_cache=emoji_cache if not ecreset else None,
+                discoveries_storage=discoveries_storage,
                 encoding=encoding
             )
 
@@ -142,7 +123,6 @@ class InfiniteCraft:
                 f"api_url={repr(self._api_url)}, "
                 f"manual_control={repr(self._manual_control)}, "
                 f"discoveries_storage={repr(self._discoveries_location)}, "
-                f"emoji_cache={repr(self._emoji_cache)}, "
                 f"encoding={repr(self._encoding)}, "
                 f"headers={repr(self._headers)}, "
                 f"element_cls={repr(self._element_cls)}, "
@@ -290,17 +270,10 @@ class InfiniteCraft:
             self._logger.debug(f"Result: {result} (first: {first} + second: {second})")
         else:
             self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
-        
-        emojis = self._update_emojis(
-            name = result.name,
-            emoji = result.emoji
-        )
-        
-        if emojis is None:
-            emojis = self._get_emojis()
 
         discoveries = self._update_discoveries(
             name = result.name,
+            emoji = result.emoji,
             is_first_discovery = result.is_first_discovery
         )
         
@@ -310,7 +283,7 @@ class InfiniteCraft:
         discoveries = [
             self._element_cls(
                 name = discovery.get("name"),
-                emoji = emojis.get(discovery.get("name")),
+                emoji = discovery.get("emoji"),
                 is_first_discovery = discovery.get("is_first_discovery")
             ) for discovery in discoveries
         ]
@@ -370,13 +343,12 @@ class InfiniteCraft:
         """
         
         raw_discoveries = self._get_raw_discoveries()
-        emojis = self._get_emojis()
         
         discoveries: Discoveries = []
         for discovery in raw_discoveries:
             element = self._element_cls(
                 name = discovery.get("name"),
-                emoji = emojis.get(discovery.get("name")),
+                emoji = discovery.get("emoji"),
                 is_first_discovery = discovery.get("is_first_discovery")
             )
 
@@ -419,7 +391,7 @@ class InfiniteCraft:
         """
         self._session = aiohttp.ClientSession(*args, **kwargs)
 
-    def _update_discoveries(self, *, name: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
+    def _update_discoveries(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
         """Update the discoveries JSON file with a new element
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
@@ -435,6 +407,7 @@ class InfiniteCraft:
         
         element: RawDiscovery = {
             "name": name,
+            "emoji": emoji,
             "is_first_discovery": is_first_discovery
         }
 
@@ -450,7 +423,6 @@ class InfiniteCraft:
         return discoveries
 
     def _get_raw_discoveries(self) -> RawDiscoveries:
-        
         """Get a `list` containing all discovered elements where each element is a `dict` without the emoji property
 
         Please do not use this function as it is meant for `internal use only` and should not be used by the user.
@@ -463,53 +435,14 @@ class InfiniteCraft:
         with open(self._discoveries_location, encoding=self._encoding) as f:
             return json.load(f)
     
-    def _update_emojis(self, *, name: str | None, emoji: str | None) -> Emojis | None:
-        """Update the emoji cache JSON file with a new element's emoji
-
-        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
-        Only use this if you know what you are doing.
-
-        ## Arguments:
-            `name` (`str | None`): Name of the element.
-            `emoji` (`str | None`): The emoji to save.
-
-        ## Returns:
-            `Emojis | None`: Returns `None` if element already exists and returns list of all elements' emojis including the added element as a `dict` if the emoji cache JSON file was updated successfully.
-        """
-
-        emojis = self._get_emojis()
-        if name in emojis:
-            return None
-        
-        emojis.update({name: emoji})
-
-        with open(self._emoji_cache, mode="w", encoding=self._encoding) as f:
-            json.dump(emojis, f, indent=2)
-        
-        return emojis
-
-    def _get_emojis(self) -> Emojis:
-        """Get a `dict` containing every element discovered's emoji
-
-        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
-        Only use this if you know what you are doing.
-
-        ## Returns:
-            `Emojis`: The `dict` containing every element's emoji.
-        """
-
-        with open(self._emoji_cache, encoding=self._encoding) as f:
-            return json.load(f)
-    
     @staticmethod
     def reset(
         *,
-        discoveries_storage: str | None = "discoveries.json",
-        emoji_cache: str | None = "emoji_cache.json",
+        discoveries_storage: str = "discoveries.json",
         encoding: str = "utf-8",
         indent: int = 2,
         make_file: bool = False
-    ) -> tuple[bool, bool]:
+    ) -> None:
         
         """Reset the discoveries storage JSON and emoji cache JSON
         
@@ -517,33 +450,18 @@ class InfiniteCraft:
 
         ## Arguments:
             `discoveries_storage` (`str | None`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
-            `emoji_cache` (`str | None`, optional): Path to emoji cache JSON. Defaults to `"emoji_cache.json"`.
             `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
             `indent` (`int`, optional): Number of spaces to use as indents. Defaults to `2`.
             `make_file` (`bool`, optional): Make the files if they don't exist. Defaults to `False`.
+        
+        ## Returns:
+            `bool`: Whether the file was reset or not.
         """
         
-        dsreset = False
-        ecreset = False
-        
-        if discoveries_storage is not None and not os.path.exists(discoveries_storage):
+        if not os.path.exists(discoveries_storage):
             if make_file:
                 utils.check_file(discoveries_storage)
             else:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
         
-        if emoji_cache is not None and not os.path.exists(emoji_cache):
-            if make_file:
-                utils.check_file(emoji_cache)
-            else:
-                raise FileNotFoundError(f"File '{emoji_cache}' not found")
-        
-        if discoveries_storage is not None:
-            utils.dump_json(discoveries_storage, starting_discoveries, encoding=encoding, indent=indent)
-            dsreset = True
-
-        if emoji_cache is not None:
-            utils.dump_json(emoji_cache, starting_emoji_cache, encoding=encoding, indent=indent)
-            ecreset = True
-        
-        return (dsreset, ecreset)
+        utils.dump_json(discoveries_storage, starting_discoveries, encoding=encoding, indent=indent)
