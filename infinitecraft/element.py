@@ -1,3 +1,9 @@
+from typing import Any
+
+__all__ = (
+    "Element",
+)
+
 class Element:
     """
     An element object that represents an element of Infinite Craft.
@@ -62,7 +68,7 @@ class Element:
     NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the emoji cache JSON file if you need it.
     """
 
-    def __init__(self, *, name: str | None = None, emoji: str | None = None, is_first_discovery: bool | None = None) -> None:
+    def __init__(self, name: str | None = None, emoji: str | None = None, is_first_discovery: bool | None = None) -> None:
         self.name = name
         self.emoji = emoji
         self.is_first_discovery = is_first_discovery
@@ -76,10 +82,11 @@ class Element:
     def __repr__(self) -> str:
         return f"Element(name={repr(self.name)}, emoji={repr(self.emoji)}, is_first_discovery={repr(self.is_first_discovery)})"
     
-    def __eq__(self, __value: object) -> bool:
-        if isinstance(__value, Element) and __value.name == self.name:
+    def __eq__(self, __value: Any) -> bool:
+        if bool(self) == False and __value is None:
             return True
-        
+        elif isinstance(__value, Element) and __value.name == self.name:
+            return True
         else:
             return False
     
