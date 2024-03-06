@@ -45,21 +45,13 @@ def main(args: argparse.Namespace) -> None:
 
 def reset_subcommand(args: argparse.Namespace):
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
-    emoji_cache = os.path.expandvars(os.path.expanduser(args.emoji_cache))
     
     if not os.path.exists(discoveries_storage):
         parser.error(f"File '{discoveries_storage}' not found")
-    
-    if not os.path.exists(emoji_cache):
-        parser.error(f"File '{emoji_cache}' not found")
-    
-    InfiniteCraft.reset(
-        discoveries_storage=discoveries_storage,
-        emoji_cache=emoji_cache
-    )
+        
+    InfiniteCraft.reset(discoveries_storage=discoveries_storage)
 
     print(f'"{discoveries_storage}" file contents reset successfully.')
-    print(f'"{emoji_cache}" file contents reset successfully.')
 
 
 parser = argparse.ArgumentParser(
@@ -93,14 +85,14 @@ parser.set_defaults(func=main)
 
 
 reset_parser = parser.add_subparsers(
-    help = "reset discovered and emoji cache json files",
+    help = "reset discoveries file",
     metavar = "reset"
 )
 
 reset = reset_parser.add_parser(
     "reset",
     prog = "reset",
-    description = "reset discovered and emoji cache json files",
+    description = "reset discoveries file",
     allow_abbrev = False
 )
 
@@ -110,14 +102,6 @@ reset.add_argument(
     type = str,
     help = "Path to discoveries.json file (default: discoveries.json)",
     default = "discoveries.json"
-)
-
-reset.add_argument(
-    "-e", "--emoji-cache", 
-    action = "store",
-    type = str,
-    help = "Path to emoji_cache.json file (default: emoji_cache.json)",
-    default = "emoji_cache.json"
 )
 
 reset.set_defaults(func=reset_subcommand)
