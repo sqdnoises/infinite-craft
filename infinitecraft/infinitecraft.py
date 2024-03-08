@@ -230,7 +230,7 @@ class InfiniteCraft:
         """
         await self.close()
 
-    async def pair(self, first: Element, second: Element) -> Element:
+    async def pair(self, first: Element, second: Element, store: bool = True) -> Element:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
@@ -238,6 +238,7 @@ class InfiniteCraft:
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
+            `store` (`bool`): Whether to store the result `Element` to `InfiniteCraft.discoveries`. Defaults to `True`.
 
         ## Raises:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
@@ -283,29 +284,30 @@ class InfiniteCraft:
         else:
             self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
 
-        discoveries = self._update_discoveries(
-            name = result.name,
-            emoji = result.emoji,
-            is_first_discovery = result.is_first_discovery
-        )
-        
-        if discoveries is None:
-            discoveries = self._get_raw_discoveries()
+        if store:
+            discoveries = self._update_discoveries(
+                name = result.name,
+                emoji = result.emoji,
+                is_first_discovery = result.is_first_discovery
+            )
+            
+            if discoveries is None:
+                discoveries = self._get_raw_discoveries()
 
-        discoveries = [
-            self._element_cls(
-                name = discovery.get("name"),
-                emoji = discovery.get("emoji"),
-                is_first_discovery = discovery.get("is_first_discovery")
-            ) for discovery in discoveries
-        ]
-        
-        self._discoveries = discoveries
-        self.discoveries = self._discoveries.copy()
+            discoveries = [
+                self._element_cls(
+                    name = discovery.get("name"),
+                    emoji = discovery.get("emoji"),
+                    is_first_discovery = discovery.get("is_first_discovery")
+                ) for discovery in discoveries
+            ]
+            
+            self._discoveries = discoveries
+            self.discoveries = self._discoveries.copy()
 
         return result
 
-    async def merge(self, first: Element, second: Element) -> Element | None:
+    async def merge(self, first: Element, second: Element, store: bool = True) -> Element | None:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
@@ -315,6 +317,7 @@ class InfiniteCraft:
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
+            `store` (`bool`): Whether to store the result `Element` to `InfiniteCraft.discoveries`. Defaults to `True`.
 
         ## Raises:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
@@ -322,9 +325,9 @@ class InfiniteCraft:
         ## Returns:
             `Element`: The resulting element as an `Element` object or an `Element` with all attributes as `None` if they could not be paired.
         """
-        return await self.pair(first=first, second=second)
+        return await self.pair(first=first, second=second, store=store)
     
-    async def combine(self, first: Element, second: Element) -> Element | None:
+    async def combine(self, first: Element, second: Element, store: bool = True) -> Element | None:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
@@ -334,6 +337,7 @@ class InfiniteCraft:
         ## Arguments:
             `first` (`Element`): The first element.
             `second` (`Element`): The second element.
+            `store` (`bool`): Whether to store the result `Element` to `InfiniteCraft.discoveries`. Defaults to `True`.
 
         ## Raises:
             `TypeError`: If `first` or `second` is not an instance of `Element`.
@@ -341,7 +345,7 @@ class InfiniteCraft:
         ## Returns:
             `Element`: The resulting element as an `Element` object or an `Element` with all attributes as `None` if they could not be paired.
         """
-        return await self.pair(first=first, second=second)
+        return await self.pair(first=first, second=second, store=store)
 
     def get_discoveries(self, *, set_value: bool = False, check: Callable[[Element], bool] | None = None) -> Discoveries:
         """Get a `list` containing all discovered elements
