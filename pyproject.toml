@@ -37,9 +37,10 @@ windows = [
 ]
 
 dev = [
-    "pytest", "pytest-asyncio",
-    "setuptools", "bumpver", "pip-tools",
-    "build", "twine"
+    "pytest", "pytest-asyncio", # for testing
+    "fastapi", "uvicorn", # for mock api during testing
+    "bumpver", # for controlling version 
+    "pip-tools", "build", "twine" # for tools
 ]
 
 [tool.bumpver]
