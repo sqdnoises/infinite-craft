@@ -2,6 +2,7 @@ import os
 import json
 import time
 import aiohttp
+import asyncio
 from typing import (
     Callable,
     MutableMapping,
@@ -31,6 +32,8 @@ class InfiniteCraft:
 
     ## Arguments:
         `api_url` (`str`, optional): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
+        `api_rate_limit` (`int`, optional): The requests per minute the API can handle before ratelimiting. `0` if you want no ratelimit. Defaults to `400` requests per minute. Must be greater than or equal to `0`.
+        `ratelimit_retry` (`int`, optional): Seconds before retrying ratelimited request. Defaults to `1` second. Must be greater than or equal to `0`.
         `manual_control` (`bool`, optional): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
         `discoveries_storage` (`str`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
         `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
@@ -42,9 +45,11 @@ class InfiniteCraft:
     
     def __init__(
         self, *,
-        api_url: str                      = "https://neal.fun",
+        api_url: str                      = "https://neal.fun", # API to contact
+        api_rate_limit: int               = 400,                # 400 requests per minute
+        ratelimit_retry: int              = 1,                  # 1 second before retrying ratelimited request
         manual_control: bool              = False,
-        discoveries_storage: str          = "discoveries.json",
+        discoveries_storage: str          = "discoveries.json", # where to store the game data
         encoding: str                     = "utf-8",
         do_reset: bool                    = False,
         make_file: bool                   = True,
@@ -52,6 +57,9 @@ class InfiniteCraft:
         element_cls: type[Element]        = Element,
         logger: Any                       = Logger()
     ) -> None:
+        
+        if not api_rate_limit >= 0:
+            raise ValueError("api_rate_limit must be greater than or equal to 0")
         
         dsreset = False
                 
@@ -71,11 +79,15 @@ class InfiniteCraft:
             raise TypeError("element_cls must be a subclass of 'Element'")
         
         self._api_url = api_url
+        self._api_rate_limit = api_rate_limit
+        self.ratelimit_retry = ratelimit_retry
         self._manual_control = manual_control
         self._discoveries_location = discoveries_storage
         self._encoding = encoding
         self._element_cls = element_cls
         self._logger = logger
+
+        self._requests: list[float] = []
 
         if do_reset and not dsreset:
             self._logger.warn(f"Resetting discoveries JSON file ({discoveries_storage})")
@@ -249,6 +261,9 @@ class InfiniteCraft:
             "first":  first.name,
             "second": second.name
         }
+        
+        await self._wait_for_request() # wait for ratelimit requests to finish
+        
         async with self._session.get(f"/api/infinite-craft/pair", params=params) as response:
             result = await response.json(encoding=self._encoding)
         
@@ -390,6 +405,25 @@ class InfiniteCraft:
         Do not use this method as it is meant for `internal use only` and should not be used by the user.
         """
         self._session = aiohttp.ClientSession(*args, **kwargs)
+    
+    async def _wait_for_request(self) -> None:
+        """Manage requests to abide by the rate limit
+        
+        Takes the ratelimit requests per minute value from `self._api_rate_limit` and manages them in `self._requests`.
+
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
+        """
+        
+        await asyncio.sleep(0)
+        current = time.monotonic()
+        self._requests.append(current)
+        
+        while len(self._requests) > self._api_rate_limit and self._requests[0] + 60 > time.monotonic():
+            self._logger.warn(f"We are getting ratelimited! Retrying in {self.ratelimit_retry}s...")
+            await asyncio.sleep(self.ratelimit_retry)
+        
+        self._requests.remove(current)
 
     def _update_discoveries(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
         """Update the discoveries JSON file with a new element
