@@ -1,4 +1,5 @@
 import os
+import time
 import pytest
 import asyncio
 import uvicorn
@@ -122,13 +123,35 @@ async def test_InfiniteCraft():
     assert ping >= 0
     # -----------------------
     
+    # --- test_check_requests ---
+    
+    start = time.monotonic()
+    
     # --- test_check_pairing ---
     first = Element("Fire")
     second = Element("Water")
     
+    current = time.monotonic() - 50
+    game._requests = [current for i in range(game._api_rate_limit - 1)] # adding 1 less than ratelimit amount of dummy requests # type: ignore
+    
     result = await game.pair(first, second)
     assert result is not None
     # --------------------------
+    
+    time_taken = round(time.monotonic() - start)
+    
+    assert time_taken < 2 # 2 seconds for good measure
+    
+    current = time.monotonic() - 50
+    game._requests = [current for i in range(game._api_rate_limit)] # adding ratelimit amount of dummy requests # type: ignore
+    
+    start = time.monotonic()
+    result = await game.pair(first, second)
+    time_taken = round(time.monotonic() - start)
+    
+    assert time_taken >= 10 and time_taken < 12 # 10 seconds for "rate limit" and +2 seconds for good measure
+    
+    # ---------------------------
     
     await game.close() # test_end_session
     
@@ -182,13 +205,35 @@ async def test_InfiniteCraft_async_with2():
         
         assert game.closed == False # test_session_started
         
+        # --- test_check_requests ---
+        
+        start = time.monotonic()
+        
         # --- test_check_pairing ---
         first = Element("Fire")
         second = Element("Water")
         
+        current = time.monotonic() - 50
+        game._requests = [current for i in range(game._api_rate_limit - 1)] # adding 1 less than ratelimit amount of dummy requests # type: ignore
+        
         result = await game.pair(first, second)
         assert result is not None
         # --------------------------
+        
+        time_taken = round(time.monotonic() - start)
+        
+        assert time_taken < 2 # 2 seconds for good measure
+        
+        current = time.monotonic() - 50
+        game._requests = [current for i in range(game._api_rate_limit)] # adding ratelimit amount of dummy requests # type: ignore
+        
+        start = time.monotonic()
+        result = await game.pair(first, second)
+        time_taken = round(time.monotonic() - start)
+        
+        assert time_taken >= 10 and time_taken < 12 # 10 seconds for "rate limit" and +2 seconds for good measure
+        
+        # ---------------------------
     # --------------------------
 
 
