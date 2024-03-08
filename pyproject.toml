@@ -61,5 +61,5 @@ push = true
 "infinitecraft/__init__.py" = ['__version__ = "{version}"']
 "README.md" = [
     "# infinite-craft `{version}`",
-    "[![](https://img.shields.io/badge/infinite--craft_version-{version}-red)](https://github.com/sqdnoises/infinite-craft)"
+    "https://img.shields.io/badge/infinite--craft_version-{version}-red"
 ]
