@@ -1,11 +1,13 @@
 import os
 import json
 import inspect
+import uvicorn
 from typing import (
     Callable, Coroutine,
     Any, NoReturn,
     Mapping
 )
+from fastapi import FastAPI
 
 from .      import errors
 from .types import *
@@ -83,3 +85,27 @@ async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args
         return await __func(*args, **kwargs)
     else:
         return __func(*args, **kwargs)
+
+
+def mock_server(host: str = "127.0.0.1", port: int = 8080) -> None:
+    app = FastAPI() 
+
+    @app.get("/api/infinite-craft/pair")
+    async def pair(first: str, second: str) -> dict[str, str | bool]: # type: ignore
+        print(f"[MOCK API] PAIR: {first} + {second}")
+        print(f"[MOCK API] RESULT: 🌌 ???")
+
+        if len(first) == 0 or len(second) == 0:
+            return {
+                "result": "???",
+                "emoji": "🌌",
+                "isNew": False
+            }
+            
+        return {
+            "result": "???",
+            "emoji": "🌌",
+            "isNew": False
+        }
+
+    uvicorn.run(app, host=host, port=port)

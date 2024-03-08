@@ -24,7 +24,7 @@ SOFTWARE.
 
 import os
 import argparse
-from . import (
+from .      import (
     __title__,
     __license__,
     __copyright__,
@@ -33,7 +33,9 @@ from . import (
     __homepage__,
     InfiniteCraft
 )
+from .utils import mock_server
 
+# implement in future
 # if os.name == "nt":
 #     try:
 #         from pyreadline3 import Readline
@@ -74,6 +76,10 @@ def reset_subcommand(args: argparse.Namespace):
     print(f'"{discoveries_storage}" file contents reset successfully.')
 
 
+def mock_subcommand(args: argparse.Namespace):
+    mock_server(args.host, args.port)
+
+
 parser = argparse.ArgumentParser(
     prog = __title__,
     description = f"{__display_version__}\n"
@@ -99,12 +105,9 @@ parser.add_argument(
 parser.set_defaults(func=main)
 
 
-reset_parser = parser.add_subparsers(
-    help = "reset discoveries file",
-    metavar = "reset"
-)
+subparser = parser.add_subparsers(help="subcommands")
 
-reset = reset_parser.add_parser(
+reset = subparser.add_parser(
     "reset",
     prog = "reset",
     description = "reset discoveries file",
@@ -120,6 +123,31 @@ reset.add_argument(
 )
 
 reset.set_defaults(func=reset_subcommand)
+
+mock = subparser.add_parser(
+    "mock",
+    prog = "mock",
+    description = "mock server for testing purposes",
+    allow_abbrev = False
+)
+
+mock.add_argument(
+    "-H", "--host",
+    action = "store",
+    type = str,
+    help = "Hostname to host at",
+    default = "127.0.0.1"
+)
+
+mock.add_argument(
+    "-p", "-P", "--port",
+    action = "store",
+    type = int,
+    help = "Port to host at",
+    default = 8080
+)
+
+mock.set_defaults(func=mock_subcommand)
 
 
 def parse():
