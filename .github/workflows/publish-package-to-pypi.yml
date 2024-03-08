@@ -32,7 +32,7 @@ jobs:
   publish-to-pypi:
     name: >-
       Publish Python 🐍 package 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    if: contains(github.ref, 'tags')  # only publish to PyPI on tag pushes
     needs:
     - build
     runs-on: ubuntu-latest
@@ -53,8 +53,8 @@ jobs:
         path: dist/
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Publish distribution 📦 to PyPI
       run: |
         twine check dist/*
