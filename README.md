@@ -8,6 +8,6 @@ Documentation coming soon
 
 # `LICENSE`
 [![](https://img.shields.io/badge/LICENSE-GNU_LGPL--3.0-red?style=for-the-badge&labelColor=black)](COPYING.LESSER)\
-View the **[GNU LGPL-3.0](COPYING.LESSER)** and **[GNU GPL-3.0](COPYING)** licenses that come with this program.
+View the **[GNU LGPL-3.0](COPYING.LESSER)** and **[GNU GPL-3.0](COPYING)** licenses that come with this library.
 
 </div>
