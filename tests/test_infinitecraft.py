@@ -131,11 +131,17 @@ async def test_InfiniteCraft():
     first = Element("Fire")
     second = Element("Water")
     
+    # --- test_check_store_False ---
+    result = await game.pair(first, second, store=False)
+    assert result not in game.discoveries
+    # ------------------------------
+    
     current = time.monotonic() - 50
     game._requests = [current for i in range(game._api_rate_limit - 1)] # adding 1 less than ratelimit amount of dummy requests # type: ignore
     
     result = await game.pair(first, second)
     assert result is not None
+    assert result in game.discoveries
     # --------------------------
     
     time_taken = round(time.monotonic() - start)
@@ -212,6 +218,11 @@ async def test_InfiniteCraft_async_with2():
         # --- test_check_pairing ---
         first = Element("Fire")
         second = Element("Water")
+        
+        # --- test_check_store_False ---
+        result = await game.pair(first, second, store=False)
+        assert result not in game.discoveries
+        # ------------------------------
         
         current = time.monotonic() - 50
         game._requests = [current for i in range(game._api_rate_limit - 1)] # adding 1 less than ratelimit amount of dummy requests # type: ignore
