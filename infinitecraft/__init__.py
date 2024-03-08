@@ -15,7 +15,7 @@ __author__ = "SqdNoises"
 __license__ = "MIT License"
 __copyright__ = "Copyright (C) 2024-present SqdNoises, Neal Agarwal"
 __homepage__ = "https://github.com/sqdnoises/infinite-craft"
-__version__ = "1.0.0"
+__version__ = "1.0.8"
 __display_version__ = __title__ + " " + __version__
 
 from .element import *
