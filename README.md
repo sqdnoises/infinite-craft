@@ -1,8 +1,9 @@
 # infinite-craft `0.2.5`
-[![](https://img.shields.io/badge/infinite--craft_Version-0.2.5-red)]()
+[![](https://img.shields.io/badge/infinite--craft_version-0.2.5-red)](https://github.com/sqdnoises/infinite-craft)
+[![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/pypi/v/infinite-craft.svg)](#coughs)
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](/,github/workflows/pytest.yml)
-[![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)]()
+[![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
 \
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 
