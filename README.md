@@ -22,6 +22,7 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 - **[Key Features](#key-features)**
 - **[Installation](#installation)**
   - **[Dev requirements](#dev-requirements)**
+  - **[In-dev installation](#in-dev-installation)**
 - **[Usage Examples](#usage-examples)**
   - **[CLI](#cli)**
 - **[How does it work?](#how-does-it-work)**
