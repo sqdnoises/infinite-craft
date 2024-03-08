@@ -160,7 +160,7 @@ This library basically contacts the URL: https://neal.fun/api/infinite-craft/pai
 tricks it with some headers, and handles everything accordingly. Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
 
 # To-do
-- [ ] Release version 1.0.0 on PyPI
+- [x] Release version 1.0.0 on PyPI
 - [ ] Make a discord server for support
 - [ ] Add a runnable and configurable CLI mock API server
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
