@@ -14,7 +14,7 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 - Built-in ratelimiting handler
 - Custom API support
 - Asynchronous library
-- Conveniently access discovered eleme/nts
+- Conveniently access discovered elements
 
 # Table of Contents:
 - **[Key Features](#key-features)**
