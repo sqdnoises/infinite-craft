@@ -2,9 +2,8 @@ name: Publish Package to PyPI
 
 on:
   push:
-    branches-ignore: [ "main" ]
-  pull_request:
-    branches-ignore: [ "main" ]
+    tags:
+      - "*.*.*"
 
 jobs:
   publish-to-pypi:
