@@ -18,9 +18,9 @@ jobs:
       with:
         python-version: "3.x"
     - name: Install requirements
-      run: >-
+      run: |
         pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -r requirements.txt
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
     - name: Store the distribution packages
