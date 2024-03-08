@@ -33,7 +33,6 @@ class InfiniteCraft:
     ## Arguments:
         `api_url` (`str`, optional): The API URL to contact. Defaults to `"https://neal.fun/api/infinite-craft"`.
         `api_rate_limit` (`int`, optional): The requests per minute the API can handle before ratelimiting. `0` if you want no ratelimit. Defaults to `400` requests per minute. Must be greater than or equal to `0`.
-        `ratelimit_retry` (`int`, optional): Seconds before retrying ratelimited request. Defaults to `1` second. Must be greater than or equal to `0`.
         `manual_control` (`bool`, optional): Manually control `InfiniteCraft.start()` and `InfiniteCraft.stop()`. Useful when using `async with` multiple times. Defaults to `False`.
         `discoveries_storage` (`str`, optional): Path to discoveries storage JSON. Defaults to `"discoveries.json"`.
         `encoding` (`str`, optional): Encoding to use while reading or saving json files. Defaults to `"utf-8"`.
@@ -47,7 +46,6 @@ class InfiniteCraft:
         self, *,
         api_url: str                      = "https://neal.fun", # API to contact
         api_rate_limit: int               = 400,                # 400 requests per minute
-        ratelimit_retry: int              = 1,                  # 1 second before retrying ratelimited request
         manual_control: bool              = False,
         discoveries_storage: str          = "discoveries.json", # where to store the game data
         encoding: str                     = "utf-8",
@@ -80,7 +78,6 @@ class InfiniteCraft:
         
         self._api_url = api_url
         self._api_rate_limit = api_rate_limit
-        self.ratelimit_retry = ratelimit_retry
         self._manual_control = manual_control
         self._discoveries_location = discoveries_storage
         self._encoding = encoding
@@ -420,8 +417,8 @@ class InfiniteCraft:
         self._requests.append(current)
         
         while len(self._requests) > self._api_rate_limit and self._requests[0] + 60 > time.monotonic():
-            self._logger.warn(f"We are getting ratelimited! Retrying in {self.ratelimit_retry}s...")
-            await asyncio.sleep(self.ratelimit_retry)
+            self._logger.warn(f"We are getting ratelimited! Retrying in {(self._requests[0] + 60) - time.monotonic()}s...")
+            await asyncio.sleep((self._requests[0] + 60) - time.monotonic())
         
         self._requests.remove(current)
 
