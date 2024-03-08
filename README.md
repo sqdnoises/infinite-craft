@@ -23,6 +23,7 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 - **[Usage Examples](#usage-examples)**
   - **[CLI](#cli)**
 - **[How does it work?](#how-does-it-work)**
+- **[To-do](#to-do)**
 - **[Documentation](#documentation)**
 - **[License](#license)**
 
@@ -155,6 +156,12 @@ infinite-craft reset -d "/path/to/discoveries.json"
 # How does it work?
 This library basically contacts the URL: https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name \
 tricks it with some headers, and handles everything accordingly. Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
+
+# To-do
+- [ ] Release version 1.0.0 on PyPI
+- [ ] Make a discord server for support
+- [ ] Add a runnable and configurable CLI mock API server
+- [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
 # Documentation
 Documentation coming soon
