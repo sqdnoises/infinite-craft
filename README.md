@@ -103,7 +103,7 @@ async def main():
 asyncio.run(main())
 ```
 
-Example that is basically like manual control except we don't need to use `async with` control
+Example that is basically like manual control except we don't need to use `async with`
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft
