@@ -1,5 +1,5 @@
-# infinite-craft `1.0.4`
-[![](https://img.shields.io/badge/infinite--craft_version-1.0.4-red)](https://github.com/sqdnoises/infinite-craft)
+# infinite-craft `1.0.5`
+[![](https://img.shields.io/badge/infinite--craft_version-1.0.5-red)](https://github.com/sqdnoises/infinite-craft)
 [![](https://img.shields.io/pypi/v/infinite-craft.svg)](#coughs)
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
