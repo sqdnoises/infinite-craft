@@ -41,7 +41,10 @@ jobs:
     - name: Publish distribution 📦 to PyPI
       run: |
         twine check dist/*
-        twine upload dist/* -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
+        twine upload dist/*
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
 
   github-release:
     name: >-
