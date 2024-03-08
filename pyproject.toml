@@ -58,5 +58,8 @@ push = true
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
-"README.md" = ["{version}"]
 "infinitecraft/__init__.py" = ['__version__ = "{version}"']
+"README.md" = [
+    "# infinite-craft `{version}`",
+    "[![](https://img.shields.io/badge/infinite--craft_version-{version}-red)](https://github.com/sqdnoises/infinite-craft)"
+]
