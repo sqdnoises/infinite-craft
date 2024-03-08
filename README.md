@@ -171,8 +171,16 @@ pip install git+https://github.com/sqdnoises/infinite-craft.git
 
 <div align="center">
 
-# `LICENSE`
-[![](https://img.shields.io/badge/LICENSE-GNU_LGPL--3.0-red?style=for-the-badge&labelColor=black)](COPYING.LESSER)\
-View the **[GNU LGPL-3.0](COPYING.LESSER)** and **[GNU GPL-3.0](COPYING)** licenses that come with this program.
+# License
+[![](https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge&labelColor=black)](LICENSE)\
+View the **[MIT License](LICENSE)** license that comes with this library.
+
+</div>
+
+---
+
+<div align="center">
+
+### 🌟 Please star the repo and show some love 💖
 
 </div>

@@ -13,7 +13,7 @@ authors = [
 ]
 description = "An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs."
 readme = "README.md"
-license = { file = "COPYING.LESSER" }
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
