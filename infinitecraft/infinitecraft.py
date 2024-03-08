@@ -230,7 +230,7 @@ class InfiniteCraft:
         """
         await self.close()
 
-    async def pair(self, first: Element, second: Element, store: bool = True) -> Element:
+    async def pair(self, first: Element, second: Element, *, store: bool = True) -> Element:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
@@ -307,7 +307,7 @@ class InfiniteCraft:
 
         return result
 
-    async def merge(self, first: Element, second: Element, store: bool = True) -> Element | None:
+    async def merge(self, first: Element, second: Element, *, store: bool = True) -> Element | None:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
@@ -327,7 +327,7 @@ class InfiniteCraft:
         """
         return await self.pair(first=first, second=second, store=store)
     
-    async def combine(self, first: Element, second: Element, store: bool = True) -> Element | None:
+    async def combine(self, first: Element, second: Element, *, store: bool = True) -> Element | None:
         """Pair two elements and return the resulting element
 
         Returns an `Element` with all attributes as `None` if they could not be paired.
