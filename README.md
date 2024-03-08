@@ -1,6 +1,6 @@
 # infinite-craft `1.1.0`
 [![](https://img.shields.io/badge/infinite--craft_version-1.1.0-red)](https://github.com/sqdnoises/infinite-craft)
-[![](https://img.shields.io/pypi/v/infinite-craft.svg)](#coughs)
+[![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
 \
@@ -43,8 +43,10 @@ pip install -U infinite-craft
 
 **NOTE:** If `pip` is not on PATH, you can use `python3 -m pip` (for Linux/MacOS) or `python -m pip` (for Windows) instead.
 
+[**View `infinite-craft` on PyPI.**](https://pypi.org/project/infinite-craft/)
+
 ### Dev requirements
-To install the dev requirements too, either clone this repo and install requirements:
+To install the dev requirements, either clone this repo and install requirements:
 ```
 git clone https://github.com/sqdnoises/infinite-craft
 pip install -r requirements.txt
@@ -54,6 +56,16 @@ or you can install the extra `dev`:
 pip install infinite-craft[dev]
 ```
 Recommended to use a virtual environment (`venv`) while using dev requirements.
+
+### In-dev installation
+If you want to use the in-dev version of this library, you can install it by doing (must have `git` installed):
+```
+pip install git+https://github.com/sqdnoises/infinite-craft.git
+```
+
+**Warning:** The library might be unstable especially if the build `Library Tests` is failing. Which you can see below.
+
+[![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
 
 # Usage Examples
 By using `async with`
@@ -167,17 +179,7 @@ tricks it with some headers, and handles everything accordingly. Everything is h
 
 # Documentation
 Documentation coming soon
-However everything is documented well in the code, you can check the below section to see how to install this in-development library.\
-**Warning:** Might be unstable especially if the builds (Library Tests) are failing.
-
-## *coughs*
-Sorry, the library is still in beta. Once v1.0.0 comes out, the library will be released to [PyPI](https://pypi.org/).
-
-Butttt if you still wanna use the in-dev version of this library, you can install it by doing (must have `git` installed):
-```
-pip install git+https://github.com/sqdnoises/infinite-craft.git
-```
-**Warning:** This library might be unstable especially if the builds (Library Tests) are failing.
+However everything is documented well in the code with docstrings.
 
 <div align="center">
 
