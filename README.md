@@ -162,7 +162,7 @@ tricks it with some headers, and handles everything accordingly. Everything is h
 # To-do
 - [x] Release version 1.0.0 on PyPI
 - [ ] Make a discord server for support
-- [ ] Add a runnable and configurable CLI mock API server
+- [x] Add a runnable and configurable CLI mock API server
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
 # Documentation
