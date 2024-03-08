@@ -32,9 +32,10 @@ infinite-craft = "infinitecraft.__main__:parse"
 infinitecraft = "infinitecraft.__main__:parse"
 
 [project.optional-dependencies]
-windows = [
-    "pyreadline3"
-]
+# plan to use in future
+# windows = [
+#     "pyreadline3"
+# ]
 
 dev = [
     "pytest", "pytest-asyncio", # for testing
