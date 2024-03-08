@@ -7,6 +7,15 @@ __all__ = (
 )
 
 
+color_log_types = {
+    "info":  "\033[38;2;208;209;192m",
+    "warn":  "\033[38;2;217;135;22m",
+    "error": "\033[38;2;224;60;27m",
+    "fatal": "\033[38;2;255;0;0m",
+    "debug": "\033[38;2;21;122;230m"
+}
+
+
 class Logger:
     """
     #### Log Levels:
@@ -23,9 +32,10 @@ class Logger:
     `5` - debug
     """
 
-    def __init__(self, prefix: Callable[[str], str] | None = None, log_level: int = 4) -> None:
+    def __init__(self, prefix: Callable[[str], str] | None = None, log_level: int = 4, color_log_types: dict[str, str] = color_log_types) -> None:
         self._prefix = prefix
         self.log_level = log_level
+        self._log_colors = color_log_types
 
         if self._prefix is None:
             self._prefix = self._prefix_handler
@@ -61,6 +71,6 @@ class Logger:
     def debug(self, message: str | Any) -> None:
         self.log("debug", message)
     
-    @staticmethod
-    def _prefix_handler(log_type: str) -> str:
-        return f"{datetime.now()} [INFINITE CRAFT] " + "{:<5}".format(log_type.upper()) + " "
+    def _prefix_handler(self, log_type: str) -> str:
+        return f"\033[38;2;88;92;89m{datetime.now()}\033[0m \033[38;2;222;235;47m[INFINITE CRAFT]\033[0m " + self._log_colors.get(log_type, "\033[0m") + "{:<5}".format(log_type.upper()) + "\033[0m "
+        #       "0000-00-00 00:00:00.000000                 [INFINITE CRAFT]                                 INFO/WARN/ERROR/FATAL/DEBUG                                                    Message"
