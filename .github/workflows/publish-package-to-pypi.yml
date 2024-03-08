@@ -1,41 +1,17 @@
-name: Publish Python PyPI
+name: Publish Package to PyPI
 
 on:
   push:
-    branches: [ "main" ]
+    branches-ignore: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches-ignore: [ "main" ]
 
 jobs:
-  build:
-    name: Build distribution 📦
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - name: Install requirements
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
-
   publish-to-pypi:
     name: |
       Publish Python 🐍 package 📦 to PyPI
-    if: contains(github.ref, 'tags')  # only publish to PyPI on tag pushes
-    needs:
-    - build
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
@@ -56,11 +32,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Download all the dists
-      uses: actions/download-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
+    - name: Build package
+      run: |
+        python -m build
+    - name: Test package
+      run: |
+        twine check dist/*
     - name: Publish distribution 📦 to PyPI
       run: |
         twine check dist/*
