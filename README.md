@@ -176,6 +176,7 @@ tricks it with some headers, and handles everything accordingly. Everything is h
 - [x] Release version 1.0.0 on PyPI
 - [ ] Make a discord server for support
 - [x] Add a runnable and configurable CLI mock API server
+- [ ] Make docs
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
 # Documentation
