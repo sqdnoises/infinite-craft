@@ -172,7 +172,7 @@ However everything is documented well in the code, you can check the below secti
 Sorry, the library is still in beta. Once v1.0.0 comes out, the library will be released to [PyPI](https://pypi.org/).
 
 Butttt if you still wanna use the in-dev version of this library, you can install it by doing (must have `git` installed):
-```py
+```
 pip install git+https://github.com/sqdnoises/infinite-craft.git
 ```
 **Warning:** This library might be unstable especially if the builds (Library Tests) are failing.
