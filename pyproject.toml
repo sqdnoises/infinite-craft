@@ -21,7 +21,8 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = [
-    "aiohttp"
+    "aiohttp",
+    "fastapi", "uvicorn" # for mock api
 ]
 
 [project.urls]
@@ -39,7 +40,6 @@ infinitecraft = "infinitecraft.__main__:parse"
 
 dev = [
     "pytest", "pytest-asyncio", # for testing
-    "fastapi", "uvicorn", # for mock api during testing
     "bumpver", # for controlling version 
     "pip-tools", "build", "twine" # for tools
 ]
