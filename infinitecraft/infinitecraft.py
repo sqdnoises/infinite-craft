@@ -195,10 +195,14 @@ class InfiniteCraft:
             "second": "Water"
         }
         
+        request = await self._wait_for_request() # wait for ratelimit requests to finish
+        
         start = time.monotonic()
         async with self._session.get(f"/api/infinite-craft/pair", params=params):
             end = time.monotonic() - start
 
+        self._done_with_request(request) # mark request as done
+        
         self._logger.debug(f"API response time: {end}s")
 
         return end
