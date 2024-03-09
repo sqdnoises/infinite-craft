@@ -284,10 +284,12 @@ class InfiniteCraft:
             "second": second.name
         }
         
-        await self._wait_for_request() # wait for ratelimit requests to finish
+        request = await self._wait_for_request() # wait for ratelimit requests to finish
         
         async with self._session.get(f"/api/infinite-craft/pair", params=params) as response:
             result = await response.json(encoding=self._encoding)
+        
+        self._done_with_request(request) # mark request as done
         
         if result == {
             "result": "Nothing",
@@ -431,7 +433,7 @@ class InfiniteCraft:
         """
         self._session = aiohttp.ClientSession(*args, **kwargs)
     
-    async def _wait_for_request(self) -> None:
+    async def _wait_for_request(self) -> float:
         """Manage requests to abide by the rate limit
         
         Takes the ratelimit requests per minute value from `self._api_rate_limit` and manages them in `self._requests`.
@@ -448,7 +450,15 @@ class InfiniteCraft:
             self._logger.warn(f"We are getting ratelimited! Retrying in {(self._requests[0] + 60) - time.monotonic()}s...")
             await asyncio.sleep((self._requests[0] + 60) - time.monotonic())
         
-        self._requests.remove(current)
+        return current
+    
+    def _done_with_request(self, request: float) -> None:
+        """Removes the finished request from queue (`self._requests`)
+        
+        Please do not use this function as it is meant for `internal use only` and should not be used by the user.
+        Only use this if you know what you are doing.
+        """
+        self._requests.remove(request)
 
     def _update_discoveries(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> RawDiscoveries | None:
         """Update the discoveries JSON file with a new element
