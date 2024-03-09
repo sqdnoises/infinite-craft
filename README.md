@@ -166,6 +166,16 @@ Reset your discoveries JSON file to the initial 4 elements
 infinite-craft reset -d "/path/to/discoveries.json"
 ```
 
+Run Mock API
+```
+infinite-craft mock
+```
+
+Run Mock API on custom hostname and port
+```
+infinite-craft mock --host 0.0.0.0 --port 80
+```
+
 **NOTE:** If `infinite-craft` or `infinitecraft` are not on PATH, you can use `python3 -m infinite-craft` or `python3 -m infinitecraft` (Linux/MacOS) or `python -m infinite-craft` or `python -m infinitecraft` (Windows) instead.
 
 # How does it work?
