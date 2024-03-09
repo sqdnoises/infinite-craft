@@ -166,7 +166,7 @@ Reset your discoveries JSON file to the initial 4 elements
 infinite-craft reset -d "/path/to/discoveries.json"
 ```
 
-**NOTE:** If `infinite-craft` or `infinitecraft` are not on PATH, you can use `python3 -m infinite-craft` or `python3 -m infinitecraft` (Linux/MacOS) or `python3 -m infinite-craft` or `python3 -m infinitecraft` (Windows) instead.
+**NOTE:** If `infinite-craft` or `infinitecraft` are not on PATH, you can use `python3 -m infinite-craft` or `python3 -m infinitecraft` (Linux/MacOS) or `python -m infinite-craft` or `python -m infinitecraft` (Windows) instead.
 
 # How does it work?
 This library basically contacts the URL: https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name \
@@ -179,8 +179,8 @@ tricks it with some headers, and handles everything accordingly. Everything is h
 - [ ] Make docs
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
-# Documentation
-Documentation coming soon
+# Documentation 📚
+Documentation coming soon\
 However everything is documented well in the code with docstrings.
 
 <div align="center">
