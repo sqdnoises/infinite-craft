@@ -149,7 +149,7 @@ async def main():
         second = Element("Chicken")
         
         print(f"Pairing elements: {first} and {second}")
-        result = await game.pair(first, second) # Pair Shawarma and Chicken
+        result = await game.pair(first, second, store=False) # Pair Shawarma and Chicken
         print(f"Result: {result}")
 
 asyncio.run(main())
