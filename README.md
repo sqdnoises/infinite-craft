@@ -5,10 +5,11 @@
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
 \
+An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
+
+### `infinite-craft`'s GitHub Actions Status
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
-\
-An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 
 # Key Features:
 - Stores elements in a neatly indented JSON file
