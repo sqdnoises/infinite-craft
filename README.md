@@ -67,7 +67,7 @@ If you want to use the in-dev version of this library, you can install it by doi
 pip install git+https://github.com/sqdnoises/infinite-craft.git
 ```
 
-**Warning:** The library might be unstable especially if the build `Library Tests` is failing. Which you can see below.
+**Warning:** The library might be unstable especially if `Library Tests` are failing. Which you can see below.
 
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
 
