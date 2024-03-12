@@ -52,6 +52,7 @@ pip install -U infinite-craft
 To install the dev requirements, either clone this repo and install requirements:
 ```
 git clone https://github.com/sqdnoises/infinite-craft
+cd infinite-craft
 pip install -r requirements.txt
 ```
 or you can install the extra `dev`:
