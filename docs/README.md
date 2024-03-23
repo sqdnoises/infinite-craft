@@ -35,7 +35,7 @@ infinite-craft is an **API Wrapper** of [Neal's Infinite Craft game](https://nea
 * Conveniently access discovered elements
 
 {% hint style="info" %}
-Do you have any issues or problems? Join our Discord server to get help or [make a GitHub issue](https://github.com/sqdnoises/infinite-craft/issues/new).
+Do you have any issues or problems? Join our [Discord server](https://discord.gg/sAecE3YVEe) to get help or [make a GitHub issue](https://github.com/sqdnoises/infinite-craft/issues/new).
 {% endhint %}
 
 ## How does it work?
