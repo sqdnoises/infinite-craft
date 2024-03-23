@@ -1,45 +1,67 @@
-# infinite-craft `1.1.3`
-[![](https://img.shields.io/badge/infinite--craft_version-1.1.3-red)](https://github.com/sqdnoises/infinite-craft)
-[![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
-[![](https://img.shields.io/pypi/dm/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
-[![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
-[![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
-\
+---
+cover: .gitbook/assets/cover.png
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: full
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
+---
+
+# 📖 Introduction
+
+## infinite-craft `1.1.3`
+
+[![](https://img.shields.io/badge/infinite--craft\_version-1.1.3-red)](https://github.com/sqdnoises/infinite-craft) [![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/) [![](https://img.shields.io/pypi/dm/infinite-craft.svg)](https://pypi.org/project/infinite-craft/) [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE/) [![](https://img.shields.io/badge/Python\_Version-3.10\_|\_3.11\_|\_3.12-blue)](https://python.org)\
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 
-### `infinite-craft`'s GitHub Actions Status
-[![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
-[![](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
+#### `infinite-craft`'s GitHub Actions Status
 
-# Key Features:
-- Stores elements in a neatly indented JSON file
-- Starts with the four main elements: Water, Fire, Wind, Earth
-- Uses [`neal.fun`](https://neal.fun/)'s [Infinite Craft](https://neal.fun/infinite-craft/) API to pair elements together
-- Built-in ratelimiting handler
-- Custom API support
-- Asynchronous library
-- Conveniently access discovered elements
+[![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml) [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
 
-# Table of Contents:
-- **[Key Features](#key-features)**
-- **[Installation](#installation)**
-  - **[Dev requirements](#dev-requirements)**
-  - **[In-dev installation](#in-dev-installation)**
-- **[Usage Examples](#usage-examples)**
-  - **[CLI](#cli)**
-- **[How does it work?](#how-does-it-work)**
-- **[To-do](#to-do)**
-- **[Documentation](#documentation)**
-- **[License](#license)**
+## Key Features:
 
-# Installation
+* Stores elements in a neatly indented JSON file
+* Starts with the four main elements: Water, Fire, Wind, Earth
+* Uses [`neal.fun`](https://neal.fun/)'s [Infinite Craft](https://neal.fun/infinite-craft/) API to pair elements together
+* Built-in ratelimiting handler
+* Custom API support
+* Asynchronous library
+* Conveniently access discovered elements
+
+## Table of Contents:
+
+* [**Key Features**](./#key-features)
+* [**Installation**](./#installation)
+  * [**Dev requirements**](./#dev-requirements)
+  * [**In-dev installation**](./#in-dev-installation)
+* [**Usage Examples**](./#usage-examples)
+  * [**CLI**](./#cli)
+* [**How does it work?**](./#how-does-it-work)
+* [**To-do**](./#to-do)
+* [**Documentation**](./#documentation)
+* [**License**](./#license)
+
+## Installation
+
 Requires **Python 3.10** or above.\
 To install, run:
+
 ```
 pip install infinite-craft
 ```
 
 To update, run:
+
 ```
 pip install -U infinite-craft
 ```
@@ -48,21 +70,28 @@ pip install -U infinite-craft
 
 [**View `infinite-craft` on PyPI.**](https://pypi.org/project/infinite-craft/)
 
-### Dev requirements
+#### Dev requirements
+
 To install the dev requirements, either clone this repo and install requirements:
+
 ```
 git clone https://github.com/sqdnoises/infinite-craft
 cd infinite-craft
 pip install -r requirements.txt
 ```
+
 or you can install the extra `dev`:
+
 ```
 pip install infinite-craft[dev]
 ```
+
 Recommended to use a virtual environment (`venv`) while using dev requirements.
 
-### In-dev installation
+#### In-dev installation
+
 If you want to use the in-dev version of this library, you can install it by doing (must have `git` installed):
+
 ```
 pip install git+https://github.com/sqdnoises/infinite-craft.git
 ```
@@ -71,8 +100,10 @@ pip install git+https://github.com/sqdnoises/infinite-craft.git
 
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
 
-# Usage Examples
+## Usage Examples
+
 By using `async with`
+
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft
@@ -87,6 +118,7 @@ asyncio.run(main())
 ```
 
 Another `async with` example with manual session control
+
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft
@@ -107,6 +139,7 @@ asyncio.run(main())
 ```
 
 Example that is basically like manual control except we don't need to use `async with`
+
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft
@@ -126,6 +159,7 @@ asyncio.run(main())
 ```
 
 Example that pings the API to check its latency
+
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft
@@ -139,6 +173,7 @@ asyncio.run(main())
 ```
 
 Example that pairs two user-defined elements and doesn't store the result in `game.discoveries`
+
 ```py
 import asyncio
 from infinitecraft import InfiniteCraft, Element
@@ -155,59 +190,60 @@ async def main():
 asyncio.run(main())
 ```
 
-## CLI
+### CLI
+
 By default, two CLI apps are also installed. `infinite-craft` and `infinitecraft`.\
 You can use either, both do the exact same thing.
 
 Display help:
+
 ```
 infinite-craft -h
 ```
 
 Reset your discoveries JSON file to the initial 4 elements
+
 ```
 infinite-craft reset -d "/path/to/discoveries.json"
 ```
 
 Run Mock API
+
 ```
 infinite-craft mock
 ```
 
 Run Mock API on custom hostname and port
+
 ```
 infinite-craft mock --host 0.0.0.0 --port 80
 ```
 
 **NOTE:** If `infinite-craft` or `infinitecraft` are not on PATH, you can use `python3 -m infinite-craft` or `python3 -m infinitecraft` (Linux/MacOS) or `python -m infinite-craft` or `python -m infinitecraft` (Windows) instead.
 
-# How does it work?
-This library basically contacts the URL: https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name \
+## How does it work?
+
+This library basically contacts the URL: https://neal.fun/api/infinite-craft/pair?first=element+name\&second=element+name\
 tricks it with some headers, and handles everything accordingly. Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
 
-# To-do
-- [x] Release version 1.0.0 on PyPI
-- [ ] Make a discord server for support
-- [x] Add a runnable and configurable CLI mock API server
-- [ ] Make docs
-- [ ] Make a playable Infinite Craft CLI game (interactive, probably)
+## To-do
 
-# Documentation 📚
+* [x] Release version 1.0.0 on PyPI
+* [ ] Make a discord server for support
+* [x] Add a runnable and configurable CLI mock API server
+* [ ] Make docs
+* [ ] Make a playable Infinite Craft CLI game (interactive, probably)
+
+## Documentation 📚
+
 Documentation coming soon\
 However everything is documented well in the code with docstrings.
 
-<div align="center">
+## License
 
-# License
-[![](https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge&labelColor=black)](LICENSE)\
-View the **[MIT License](LICENSE)** license that comes with this library.
+[![](https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge\&labelColor=black)](LICENSE/)\
+View the [**MIT License**](LICENSE/) license that comes with this library.
 
-</div>
+***
 
----
-
-<div align="center">
-
-### 🌟 Please star the repo and show some love 💖
-
-</div>
+🌟 Please star the repo and show some love 💖
