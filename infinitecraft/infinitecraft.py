@@ -378,7 +378,7 @@ class InfiniteCraft:
         return await self.pair(first=first, second=second, store=store)
 
     def get_discoveries(self, *, set_value: bool = False, check: Callable[[Element], bool] | None = None) -> Discoveries:
-        """Get a `list` containing all discovered elements
+        """Get a `list` containing all discovered elements fetched from `discoveries.json`
 
         ## Arguments:
             `set_value` (`bool`, optional): Whether to set the value for the `InfiniteCraft.discoveries` attribute after getting it. Defaults to `None`.
@@ -412,7 +412,7 @@ class InfiniteCraft:
         return discoveries
     
     def get_discovery(self, name: str, *, from_file: bool = False) -> Element | None:
-        """Get a discovered `Element`
+        """Get a discovered `Element` from `InfiniteCraft.discoveries`
 
         ## Arguments:
             `name` (`str`): Name of element to get.
