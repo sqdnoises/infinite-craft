@@ -1,5 +1,4 @@
 # Table of contents
 
-* [📖 Introduction](docs/README.md)
-* [⚒️ Getting Started](docs/getting-started.md)
-* [🔨 Testing infinite-craft](docs/tests/README.md)
+* [📖 Introduction](docs/Introduction.md)
+* [⚒️ Getting Started](docs/Getting-Started.md)
