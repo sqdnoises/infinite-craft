@@ -30,6 +30,7 @@ Need help? Join our community! -> https://discord.gg/FF2fSN2sJd
 - **[Usage Examples](#usage-examples)**
   - **[CLI](#cli)**
 - **[How does it work?](#how-does-it-work)**
+- **[Discord](#discord)**
 - **[To-do](#to-do)**
 - **[Documentation](#documentation)**
 - **[License](#license)**
