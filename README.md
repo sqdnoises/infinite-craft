@@ -7,6 +7,8 @@
 \
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 
+Need help? Join our community! -> https://discord.gg/FF2fSN2sJd
+
 ### `infinite-craft`'s GitHub Actions Status
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
@@ -185,16 +187,21 @@ infinite-craft mock --host 0.0.0.0 --port 80
 This library basically contacts the URL: https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name \
 tricks it with some headers, and handles everything accordingly. Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
 
+# Discord
+Need help with `infinite-craft`?\
+Join the Discord server! -> https://discord.gg/FF2fSN2sJd
+
 # To-do
-- [x] Release version 1.0.0 on PyPI
-- [ ] Make a discord server for support
-- [x] Add a runnable and configurable CLI mock API server
+- [x] ~~Release version 1.0.0 on PyPI~~
+- [x] ~~Make a discord server for support~~ Join our community! https://discord.gg/FF2fSN2sJd
+- [x] ~~Add a runnable and configurable CLI mock API server~~
 - [ ] Make docs
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
 # Documentation 📚
 Documentation coming soon\
-However everything is documented well in the code with docstrings.
+However everything is documented well in the code with docstrings.\
+You can see the in-development documentation page [here](https://sqdnoises.gitbook.io/infinite-craft).
 
 <div align="center">
 
