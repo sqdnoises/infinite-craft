@@ -1,4 +1,4 @@
 # Table of contents
 
-* [📖 Introduction](docs/Introduction.md)
-* [⚒️ Getting Started](docs/Getting-Started.md)
+* [📖 Introduction](Introduction.md)
+* [⚒️ Getting Started](Getting-Started.md)
