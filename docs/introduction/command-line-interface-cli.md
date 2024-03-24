@@ -4,7 +4,8 @@ description: Interacting with the infinite-craft Command Line Interface (or CLI)
 
 # 💻 Command Line Interface (CLI)
 
-When you install Two CLI apps are installed. `infinite-craft` and `infinitecraft`.\
+When you install `infinite-craft`, two CLI apps are installed. `infinite-craft` and `infinitecraft`.
+
 You can use either, both do the exact same thing.
 
 ## Display help
@@ -47,7 +48,18 @@ infinite-craft mock --host 0.0.0.0 --port 80
 
 **NOTE:** If `infinite-craft` or `infinitecraft` is not on PATH, you can use:
 
-* `python3 -m infinite-craft` (for Linux/MacOS)
-* `python -m infinite-craft` (for Windows)
+{% tabs %}
+{% tab title="Linux/MacOS" %}
+```
+python3 -m infinite-craft
+```
+{% endtab %}
+
+{% tab title="Windows" %}
+```
+python -m infinite-craft
+```
+{% endtab %}
+{% endtabs %}
 
 Same with `infinitecraft`.
