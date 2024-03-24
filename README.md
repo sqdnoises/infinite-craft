@@ -121,6 +121,6 @@ View the **[MIT License](LICENSE)** license that comes with this library.
 
 <div align="center">
 
-### 🌟 Please star the repo and show some love 💖
+### 🌟 Please [star the repo](https://github.com/sqdnoises/infinite-craft/stargazers) and show some love 💖
 
 </div>
