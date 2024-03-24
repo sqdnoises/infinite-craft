@@ -4,7 +4,7 @@ description: Here's a few examples to get started with infinite-craft.
 
 # 🍀 Code Examples
 
-The infinite-craft library's module is named `infinitecraft`.
+The `infinite-craft` library's module is named `infinitecraft`.
 
 You can import the `InfiniteCraft` class to deal with the game.
 
