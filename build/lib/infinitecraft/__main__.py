@@ -61,7 +61,7 @@ def main(args: argparse.Namespace) -> None:
         print("License: " + __license__)
         print(f"For more information, see: {__homepage__}#license")
         print()
-        print("Need help?")
+        print("Need help with the code?")
         print(f"Join our coummunity server! {__discord__}")
         print()
         print("Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/")
@@ -90,10 +90,7 @@ parser = argparse.ArgumentParser(
     description = f"{__display_version__}\n"
                   f"{__copyright__}\n"
                   f"License: {__license__}\n"
-                  f"For more information, see: {__homepage__}#license"
-                   ""
-                  f"Need help?"
-                  f"Join our coummunity server! {__discord__}",
+                  f"For more information, see: {__homepage__}?tab=readme-ov-file#license",
     allow_abbrev = False,
     formatter_class = argparse.RawDescriptionHelpFormatter
 )
