@@ -22,7 +22,7 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 
 # Discord Server
 Need help? Join our community!\
--> **https://discord.gg/FF2fSN2sJd**
+-> https://discord.gg/FF2fSN2sJd
 
 # Table of Contents:
 - **[Key Features](#key-features)**
