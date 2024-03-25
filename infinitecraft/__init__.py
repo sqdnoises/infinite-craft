@@ -2,7 +2,10 @@
 An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
 Copyright (C) 2024-present SqdNoises, Neal Agarwal
 License: MIT License
-To view the full license, visit https://github.com/sqdnoises/infinite-craft?tab=readme-ov-file#license
+To view the full license, visit https://github.com/sqdnoises/infinite-craft#license
+
+Need help with something?
+Join our Discord server -> https://discord.gg/EPr4T2F8bq
 
 Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/
 """
