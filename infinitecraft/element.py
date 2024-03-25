@@ -10,7 +10,7 @@ class Element:
 
     ## Attributes:
         `name` (`str`): Name of the element.
-        `emoji` (`str`): Emoji of the element. Could be `None` if not found in the emoji cache.
+        `emoji` (`str`): Emoji of the element.
         `first_discovery` (`bool`): Whether the current element was a first discovery or not.
     
     ## Special Functions:
