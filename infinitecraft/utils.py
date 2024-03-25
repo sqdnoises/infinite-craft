@@ -94,13 +94,6 @@ def mock_server(host: str = "127.0.0.1", port: int = 8080) -> None:
     async def pair(first: str, second: str) -> dict[str, str | bool]: # type: ignore
         print(f"[MOCK API] PAIR: {first} + {second}")
         print(f"[MOCK API] RESULT: 🌌 ???")
-
-        if len(first) == 0 or len(second) == 0:
-            return {
-                "result": "???",
-                "emoji": "🌌",
-                "isNew": False
-            }
             
         return {
             "result": "???",
