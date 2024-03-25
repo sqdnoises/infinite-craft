@@ -14,7 +14,7 @@ class Element:
         `first_discovery` (`bool`): Whether the current element was a first discovery or not.
     
     ## Special Functions:
-        - `__str__`: Returns the Emoji (if exists) and Name of the element combined.
+        - `__str__`: Returns the Emoji (if it exists) and Name of the element combined.
         
             - For example:
             
