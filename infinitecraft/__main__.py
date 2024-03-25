@@ -90,9 +90,9 @@ parser = argparse.ArgumentParser(
     description = f"{__display_version__}\n"
                   f"{__copyright__}\n"
                   f"License: {__license__}\n"
-                  f"For more information, see: {__homepage__}#license"
-                   ""
-                  f"Need help?"
+                  f"For more information, see: {__homepage__}#license\n"
+                   "\n"
+                  f"Need help?\n"
                   f"Join our coummunity server! {__discord__}",
     allow_abbrev = False,
     formatter_class = argparse.RawDescriptionHelpFormatter
