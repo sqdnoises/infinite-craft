@@ -24,6 +24,7 @@ SOFTWARE.
 
 import os
 import argparse
+
 from .      import (
     __title__,
     __license__,
@@ -31,6 +32,7 @@ from .      import (
     __cli_description__,
     __display_version__,
     __homepage__,
+    __discord__,
     InfiniteCraft
 )
 from .utils import mock_server
@@ -57,7 +59,10 @@ def main(args: argparse.Namespace) -> None:
         print(__display_version__)
         print(__copyright__)
         print("License: " + __license__)
-        print(f"For more information, see: {__homepage__}?tab=readme-ov-file#license")
+        print(f"For more information, see: {__homepage__}#license")
+        print()
+        print("Need help with the code?")
+        print(f"Join our coummunity server! {__discord__}")
         print()
         print("Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/")
     

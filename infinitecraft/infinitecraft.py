@@ -48,7 +48,15 @@ __all__ = (
 
 class InfiniteCraft:
     """
-    Initialize an Infinite Craft session
+    # infinite-craft
+    An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
+    
+    ### Need help?
+    Need help with something?
+    Join our Discord server -> https://discord.gg/EPr4T2F8bq
+    
+    ## `InfiniteCraft`
+    Initialize an Infinite Craft session.
 
     ## Attributes:
         `discoveries` (`list[Element]`): List of `Element` objects that have been discovered.
@@ -64,6 +72,7 @@ class InfiniteCraft:
         `headers` (`dict`, optional): Headers to send to the API. Defaults to `{}`.
         `element_cls` (`Element`, optional): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
         `logger` (`class`, optional): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
+        `debug` (`bool`, optional): Whether to send debug logs. This sets the current `logger` to `Logger(log_level=5)`. Only works when `bool(logger)` is False or when the custom logger is used. Defaults to `False`.
     """
     
     def __init__(
@@ -77,7 +86,8 @@ class InfiniteCraft:
         make_file: bool                   = True,
         headers: MutableMapping[str, str] = {},
         element_cls: type[Element]        = Element,
-        logger: Any                       = Logger()
+        logger: Any                       = Logger(),
+        debug: bool                       = False
     ) -> None:
         
         if not api_rate_limit >= 0:
@@ -106,7 +116,11 @@ class InfiniteCraft:
         self._discoveries_location = discoveries_storage
         self._encoding = encoding
         self._element_cls = element_cls
-        self._logger = logger
+        
+        if debug and not logger or debug and isinstance(logger, Logger):
+            self._logger = Logger(log_level=5)
+        else:
+            self._logger = logger
 
         self._requests: list[float] = []
 
@@ -141,6 +155,9 @@ class InfiniteCraft:
 
         self._closed: bool | None = None
         self.closed: bool | None = None
+        
+        self._logger.debug("InfiniteCraft has been initialised.")
+        self._logger.debug("Need help? Join the community server -> https://discord.gg/EPr4T2F8bq")
 
     def __str__(self) -> str:
         try:

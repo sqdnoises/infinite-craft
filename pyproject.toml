@@ -27,6 +27,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/sqdnoises/infinite-craft"
+Discord = "https://discord.gg/9BhN3BrE6n"
 
 [project.scripts]
 infinite-craft = "infinitecraft.__main__:parse"
