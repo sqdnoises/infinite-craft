@@ -6,6 +6,6 @@ If you need help with code, the code's functions and classes are very well docum
 
 If you require even more assistance, check out this page:
 
-{% content-ref url="readme/more-help.md" %}
-[more-help.md](readme/more-help.md)
+{% content-ref url="introduction/more-help.md" %}
+[more-help.md](introduction/more-help.md)
 {% endcontent-ref %}
