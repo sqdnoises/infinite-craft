@@ -61,7 +61,7 @@ class InfiniteCraft:
         `headers` (`dict`, optional): Headers to send to the API. Defaults to `{}`.
         `element_cls` (`Element`, optional): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
         `logger` (`class`, optional): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
-        `debug` (`bool`, optional): Whether to send debug logs. This sets the current `logger` to `Logger(log_level=5)`. Only works when `bool(logger)` is False or when the custom logger is used. Defaults to `False`.
+        `debug` (`bool`, optional): Whether to send debug logs. This sets the current `logger` to `Logger(log_level=5)`. Only works when `bool(logger)` is `False` or when the custom logger is used. Defaults to `False`.
     """
     
     def __init__(
@@ -214,10 +214,10 @@ class InfiniteCraft:
         return end
 
     async def start(self) -> None:
-        """Start the Infinite Craft session
+        """Start the `InfiniteCraft` session
         
         ## Raises:
-            `RuntimeError`: Raises when session is closed or is already.
+            `RuntimeError`: Raises when session is closed or has already started.
         """
         if self._closed:
             raise RuntimeError("Cannot start session; Session has been closed")
