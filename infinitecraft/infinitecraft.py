@@ -523,7 +523,7 @@ class InfiniteCraft:
         make_file: bool = False
     ) -> None:
         
-        """Reset the discoveries storage JSON and emoji cache JSON
+        """Reset the discoveries.json file to its initial state
         
         This is a `@staticmethod`, hence it can be used using `InfiniteCraft.reset()` without initialising the class.
 
