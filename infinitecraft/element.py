@@ -46,7 +46,7 @@ class Element:
         >>> water = Element(name="Water", emoji="💧", is_first_discovery=True)
         >>> fire1 == fire2
         True
-        >>> fire1 == water 
+        >>> fire1 == water
         False
         ```
         
