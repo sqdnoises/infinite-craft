@@ -38,7 +38,7 @@ InfiniteCraft(
 
 <mark style="color:red;">**`discoveries`**</mark> (<mark style="color:yellow;">**`list`**</mark>**`[`**<mark style="color:yellow;">**`Element`**</mark>**`]`**): List of <mark style="color:yellow;">**`Element`**</mark> objects that have been discovered.
 
-<mark style="color:red;">**`closed`**</mark> (<mark style="color:yellow;">**`bool`**</mark> **`|`** <mark style="color:orange;">**`None`**</mark>): Whether the Infinite Craft session is closed or not.\
+<mark style="color:red;">**`closed`**</mark> (<mark style="color:yellow;">**`bool`**</mark> **|** <mark style="color:orange;">**`None`**</mark>): Whether the Infinite Craft session is closed or not.\
 <mark style="color:orange;">**`None`**</mark> if session has not been started.
 
 ### Arguments
@@ -83,8 +83,8 @@ Useful when using <mark style="color:purple;">**`async with`**</mark> multiple t
 > Defaults to a custom logger <mark style="color:yellow;">**`Logger`**</mark>
 
 <mark style="color:red;">**`debug`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether to send debug logs.\
-This sets the current <mark style="color:red;">`logger`</mark> to <mark style="color:yellow;">**`Logger`**</mark>**`(`**<mark style="color:red;">`log_level`</mark>**`=`**<mark style="color:orange;">`5`</mark>**`)`**.\
-Only works when <mark style="color:yellow;">**`bool`**</mark>**`(`**<mark style="color:red;">`logger`</mark>**`)`** is <mark style="color:blue;">`False`</mark> or when the custom logger is used.
+This sets the current <mark style="color:red;">**`logger`**</mark> to <mark style="color:yellow;">**`Logger`**</mark>**`(`**<mark style="color:red;">**`log_level`**</mark>**`=`**<mark style="color:orange;">`5`</mark>**`)`**.\
+Only works when <mark style="color:yellow;">**`bool`**</mark>**`(`**<mark style="color:red;">**`logger`**</mark>**`)`** is <mark style="color:blue;">`False`</mark> or when the custom logger is used.
 
 > Defaults to <mark style="color:blue;">`False`</mark>
 
@@ -126,7 +126,7 @@ Start the <mark style="color:yellow;">**`InfiniteCraft`**</mark> session.
 
 ## _async def_ <mark style="color:blue;">`stop`</mark>`()`
 
-Alias for [<mark style="color:yellow;">**`InfiniteCraft`**</mark>**`.`**<mark style="color:blue;">**`close`**</mark>**`()`**](infinitecraft.md#def-close)
+Alias for _<mark style="color:yellow;">**`self`**</mark>_[**`.`**<mark style="color:blue;">**`close`**</mark>**`()`**](infinitecraft.md#def-close)
 
 
 
@@ -154,13 +154,15 @@ Useful in <mark style="color:purple;">**`if`**</mark> statements.
 
 <mark style="color:red;">**`first`**</mark> (<mark style="color:yellow;">**`Element`**</mark>): The first element.
 
+> Required
+
 <mark style="color:red;">**`second`**</mark> (<mark style="color:yellow;">**`Element`**</mark>): The second element.
 
-> Required.
+> Required
 
-<mark style="color:red;">**`store`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether to store the result <mark style="color:yellow;">**`Element`**</mark> to <mark style="color:yellow;">**`InfiniteCraft`**</mark>**`.`**<mark style="color:red;">**`discoveries`**</mark>.
+<mark style="color:red;">**`store`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether to store the result <mark style="color:yellow;">**`Element`**</mark> to _<mark style="color:yellow;">**`self`**</mark>_**`.`**<mark style="color:red;">**`discoveries`**</mark>.
 
-> Defaults to <mark style="color:blue;">`True`</mark>.
+> Defaults to <mark style="color:blue;">`True`</mark>
 
 ### Raises
 
@@ -184,11 +186,70 @@ Alias for [<mark style="color:yellow;">**`InfiniteCraft`**</mark>**`.`**<mark st
 
 
 
-## def <mark style="color:blue;">**`get_discoveries`**</mark>**`()` -> **<mark style="color:yellow;">**`Element`**</mark>**, **<mark style="color:orange;">**`None`**</mark>
+## _def_ <mark style="color:blue;">**`get_discoveries`**</mark>**`()` -> **<mark style="color:yellow;">**`Element`**</mark>**, **<mark style="color:orange;">**`None`**</mark>
+
+Get a <mark style="color:yellow;">**`list`**</mark> containing all discovered elements fetched from the `discoveries.json` file.
+
+<pre class="language-python"><code class="lang-python">def get_discoveries(
+    *,
+    set_value: bool = False,
+    check: Callable[[Element], bool] | None = None
+) -> <a data-footnote-ref href="#user-content-fn-2">Discoveries</a>
+</code></pre>
+
+### Arguments
+
+<mark style="color:red;">**`set_value`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether to set the value for the _<mark style="color:yellow;">**`self`**</mark>_**`.`**<mark style="color:red;">**`discoveries`**</mark> attribute after getting it.
+
+> Defaults to <mark style="color:orange;">**`None`**</mark>
+
+**`check`** (<mark style="color:red;">**`Callable`**</mark>**`[[`**<mark style="color:yellow;">**`Element`**</mark>**`],`` `**<mark style="color:yellow;">**`bool`**</mark>**`]`**, optional): A callable functions that accepts an argument for <mark style="color:red;">**`element`**</mark> and returns a bool to whether add the element or not.
+
+> Defaults to <mark style="color:orange;">**`None`**</mark>
+
+### Returns
+
+<mark style="color:yellow;">**`list`**</mark>**`[`**<mark style="color:yellow;">**`Element`**</mark>**`]`**: The <mark style="color:yellow;">**`list`**</mark> containing every <mark style="color:yellow;">**`Element`**</mark> discovered.
 
 
 
+## _def_ <mark style="color:blue;">**`get_discovery`**</mark>**`()` -> **<mark style="color:yellow;">**`Element`**</mark>**, **<mark style="color:orange;">**`None`**</mark>
 
+Get a discovered <mark style="color:yellow;">**`Element`**</mark> from _<mark style="color:yellow;">**`self`**</mark>_**`.`**<mark style="color:red;">**`discoveries`**</mark>.
+
+### Arguments
+
+<mark style="color:red;">**`name`**</mark> (<mark style="color:yellow;">**`str`**</mark>): Name of element to get.
+
+> Required
+
+<mark style="color:red;">**`from_file`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether to check the discoveries JSON file for the element.
+
+> Defaults to <mark style="color:blue;">`False`</mark>
+
+### Returns
+
+<mark style="color:yellow;">**`Element`**</mark> **|** <mark style="color:orange;">**`None`**</mark>: The discovered <mark style="color:yellow;">**`Element`**</mark> or <mark style="color:orange;">**`None`**</mark> if it wasn't discovered.
+
+
+
+<mark style="color:yellow;">**`@staticmethod`**</mark>
+
+## _def_ <mark style="color:blue;">`reset`</mark>`()`
+
+Reset the `discoveries.json` file to its initial state.
+
+This is a `@staticmethod`, hence it can be used using `InfiniteCraft.reset()` without initialising the class.
+
+```py
+def reset(
+    *,
+    discoveries_storage: str = "discoveries.json",
+    encoding: str = "utf-8",
+    indent: int = 2,
+    make_file: bool = False
+)
+```
 
 
 
@@ -197,3 +258,5 @@ Alias for [<mark style="color:yellow;">**`InfiniteCraft`**</mark>**`.`**<mark st
 {% endcontent-ref %}
 
 [^1]: Where <mark style="color:red;">**`element`**</mark> is the result of the <mark style="color:blue;">**`pair`**</mark>**`()`** function.
+
+[^2]: This is a custom typed variable that refers to <mark style="color:yellow;">**`type`**</mark>**`[`**<mark style="color:yellow;">**`list`**</mark>**`[`**<mark style="color:yellow;">**`Element`**</mark>**`]]`**.

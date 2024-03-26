@@ -28,17 +28,17 @@ Element(
 
 ### Arguments & Attributes
 
-<mark style="color:red;">**`name`**</mark> (<mark style="color:yellow;">**`str`**</mark>, optional): Name of the element
+<mark style="color:red;">**`name`**</mark> (<mark style="color:yellow;">**`str`**</mark> **|** <mark style="color:orange;">**`None`**</mark>, optional): Name of the element
 
-<mark style="color:red;">**`emoji`**</mark> (<mark style="color:yellow;">**`str`**</mark>, optional): Emoji of the element.
+<mark style="color:red;">**`emoji`**</mark> (<mark style="color:yellow;">**`str`**</mark> **|** <mark style="color:orange;">**`None`**</mark>, optional): Emoji of the element.
 
-<mark style="color:red;">**`is_first_discovery`**</mark> (<mark style="color:yellow;">**`bool`**</mark>, optional): Whether the current element was a first discovery or not.
+<mark style="color:red;">**`is_first_discovery`**</mark> (<mark style="color:yellow;">**`bool`**</mark> **|** <mark style="color:orange;">**`None`**</mark>, optional): Whether the current element was a first discovery or not.
 
 <details>
 
 <summary>Special Functions</summary>
 
-<mark style="color:blue;">**`__str__`**</mark>`()`: Returns the Emoji (if it exists) and Name of the element combined.
+<mark style="color:blue;">**`__str__`**</mark>**`()`**: Returns the Emoji (if it exists) and Name of the element combined.
 
 For example:
 
@@ -49,7 +49,7 @@ For example:
 'Water'
 ```
 
-<mark style="color:blue;">**`__repr__`**</mark>`()`: Returns a string representing how the class was made.
+<mark style="color:blue;">**`__repr__`**</mark>**`()`**: Returns a string representing how the class was made.
 
 For example:
 
@@ -60,7 +60,7 @@ For example:
 "Element(name='Water', emoji=None, is_first_discovery=True)"
 ```
 
-<mark style="color:blue;">**`__eq__`**</mark>`()`: Checks if the element name is equal to another element's name.
+<mark style="color:blue;">**`__eq__`**</mark>**`()`**: Checks if the element name is equal to another element's name.
 
 For example:
 
@@ -74,7 +74,7 @@ True
 False
 ```
 
-<mark style="color:blue;">**`__bool__`**</mark>`()`: If all attributes are <mark style="color:orange;">`None`</mark>, <mark style="color:blue;">`False`</mark> gets returned otherwise <mark style="color:blue;">`True`</mark> gets returned.
+<mark style="color:blue;">**`__bool__`**</mark>**`()`**: If all attributes are <mark style="color:orange;">**`None`**</mark>, <mark style="color:blue;">`False`</mark> gets returned otherwise <mark style="color:blue;">`True`</mark> gets returned.
 
 For example:
 
