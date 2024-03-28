@@ -1,3 +1,5 @@
+[![](https://github.com/sqdnoises/infinite-craft/raw/main/docs/.gitbook/assets/cover.png)](https://github.com/sqdnoises/infinite-craft)
+
 # infinite-craft `1.1.3`
 [![](https://img.shields.io/badge/infinite--craft_version-1.1.3-red)](https://github.com/sqdnoises/infinite-craft)
 [![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
