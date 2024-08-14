@@ -17,9 +17,9 @@ import time
 import aiohttp
 import asyncio
 from typing import (
+    Any,
     Callable,
-    MutableMapping,
-    Any
+    MutableMapping
 )
 
 from .          import utils
@@ -29,11 +29,9 @@ from .logger    import Logger
 from .constants import *
 from .types     import *
 
-
 __all__ = (
     "InfiniteCraft",
 )
-
 
 class InfiniteCraft:
     """
@@ -60,7 +58,7 @@ class InfiniteCraft:
         `do_reset` (`bool`, optional): Whether to reset the discoveries storage JSON and emoji cache JSON. Defaults to `False`.
         `headers` (`dict`, optional): Headers to send to the API. Defaults to `{}`.
         `element_cls` (`Element`, optional): Class to be used for creating elements (MUST BE A SUBCLASS OF `Element`). Defaults to `Element`.
-        `logger` (`class`, optional): An initialized logger class or module with methods `info`, `warn`, `error`, `fatal`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
+        `logger` (`class`, optional): An initialized logger class or module with methods `info`, `warn`, `error`, `critical`, and `debug` to use for logging. Defaults to a custom logger `Logger`.
         `debug` (`bool`, optional): Whether to send debug logs. This sets the current `logger` to `Logger(log_level=5)`. Only works when `bool(logger)` is `False` or when the custom logger is used. Defaults to `False`.
     """
     
@@ -128,6 +126,7 @@ class InfiniteCraft:
         self._headers = {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
+            "priority": "u=1, i",
             "cache-control": "no-cache",
             "pragma": "no-cache",
             "sec-ch-ua": '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
@@ -138,7 +137,7 @@ class InfiniteCraft:
             "sec-fetch-site": "same-origin",
             "Referer": "https://neal.fun/infinite-craft/",
             "Referrer-Policy": "strict-origin-when-cross-origin",
-            "User-Agent": "Mozilla/5.0 (Windows 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
         }
         self._headers.update(headers)
 
@@ -165,7 +164,8 @@ class InfiniteCraft:
                 f"encoding={repr(self._encoding)}, "
                 f"headers={repr(self._headers)}, "
                 f"element_cls={repr(self._element_cls)}, "
-                f"logger={repr(self._logger)}"
+                f"logger={repr(self._logger)}, "
+                f"debug={repr(self._logger.log_level == 5)}"
             ")"
         )
 
@@ -185,34 +185,6 @@ class InfiniteCraft:
         else:
             self._logger.debug("EXIT: Manual control is ON;")
 
-    async def ping(self) -> float:
-        """Ping the API and return the latency
-
-        Only works when the session has been started.
-
-        ## Returns:
-            `float`: The latency in seconds.
-        """
-        
-        self._logger.debug(f"Pinging API route: {self._api_url}/api/infinite-craft/pair with Fire + Water")
-        
-        params = {
-            "first":  "Fire",
-            "second": "Water"
-        }
-        
-        request = await self._wait_for_request() # wait for ratelimit requests to finish
-        
-        start = time.monotonic()
-        async with self._session.get(f"/api/infinite-craft/pair", params=params):
-            end = time.monotonic() - start
-
-        self._done_with_request(request) # mark request as done
-        
-        self._logger.debug(f"API response time: {end}s")
-
-        return end
-
     async def start(self) -> None:
         """Start the `InfiniteCraft` session
         
@@ -226,8 +198,7 @@ class InfiniteCraft:
             await self._build_session(
                 self._api_url,
                 headers = self._headers,
-                skip_auto_headers = ["User-Agent", "Content-Type"],
-                raise_for_status = True
+                skip_auto_headers = ["User-Agent", "Content-Type"]
             )
             
             self._closed = False
@@ -263,6 +234,33 @@ class InfiniteCraft:
             `RuntimeError`: Raises when session has not been started or is already closed.
         """
         await self.close()
+    
+    async def ping(self) -> float:
+        """Ping the API and return the latency
+
+        Only works when the session has been started.
+
+        ## Returns:
+            `float`: The latency in seconds.
+        """
+        
+        self._logger.debug(f"Pinging API route: {self._api_url}/api/infinite-craft/pair with Fire + Water")
+        
+        params = {
+            "first":  "Fire",
+            "second": "Water"
+        }
+        
+        request = await self._wait_for_request() # wait for ratelimit requests to finish
+        
+        start = time.monotonic()
+        async with self._session.get(f"/api/infinite-craft/pair", params=params) as response:
+            self._done_with_request(request) # mark request as done
+            end = time.monotonic() - start
+            self._logger.debug(f"API response time: {end}s")
+            response.raise_for_status()
+        
+        return end
 
     async def pair(self, first: Element, second: Element, *, store: bool = True) -> Element:
         """Pair two elements and return the resulting element
@@ -297,11 +295,21 @@ class InfiniteCraft:
         request = await self._wait_for_request() # wait for ratelimit requests to finish
         
         async with self._session.get(f"/api/infinite-craft/pair", params=params) as response:
-            result = await response.json(encoding=self._encoding)
+            self._done_with_request(request) # mark request as done
+            # Request Info
+            self._logger.debug(f"{response.request_info.method} {response.request_info.url}")
+            self._logger.debug(f"Request Headers: {json.dumps(dict(response.request_info.headers), indent=4)}")
+            
+            # Response Info
+            self._logger.debug(f"Response Status: {response.status}")
+            self._logger.debug(f"Response Content Type: {response.content_type}")
+            self._logger.debug(f"Response Headers: {json.dumps(dict(response.headers), indent=4)}")
+            self._logger.debug(f"Response Body: {await response.text()}")
+            
+            response.raise_for_status()
+            result_data: ResultDict = await response.json(encoding=self._encoding)
         
-        self._done_with_request(request) # mark request as done
-        
-        if result == {
+        if result_data == {
             "result": "Nothing",
             "emoji": "",
             "isNew": False
@@ -310,9 +318,9 @@ class InfiniteCraft:
             return Element(name=None, emoji=None, is_first_discovery=None)
         
         result = self._element_cls(
-            name               = result.get("result"),
-            emoji              = result.get("emoji"),
-            is_first_discovery = result.get("isNew")
+            name               = result_data.get("result"),
+            emoji              = result_data.get("emoji"),
+            is_first_discovery = result_data.get("isNew")
         )
 
         if not result.is_first_discovery:

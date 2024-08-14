@@ -9,7 +9,6 @@ from uvicorn import Config
 from threading import Thread
 from infinitecraft import InfiniteCraft, Element, Logger
 
-
 kwargs: Ignore = dict(
     api_url = "http://127.0.0.1:8080",
     discoveries_storage="tests/discoveries.json",
@@ -20,7 +19,6 @@ def remove():
     file = kwargs.get("discoveries_storage")
     if os.path.exists(file):
         os.remove(file)
-
 
 class ThreadedUvicorn:
     def __init__(self, *args: Ignore, config: Config | None = None, **kwargs: Ignore):
@@ -100,7 +98,6 @@ class TestInfiniteCraftFiles:
         InfiniteCraft(**kwargs, do_reset=False, make_file=False)
         assert os.path.exists(kwargs.get("discoveries_storage"))
 
-
 @pytest.mark.asyncio
 async def test_InfiniteCraft():
     remove()
@@ -168,7 +165,6 @@ async def test_InfiniteCraft():
         await game.start()
     # --------------------------------
 
-
 @pytest.mark.asyncio
 async def test_InfiniteCraft_async_with():
     remove()
@@ -193,7 +189,6 @@ async def test_InfiniteCraft_async_with():
     with pytest.raises(RuntimeError):
         await game.start()
     # --------------------------------
-
 
 @pytest.mark.asyncio
 async def test_InfiniteCraft_async_with2():
@@ -246,7 +241,6 @@ async def test_InfiniteCraft_async_with2():
         
         # ---------------------------
     # --------------------------
-
 
 @pytest.mark.asyncio
 async def test_InfiniteCraft_manual_control():

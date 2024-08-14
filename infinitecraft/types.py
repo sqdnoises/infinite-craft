@@ -1,14 +1,20 @@
 from .element import Element
-from typing import TypedDict, Any
+from typing import Any, TypedDict
 
 __all__ = (
     "Unused",
+    "ResultDict",
     "RawDiscovery",
     "Discoveries",
     "RawDiscoveries"
 )
 
 Unused = Any
+
+class ResultDict(TypedDict):
+    result: str
+    emoji: str
+    isNew: bool
 
 Discovery = Element
 Discoveries = list[Element]

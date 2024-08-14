@@ -38,7 +38,6 @@ from .utils import mock_server
 # else:
 #     import readline
 
-
 def main(args: argparse.Namespace) -> None:
     if args.version:
         print(__display_version__)
@@ -57,7 +56,6 @@ def main(args: argparse.Namespace) -> None:
     else:
         parser.print_usage()
 
-
 def reset_subcommand(args: argparse.Namespace):
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
     
@@ -68,10 +66,8 @@ def reset_subcommand(args: argparse.Namespace):
 
     print(f'"{discoveries_storage}" file contents reset successfully.')
 
-
 def mock_subcommand(args: argparse.Namespace):
     mock_server(args.host, args.port)
-
 
 parser = argparse.ArgumentParser(
     prog = __title__,
@@ -144,7 +140,6 @@ mock.add_argument(
 )
 
 mock.set_defaults(func=mock_subcommand)
-
 
 def parse():
     args = parser.parse_args()

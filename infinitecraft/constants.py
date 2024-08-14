@@ -2,7 +2,6 @@ __all__ = (
     "starting_discoveries",
 )
 
-
 starting_discoveries = [
     {
         "name": "Water",
