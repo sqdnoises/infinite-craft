@@ -11,7 +11,8 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 
 ### `infinite-craft`'s GitHub Actions Status
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
-[![](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
+[![Publish Package to PyPI](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
+[![Create GitHub Release](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml)
 
 # Key Features:
 - Stores elements in a neatly indented JSON file
