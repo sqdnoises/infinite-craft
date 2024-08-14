@@ -14,6 +14,9 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 [![Publish Package to PyPI](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
 [![Create GitHub Release](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml)
 
+> [!IMPORTANT]  
+> The library is currently broken. If you pair two elements you get a [`403 Forbidden` error](https://github.com/sqdnoises/infinite-craft/issues/2). A fix for this is currently being made.
+
 # Key Features:
 - Stores elements in a neatly indented JSON file
 - Starts with the four main elements: Water, Fire, Wind, Earth
@@ -24,8 +27,9 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 - Conveniently access discovered elements
 
 # Discord Server
-Need help? Join our community!\
--> https://discord.gg/FF2fSN2sJd
+> [!TIP]
+> Need help? Join our Discord community!\
+» https://discord.gg/FF2fSN2sJd
 
 # Table of Contents:
 - **[Key Features](#key-features)**
@@ -38,7 +42,9 @@ Need help? Join our community!\
 - **[License](#license)**
 
 # Installation
-Requires **Python 3.10** or above.\
+> [!IMPORTANT]
+> **Python 3.10** or above is required. Any versions below will not work.
+
 To install, run:
 ```
 pip install infinite-craft
@@ -49,9 +55,10 @@ To update, run:
 pip install -U infinite-craft
 ```
 
-**NOTE:** If `pip` is not on PATH, you can use:
-- `python3 -m pip` (for Linux/MacOS) or
-- `python -m pip` (for Windows) instead.
+> [!NOTE]
+> If `pip` is not on PATH, you can use:
+> - `python3 -m pip` (for Linux/MacOS) or
+> - `python -m pip` (for Windows) instead.
 
 [**View `infinite-craft` on PyPI.**](https://pypi.org/project/infinite-craft/)
 
@@ -109,7 +116,9 @@ Everything is handled in a user-friendly manner and asynchronously, so it should
 - [x] ~~Release version 1.0.0 on PyPI~~
 - [x] ~~Make a discord server for support~~ Join our community! https://discord.gg/FF2fSN2sJd
 - [x] ~~Add a runnable and configurable CLI mock API server~~
-- [ ] Make docs
+- [x] ~~Make docs~~
+- [ ] Fix [403 Forbidden Error](https://github.com/sqdnoises/infinite-craft/issues/2)
+- [ ] Finish docs
 - [ ] Make a playable Infinite Craft CLI game (interactive, probably)
 
 <div align="center">
