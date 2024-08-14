@@ -7,6 +7,44 @@ on:
       - "*.*.*"
 
 jobs:
+  build-package:
+    name: |
+      Build and Test Python 🐍 package 📦
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest pytest-asyncio
+        python -m pip install -r requirements.txt
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Build package
+      run: |
+        python -m build
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Test package
+      run: |
+        twine check dist/*
+  
   github-release:
     name: >-
       Sign the Python 🐍 distribution 📦 with Sigstore
