@@ -1,76 +1,137 @@
+"""
+Use either (pre initialised)
+```py
+from logger import logging
+
+logging.name = "My Program"
+logging.log_level = 5
+logging.info("Hello World")
+```
+
+or
+```py
+from logger import Logger
+
+logging = Logger("My Program", log_level=5)
+logging.info("Hello World")
+```
+
+Copyright (c) 2023-present SqdNoises
+"""
+
+import traceback
 from datetime import datetime
 from typing import Callable, Any, Literal
 
+from .termcolors import *
+from .termcolors import rgb
 
 __all__ = (
     "Logger",
 )
 
-
-color_log_types = {
-    "info":  "\033[38;2;208;209;192m",
-    "warn":  "\033[38;2;217;135;22m",
-    "error": "\033[38;2;224;60;27m",
-    "fatal": "\033[38;2;255;0;0m",
-    "debug": "\033[38;2;21;122;230m"
+LOGGER_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+NAME_COLOR = rgb(222, 235, 47)
+LOG_TYPES_TEXT = {
+    "info"    : bold + rgb(208, 209, 192) + "INFO    " + reset,
+    "warning" : bold + rgb(217, 135, 22)  + "WARNING " + reset,
+    "error"   : bold + rgb(224, 60, 27)   + "ERROR   " + reset,
+    "critical": bold + rgb(255, 0, 0)     + "CRITICAL" + reset,
+    "debug"   : bold + rgb(21, 122, 230)  + "DEBUG   " + reset
 }
-
 
 class Logger:
     """
+    A simple logger class.
+    
+    Example:
+    ```py
+    from logger import Logger
+
+    logging = Logger("My Program", log_level=5)
+    logging.info("Hello World")
+    ```
+    
     #### Log Levels:
     `0` - nothing
 
     `1` - info
     
-    `2` - warn
+    `2` - warning
     
     `3` - error
     
-    `4` - fatal
+    `4` - critical
     
     `5` - debug
     """
 
-    def __init__(self, prefix: Callable[[str], str] | None = None, log_level: int = 4, color_log_types: dict[str, str] = color_log_types) -> None:
-        self._prefix = prefix
+    def __init__(
+        self,
+        name: str = "[INFINITE CRAFT]",
+        *,
+        prefix: Callable[[str], str] | None = None,
+        log_level: int = 4,
+        name_color: str = NAME_COLOR,
+        timestamp_color: str = bold + black,
+        message_color: str = "",
+        time_format: str = LOGGER_TIME_FORMAT,
+        log_types_text: dict[str, str] = LOG_TYPES_TEXT
+    ) -> None:
+        self.name = str(name)
+        self.prefix = prefix
         self.log_level = log_level
-        self._log_colors = color_log_types
+        self.name_color = name_color
+        self.timestamp_color = timestamp_color
+        self.message_color = message_color
+        self.time_format = time_format
+        self.log_types_text = log_types_text
 
-        if self._prefix is None:
-            self._prefix = self._prefix_handler
+        if self.prefix is None:
+            self.prefix = self._prefix_handler
 
-    def log(self, log_type: Literal["info", "warn", "error", "fatal", "debug"], message: Any) -> None:
+    def log(self, log_type: Literal["info", "warning", "error", "critical", "debug"], message: Any) -> None:
         if log_type == "info":
             log_level = 1
-        elif log_type == "warn":
+        elif log_type == "warning":
             log_level = 2
         elif log_type == "error":
             log_level = 3
-        elif log_type == "fatal":
+        elif log_type == "critical":
             log_level = 4
         else:
             log_level = 5
 
         if log_level <= self.log_level:
-            prefix = str(self._prefix(log_type)) # type: ignore
-            print(prefix + message, end="\033[0m\n")
+            prefix = str(self.prefix(log_type)) if self.prefix is not None else ""
+            print(prefix + message, end=reset+"\n", flush=True)
     
     def info(self, message: str | Any) -> None:
         self.log("info", message)
     
     def warn(self, message: str | Any) -> None:
-        self.log("warn", message)
+        self.warning(message)
     
-    def error(self, message: str | Any) -> None:
+    def warning(self, message: str | Any) -> None:
+        self.log("warning", message)
+    
+    def err(self, message: str | Any, exc_info: Exception | None = None) -> None:
+        self.error(message, exc_info)
+    
+    def error(self, message: str | Any, exc_info: Exception | None = None) -> None:
+        if exc_info:
+            message += "\n" + red + "".join(traceback.format_exception(exc_info)).rstrip("\n")
+        
         self.log("error", message)
     
-    def fatal(self, message: str | Any) -> None:
-        self.log("fatal", message)
+    def critical(self, message: str | Any, exc_info: Exception | None = None) -> None:
+        if exc_info:
+            message += "\n" + red + "".join(traceback.format_exception(exc_info)).rstrip("\n")
+        
+        self.log("critical", message)
     
     def debug(self, message: str | Any) -> None:
         self.log("debug", message)
     
     def _prefix_handler(self, log_type: str) -> str:
-        return f"\033[38;2;88;92;89m{datetime.now()}\033[0m \033[38;2;222;235;47m[INFINITE CRAFT]\033[0m " + self._log_colors.get(log_type, "\033[0m") + "{:<5}".format(log_type.upper()) + "\033[0m "
-        #       "0000-00-00 00:00:00.000000                 [INFINITE CRAFT]                                 INFO/WARN/ERROR/FATAL/DEBUG                                                    Message"
+        return f"{reset}{self.timestamp_color}{datetime.now().strftime(self.time_format)}{reset} {self.log_types_text.get(log_type, '')}{reset} {self.name_color}{self.name}{reset} {self.message_color}"
