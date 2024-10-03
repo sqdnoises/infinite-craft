@@ -5,6 +5,8 @@ venv/
 build/
 *.egg-info/
 dist/
+logs/
+*.log
 
 *-ignore/
 *-ignore
