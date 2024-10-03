@@ -1,5 +1,5 @@
 """
-An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
+An API Wrapper for Neal's Infinite Craft game in Python.
 Copyright (C) 2024-present SqdNoises, Neal Agarwal
 License: MIT License
 To view the full license, visit https://github.com/sqdnoises/infinite-craft#license
@@ -11,6 +11,7 @@ Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite
 """
 
 import os
+import uvicorn
 import argparse
 
 from .      import (
@@ -19,7 +20,7 @@ from .      import (
     __copyright__,
     __cli_description__,
     __display_version__,
-    __homepage__,
+    __github__,
     __discord__,
     InfiniteCraft
 )
@@ -41,22 +42,20 @@ from .utils import mock_server
 def main(args: argparse.Namespace) -> None:
     if args.version:
         print(__display_version__)
-    
     elif args.information:
         print(__display_version__)
         print(__copyright__)
         print("License: " + __license__)
-        print(f"For more information, see: {__homepage__}#license")
+        print(f"For more information, see: {__github__}#license")
         print()
         print("Need help?")
         print(f"Join our coummunity server! {__discord__}")
         print()
         print("Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/")
-    
     else:
         parser.print_usage()
 
-def reset_subcommand(args: argparse.Namespace):
+def reset_subcommand(args: argparse.Namespace) -> None:
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
     
     if not os.path.exists(discoveries_storage):
@@ -66,15 +65,20 @@ def reset_subcommand(args: argparse.Namespace):
 
     print(f'"{discoveries_storage}" file contents reset successfully.')
 
-def mock_subcommand(args: argparse.Namespace):
-    mock_server(args.host, args.port)
+def mock_subcommand(args: argparse.Namespace) -> None:
+    app = mock_server()
+    uvicorn.run(
+        app,
+        host = args.host,
+        port = args.port
+    )
 
 parser = argparse.ArgumentParser(
     prog = __title__,
     description = f"{__display_version__}\n"
                   f"{__copyright__}\n"
                   f"License: {__license__}\n"
-                  f"For more information, see: {__homepage__}#license\n"
+                  f"For more information, see: {__github__}#license\n"
                    "\n"
                   f"Need help?\n"
                   f"Join our coummunity server! {__discord__}",
@@ -95,8 +99,6 @@ parser.add_argument(
 )
 
 parser.set_defaults(func=main)
-
-
 subparser = parser.add_subparsers(help="subcommands")
 
 reset = subparser.add_parser(
@@ -136,11 +138,11 @@ mock.add_argument(
     action = "store",
     type = int,
     help = "Port to host at",
-    default = 8080
+    default = 15575
 )
 
 mock.set_defaults(func=mock_subcommand)
 
-def parse():
+def parse() -> None:
     args = parser.parse_args()
     args.func(args)
