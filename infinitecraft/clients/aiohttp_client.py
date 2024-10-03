@@ -15,6 +15,7 @@ __all__ = (
     "AiohttpClientResponse"
 )
 
+# TODO: Add docstrings
 class AiohttpClient(AsyncAPIClientProtocol):
     _base_url: str
     _headers: dict[str, str]
