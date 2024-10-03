@@ -1,73 +1,52 @@
-from typing import Any
+from .abc import ElementProtocol
 
 __all__ = (
     "Element",
 )
 
-class Element:
+class Element(ElementProtocol):
     """
-    An element object that represents an element of Infinite Craft.
+    Represents an element in the Infinite Craft system.
 
-    ## Attributes:
-        `name` (`str`): Name of the element.
-        `emoji` (`str`): Emoji of the element.
-        `first_discovery` (`bool`): Whether the current element was a first discovery or not.
-    
-    ## Special Functions:
-        - `__str__`: Returns the Emoji (if it exists) and Name of the element combined.
-        
-            - For example:
-            
-        ```py
-        >>> str(Element(name="Fire", emoji="🔥", is_first_discovery=False))
+    This class provides attributes for an element's name, emoji, and whether 
+    it was a first discovery. It also implements several special methods 
+    (`__str__`, `__repr__`, `__eq__`, `__bool__`) for more user-friendly 
+    object representations and comparisons.
+
+    Attributes:
+        name (str | None): The name of the element.
+        emoji (str | None): The emoji representing the element.
+        is_first_discovery (bool | None): Whether the element was the first discovery.
+
+    Methods:
+        __str__: Returns a string combining the emoji and name of the element.
+        __repr__: Returns a string representation of how the object was created.
+        __eq__: Compares the element name with another element's name.
+        __bool__: Returns False if all attributes are None, otherwise True.
+
+    Example:
+        >>> fire = Element(name="Fire", emoji="🔥", is_first_discovery=False)
+        >>> print(str(fire))
         '🔥 Fire'
-        >>> str(Element(name="Water", emoji=None, is_first_discovery=True))
+        >>> water = Element(name="Water", emoji=None, is_first_discovery=True)
+        >>> print(str(water))
         'Water'
-        ```
-        
-        - `__repr__`: Returns a string representing how the class was made.
-        
-            - For example:
-            
-        ```py
-        >>> repr(Element(name="Fire", emoji="🔥", is_first_discovery=False))
-        "Element(name='Fire', emoji='🔥', is_first_discovery=False)"
-        >>> repr(Element(name="Water", emoji=None, is_first_discovery=True))
-        "Element(name='Water', emoji=None, is_first_discovery=True)"
-        ```
-        
-        - `__eq__`: Checks if the element name is equal to another element's name.
-        
-            - For example:
-        
-        ```py
-        >>> fire1 = Element(name="Fire", emoji="🔥", is_first_discovery=False)
-        >>> fire2 = Element(name="Fire", emoji="❤️‍🔥", is_first_discovery=False)
-        >>> water = Element(name="Water", emoji="💧", is_first_discovery=True)
-        >>> fire1 == fire2
-        True
-        >>> fire1 == water
-        False
-        ```
-        
-        - `__bool__`: If all attributes are `None` (not defined) `False` gets returned otherwise `True` gets returned.
-        
-            - For example:
-        
-        ```py
-        >>> bool(Element(name="Fire", emoji="🔥", is_first_discovery=False))
-        True
-        >>> bool(Element(name="Water", emoji=None, is_first_discovery=True))
-        True
-        >>> bool(Element(name=None, emoji=None, is_first_discovery=None))
-        False
-        ```
-    
-    You can make your own `Element` class by subclassing this one.
-    
-    NOTE: The emoji is NOT fetched upon creation of this class. You can fetch it by reading the discoveries JSON file if you need it.
-    """
 
+        >>> repr(fire)
+        "Element(name='Fire', emoji='🔥', is_first_discovery=False)"
+        >>> fire == water
+        False
+    
+    Note:
+        The `emoji` attribute is not fetched upon creation of the class. 
+        If the emoji is not provided, it must be fetched manually, such as by reading 
+        a discoveries JSON file or other data source.
+    """
+    
+    name: str | None
+    emoji: str | None
+    is_first_discovery: bool | None
+    
     def __init__(
         self,
         name:               str  | None = None,
@@ -79,23 +58,85 @@ class Element:
         self.is_first_discovery = is_first_discovery
     
     def __str__(self) -> str:
+        """
+        Returns a string representation of the element, combining the emoji (if it exists) 
+        and the name.
+
+        Returns:
+            str: The emoji and name combined or just the name if no emoji is present.
+        
+        Example:
+            >>> str(Element(name="Fire", emoji="🔥"))
+            '🔥 Fire'
+            >>> str(Element(name="Water", emoji=None))
+            'Water'
+        """
         if self.emoji:
             return str(self.emoji) + " " + str(self.name)
         else:
             return str(self.name)
     
     def __repr__(self) -> str:
-        return f"Element(name={repr(self.name)}, emoji={repr(self.emoji)}, is_first_discovery={repr(self.is_first_discovery)})"
+        """
+        Returns a string that shows how the Element object was constructed.
+
+        Returns:
+            str: A string representation of the object’s creation.
+        
+        Example:
+            >>> repr(Element(name="Fire", emoji="🔥"))
+            "Element(name='Fire', emoji='🔥', is_first_discovery=None)"
+        """
+        return (
+            f"Element("
+            f"name={repr(self.name)}, "
+            f"emoji={repr(self.emoji)}, "
+            f"is_first_discovery={repr(self.is_first_discovery)}"
+            f")"
+        )
     
-    def __eq__(self, __value: Any) -> bool:
-        if bool(self) == False and __value is None:
+    def __eq__(self, other: ElementProtocol | None) -> bool:
+        """
+        Compares this element with another element based on the name.
+
+        Args:
+            other (ElementProtocol | None): Another element to compare to.
+
+        Returns:
+            bool: True if the names of the two elements are the same, or if both elements are None. 
+            False otherwise.
+        
+        Example:
+            >>> fire1 = Element(name="Fire", emoji="🔥")
+            >>> fire2 = Element(name="Fire", emoji="❤️‍🔥")
+            >>> fire1 == fire2
+            True
+            >>> fire1 == Element(name="Water")
+            False
+        """
+        if bool(self) == False and other is None:
             return True
-        elif isinstance(__value, Element) and __value.name == self.name:
+        elif isinstance(other, ElementProtocol) and other.name == self.name:
             return True
         else:
             return False
     
     def __bool__(self) -> bool:
-        return self.name               is not None and \
-               self.emoji              is not None and \
-               self.is_first_discovery is not None
+        """
+        Returns whether the element is considered "truthy" or not.
+
+        The element is considered True if all attributes (name, emoji, and is_first_discovery) are 
+        defined (not None). If any of these are None, it returns False.
+
+        Returns:
+            bool: True if all attributes are not None, False otherwise.
+        
+        Example:
+            >>> bool(Element(name="Fire", emoji="🔥"))
+            True
+            >>> bool(Element(name=None, emoji=None))
+            False
+        """
+        return self.name               is not None \
+           and self.emoji              is not None \
+           and self.is_first_discovery is not None
