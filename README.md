@@ -7,7 +7,7 @@
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
 \
-An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs.
+An API Wrapper for Neal's Infinite Craft game in Python.
 
 ### `infinite-craft`'s GitHub Actions Status
 [![](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/pytest.yml)
@@ -29,7 +29,8 @@ An API Wrapper of Neal's Infinite Craft game in Python for people to implement i
 # Discord Server
 > [!TIP]
 > Need help? Join our Discord community!\
-» https://discord.gg/FF2fSN2sJd
+» https://discord.gg/FF2fSN2sJd \
+[![Discord invite](https://invidget.switchblade.xyz/FF2fSN2sJd)](https://discord.gg/FF2fSN2sJd)
 
 # Table of Contents:
 - **[Key Features](#key-features)**
@@ -99,16 +100,17 @@ asyncio.run(main())
 You can find more examples in the **[documentation](#documentation-)**.
 
 # Documentation 📚
-Documentation is *coming soon™️*
+Documentation is *coming soon*.
 
 While the documentation is not ready, everything is documented well in the code with docstrings which you can see in an IDE like Visual Studio Code.
 
 *You can also see the in-development documentation page [here](https://sqdnoises.gitbook.io/infinite-craft).*
 
 # How does it work?
-This library basically contacts the URL:
-https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name \
-Tricks it with some headers, and handles everything accordingly.
+This library contacts the URL:
+> https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name
+
+where `element+name` in `first=` parameter is the first element you want to pair and the `element+name` in `second=` parameter is the second element.
 
 Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
 
@@ -116,16 +118,17 @@ Everything is handled in a user-friendly manner and asynchronously, so it should
 - [x] ~~Release version 1.0.0 on PyPI~~
 - [x] ~~Make a discord server for support~~ Join our community! https://discord.gg/FF2fSN2sJd
 - [x] ~~Add a runnable and configurable CLI mock API server~~
-- [x] ~~Make docs~~
+- [x] ~~Make a documentation page~~
 - [ ] Fix [403 Forbidden Error](https://github.com/sqdnoises/infinite-craft/issues/2)
-- [ ] Finish docs
-- [ ] Make a playable Infinite Craft CLI game (interactive, probably)
+- [ ] Add a synchronous class
+- [ ] Finish documentation page
+- [ ] Make a playable & interactive Infinite Craft CLI game
 
 <div align="center">
 
 # License
 [![](https://img.shields.io/badge/LICENSE-MIT-red?style=for-the-badge&labelColor=black)](LICENSE)\
-View the **[MIT License](LICENSE)** license that comes with this library.
+Click **[<kbd>MIT License</kbd>](LICENSE)** to view the license that comes with this library.
 
 </div>
 

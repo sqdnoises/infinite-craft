@@ -11,7 +11,7 @@ version = "1.1.4"
 authors = [
     { name = "sqdnoises" }
 ]
-description = "An API Wrapper of Neal's Infinite Craft game in Python for people to implement in their programs."
+description = "An API Wrapper for Neal's Infinite Craft game in Python."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
