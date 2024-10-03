@@ -3,16 +3,23 @@ import time
 import pytest
 import asyncio
 import uvicorn
-from typing import Any as Ignore
-from fastapi import FastAPI
+from typing import Any
 from uvicorn import Config
 from threading import Thread
-from infinitecraft import InfiniteCraft, Element, Logger
 
-kwargs: Ignore = dict(
-    api_url = "http://127.0.0.1:8080",
-    discoveries_storage="tests/discoveries.json",
-    logger=Logger(log_level=5)
+from infinitecraft       import (
+    InfiniteCraft,
+    Element
+)
+from infinitecraft.utils import mock_server
+
+HOST = "127.0.0.1"
+PORT = 15575
+
+kwargs: Any = dict(
+    api_url = f"http://{HOST}:{PORT}",
+    discoveries_storage = "tests/discoveries.json",
+    debug = True
 )
 
 def remove():
@@ -21,7 +28,7 @@ def remove():
         os.remove(file)
 
 class ThreadedUvicorn:
-    def __init__(self, *args: Ignore, config: Config | None = None, **kwargs: Ignore):
+    def __init__(self, *args: Any, config: Config | None = None, **kwargs: Any):
         if config is None:
             self.server = uvicorn.Server(Config(*args, **kwargs))
         else:
@@ -43,32 +50,16 @@ class ThreadedUvicorn:
                 continue
 
 # mock server
-app = FastAPI() 
-server = ThreadedUvicorn(app, host="127.0.0.1", port=8080)
-
-@app.get("/api/infinite-craft/pair")
-async def pair(first: str, second: str):
-    print(f"[MOCK API] PAIR: {first} + {second}")
-    print(f"[MOCK API] RESULT: 🌌 ???")
-    
-    if len(first) == 0 or len(second) == 0:
-        return {
-            "result": "???",
-            "emoji": "🌌",
-            "isNew": False
-        }
-    return {
-        "result": "???",
-        "emoji": "🌌",
-        "isNew": False
-    }
+app = mock_server()
+server = ThreadedUvicorn(app, host=HOST, port=PORT)
 
 print("Starting MOCK API server")
 server.start()
 print("MOCK API server started")
 
+remove()
+
 class TestInfiniteCraftFiles:
-    
     @pytest.mark.asyncio
     async def test_make_file_False(self):
         remove()
@@ -79,7 +70,6 @@ class TestInfiniteCraftFiles:
     async def test_make_file_True(self):
         remove()
         InfiniteCraft(**kwargs, make_file=True)
-
         assert os.path.exists(kwargs.get("discoveries_storage"))
     
     @pytest.mark.asyncio
@@ -260,7 +250,7 @@ async def test_InfiniteCraft_manual_control():
         await game.start()
     # --------------------------------
 
-def pytest_sessionfinish(session: Ignore, exitstatus: Ignore):
+def pytest_sessionfinish(session: Any, exitstatus: Any):
     print("Clean files")
     remove()
     print("Stopping MOCK API server")
