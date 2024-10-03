@@ -1,8 +1,10 @@
+from .types import Discovery
+
 __all__ = (
     "starting_discoveries",
 )
 
-starting_discoveries = [
+starting_discoveries: list[Discovery] = [
     {
         "name": "Water",
         "emoji": "💧",
