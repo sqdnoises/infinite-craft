@@ -1,9 +1,11 @@
+from dataclasses import dataclass
 from .abc import ElementProtocol
 
 __all__ = (
     "Element",
 )
 
+@dataclass(frozen=True)
 class Element(ElementProtocol):
     """
     Represents an element in the Infinite Craft system.
@@ -43,19 +45,9 @@ class Element(ElementProtocol):
         a discoveries JSON file or other data source.
     """
     
-    name: str | None
-    emoji: str | None
-    is_first_discovery: bool | None
-    
-    def __init__(
-        self,
-        name:               str  | None = None,
-        emoji:              str  | None = None,
-        is_first_discovery: bool | None = None
-    ) -> None:
-        self.name = name
-        self.emoji = emoji
-        self.is_first_discovery = is_first_discovery
+    name: str | None = None
+    emoji: str | None = None
+    is_first_discovery: bool | None = None
     
     def __str__(self) -> str:
         """
@@ -114,7 +106,7 @@ class Element(ElementProtocol):
             >>> fire1 == Element(name="Water")
             False
         """
-        if bool(self) == False and other is None:
+        if not self and other is None:
             return True
         elif isinstance(other, ElementProtocol) and other.name == self.name:
             return True
