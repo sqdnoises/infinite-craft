@@ -129,12 +129,12 @@ class AsyncAPIClientResponseProtocol(Protocol):
     
     _request_url: str
     _request_method: str
-    _request_headers: dict[str, str]
+    _request_headers: dict[str, str | None]
     
     _url: str
     _status: int
     _content_type: str
-    _headers: dict[str, str]
+    _headers: dict[str, str | None]
     
     @reify
     def request_url(self) -> str:
@@ -157,7 +157,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         return self._request_method
     
     @reify
-    def request_headers(self) -> dict[str, str]:
+    def request_headers(self) -> dict[str, str | None]:
         """
         dict[str, str]: The headers sent with the request.
 
@@ -208,7 +208,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         return self._content_type
     
     @reify
-    def headers(self) -> dict[str, str]:
+    def headers(self) -> dict[str, str | None]:
         """
         dict[str, str]: The headers in the response.
 

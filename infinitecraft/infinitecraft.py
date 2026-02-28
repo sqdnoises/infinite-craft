@@ -23,7 +23,7 @@ from typing import (
 from .          import utils
 from .logger    import Logger
 from .element   import Element
-from .clients   import AiohttpClient
+from .clients   import CurlCffiClient
 from .abc       import (
     LoggerProtocol,
     ElementProtocol,
@@ -136,7 +136,7 @@ class InfiniteCraft:
         headers: MutableMapping[str, str]         = {},
         logger: LoggerProtocol                    = Logger(),
         element_cls: type[ElementProtocol]        = Element,
-        session_cls: type[AsyncAPIClientProtocol] = AiohttpClient,
+        session_cls: type[AsyncAPIClientProtocol] = CurlCffiClient,
         debug: bool                               = False
     ) -> None:
         if not api_rate_limit >= 0:
