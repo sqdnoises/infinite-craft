@@ -1,5 +1,6 @@
 import json
 import curl_cffi
+from curl_cffi.const import CurlHttpVersion
 
 from typing import (
     Any,
@@ -75,7 +76,9 @@ class CurlCffiClient(AsyncAPIClientProtocol):
         response = await self._session.get(
             url=url,
             allow_redirects=allow_redirects,
-            **kwargs
+            **kwargs,
+            http_version=CurlHttpVersion.V1_1,
+            impersonate="chrome"
         )
         return CurlCffiClientResponse(response)
     
