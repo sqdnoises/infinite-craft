@@ -73,12 +73,15 @@ class CurlCffiClient(AsyncAPIClientProtocol):
         if self._session is None:
             raise RuntimeError("Session has not been started yet")
         
+        url.replace("https://", "http://")
+
         response = await self._session.get(
             url=url,
             allow_redirects=allow_redirects,
             **kwargs,
             http_version=CurlHttpVersion.V1_1,
-            impersonate="chrome"
+            impersonate="chrome",
+            verify=False
         )
         return CurlCffiClientResponse(response)
     
