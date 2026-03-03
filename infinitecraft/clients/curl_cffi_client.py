@@ -1,6 +1,5 @@
 import json
 import curl_cffi
-from curl_cffi.const import CurlHttpVersion
 
 from typing import (
     Any,
@@ -61,6 +60,14 @@ class CurlCffiClient(AsyncAPIClientProtocol):
         self._is_closed = False
         if self._session is None:
             self._session = curl_cffi.AsyncSession(base_url=self._base_url, headers=self._headers, **self._session_kwargs)
+        # Visit the website for cookies
+        await self._session.get(
+            url=self._base_url, 
+            allow_redirects=True,
+            verify=True,
+            impersonate="chrome120",
+        )
+        
     
     async def get(
         self,
@@ -72,16 +79,15 @@ class CurlCffiClient(AsyncAPIClientProtocol):
         """Perform a GET request."""
         if self._session is None:
             raise RuntimeError("Session has not been started yet")
-        
-        url.replace("https://", "http://")
+
+        self._headers["Referer"] = self.base_url
 
         response = await self._session.get(
             url=url,
             allow_redirects=allow_redirects,
+            verify=True,
             **kwargs,
-            http_version=CurlHttpVersion.V1_1,
-            impersonate="chrome",
-            verify=False
+            impersonate="chrome120",
         )
         return CurlCffiClientResponse(response)
     
