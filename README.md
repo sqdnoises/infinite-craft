@@ -1,11 +1,10 @@
 [![](https://github.com/sqdnoises/infinite-craft/raw/main/docs/.gitbook/assets/cover.png)](https://github.com/sqdnoises/infinite-craft)
 
-# infinite-craft `1.1.4`
-[![](https://img.shields.io/badge/infinite--craft_version-1.1.4-red)](https://github.com/sqdnoises/infinite-craft)
+# infinite-craft
 [![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
 [![](https://img.shields.io/pypi/dm/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
-[![](https://img.shields.io/badge/Python_Version-3.10_|_3.11_|_3.12-blue)](https://python.org)
+[![](https://img.shields.io/badge/Python_Version-3.10+-blue)](https://python.org)
 \
 An API Wrapper for Neal's Infinite Craft game in Python.
 
@@ -41,14 +40,9 @@ An API Wrapper for Neal's Infinite Craft game in Python.
 
 # Installation
 > [!IMPORTANT]
-> **Python 3.10** or above is required. Any versions below will not work.
+> **Python 3.10** or above is required. Any versions below are not guaranteed to work.
 
-To install, run:
-```
-pip install infinite-craft
-```
-
-To update, run:
+To install or update, run:
 ```
 pip install -U infinite-craft
 ```
