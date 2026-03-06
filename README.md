@@ -112,7 +112,7 @@ Everything is handled in a user-friendly manner and asynchronously, so it should
 - [x] ~~Make a documentation page~~
 - [x] Fix [403 Forbidden Error](https://github.com/sqdnoises/infinite-craft/issues/2)
 - [ ] Finish todos in code
-- [ ] Finish documentation page
+- [ ] Implement better documentation
 - [ ] Make a playable & interactive Infinite Craft CLI game
 
 <div align="center">
