@@ -23,7 +23,7 @@ from typing import (
 from .          import utils
 from .logger    import Logger
 from .element   import Element
-from .clients   import AiohttpClient
+from .clients   import CurlCffiClient
 from .abc       import (
     LoggerProtocol,
     ElementProtocol,
@@ -83,7 +83,7 @@ class InfiniteCraft:
         element_cls (type[ElementProtocol], optional): Class for creating elements. 
             Must subclass Element. Default: Element
         session_cls (type[AsyncAPIClientProtocol], optional): Class for API client session. 
-            Default: AiohttpClient
+            Default: CurlCffiClient
         debug (bool, optional): Enable debug logging. 
             Sets logger to Logger(log_level=5). Default: False
 
@@ -136,7 +136,7 @@ class InfiniteCraft:
         headers: MutableMapping[str, str]         = {},
         logger: LoggerProtocol                    = Logger(),
         element_cls: type[ElementProtocol]        = Element,
-        session_cls: type[AsyncAPIClientProtocol] = AiohttpClient,
+        session_cls: type[AsyncAPIClientProtocol] = CurlCffiClient,
         debug: bool                               = False
     ) -> None:
         if not api_rate_limit >= 0:
@@ -188,12 +188,13 @@ class InfiniteCraft:
             "priority": "u=1, i",
             "cache-control": "no-cache",
             "pragma": "no-cache",
-            "sec-ch-ua": '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+            "sec-ch-ua": '"Not_A Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
+            "Origin":"https://neal.fun",
             "Referer": "https://neal.fun/infinite-craft/",
             "Referrer-Policy": "strict-origin-when-cross-origin",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
