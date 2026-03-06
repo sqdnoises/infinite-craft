@@ -25,7 +25,11 @@ build==1.4.0
     #   infinite-craft (pyproject.toml)
     #   pip-tools
 certifi==2026.2.25
-    # via requests
+    # via
+    #   curl-cffi
+    #   requests
+cffi==2.0.0
+    # via curl-cffi
 charset-normalizer==3.4.5
     # via requests
 click==8.3.1
@@ -38,6 +42,8 @@ colorama==0.4.6
     #   build
     #   click
     #   pytest
+curl-cffi==0.14.0
+    # via infinite-craft (pyproject.toml)
 docutils==0.22.4
     # via readme-renderer
 fastapi==0.135.1
@@ -100,6 +106,8 @@ propcache==0.4.1
     # via
     #   aiohttp
     #   yarl
+pycparser==3.0
+    # via cffi
 pydantic==2.12.5
     # via fastapi
 pydantic-core==2.41.5
