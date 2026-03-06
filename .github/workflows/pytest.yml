@@ -27,8 +27,11 @@ jobs:
       - name: Install Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Install project with dev dependencies
-        run: uv pip install --system ".[dev]"
+        run: uv pip install ".[dev]"
 
       - name: Run tests
-        run: pytest -v --log-cli-level=ERROR
+        run: uv run pytest -v --log-cli-level=ERROR
