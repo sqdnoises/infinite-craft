@@ -41,11 +41,6 @@ infinite-craft = "infinitecraft.__main__:parse"
 infinitecraft = "infinitecraft.__main__:parse"
 
 [project.optional-dependencies]
-# plan to use in future
-# windows = [
-#     "pyreadline3"
-# ]
-
 dev = [
     # code formatting
     "black",
