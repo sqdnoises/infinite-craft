@@ -1,4 +1,7 @@
-__all__ = ("BaseException", "ClientResponseError")
+__all__ = (
+    "BaseException",
+    "ClientResponseError",
+)
 
 
 class BaseException(Exception):

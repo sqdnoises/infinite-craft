@@ -148,9 +148,9 @@ def mock_server() -> FastAPI:
     app = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
 
     @app.get("/api/infinite-craft/pair")
-    async def pair(
+    async def pair(  # pyright: ignore[reportUnusedFunction]
         first: str, second: str
-    ) -> dict[str, str | bool]:  # pyright: ignore[reportUnusedFunction]
+    ) -> dict[str, str | bool]:
         print(f"[MOCK API] PAIR: {first} + {second}")
         print(f"[MOCK API] RESULT: 🌌 ???")
 

@@ -111,11 +111,11 @@ class AsyncAPIClientResponseProtocol(Protocol):
     Attributes:
         request_url (str): The URL used for the request.
         request_method (str): The HTTP method used for the request.
-        request_headers (dict[str, str]): The headers used in the request.
+        request_headers (dict[str, str | None]): The headers used in the request.
         url (str): The URL of the response.
         status (int): The status code of the response.
         content_type (str): The content type of the response.
-        headers (dict[str, str]): The headers in the response.
+        headers (dict[str, str | None]): The headers in the response.
         ok (bool): Returns `True` if the status is less than 400, otherwise `False`.
 
     Methods:

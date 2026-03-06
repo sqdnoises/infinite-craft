@@ -26,7 +26,7 @@ from . import (
 )
 from .utils import mock_server
 
-# implement in future
+# TODO: implement in future
 # if os.name == "nt":
 #     try:
 #         from pyreadline3 import Readline
@@ -61,12 +61,10 @@ def main(args: argparse.Namespace) -> None:
 
 def reset_subcommand(args: argparse.Namespace) -> None:
     discoveries_storage = os.path.expandvars(os.path.expanduser(args.discoveries))
-
     if not os.path.exists(discoveries_storage):
         parser.error(f"File '{discoveries_storage}' not found")
 
     InfiniteCraft.reset(discoveries_storage=discoveries_storage)
-
     print(f'"{discoveries_storage}" file contents reset successfully.')
 
 

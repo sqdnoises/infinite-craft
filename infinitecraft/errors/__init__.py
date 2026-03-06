@@ -1,4 +1,9 @@
-__all__ = ("BaseException", "NotFileError", "NotDirectoryError", "NotWritableError")
+__all__ = (
+    "BaseException",
+    "NotFileError",
+    "NotDirectoryError",
+    "NotWritableError",
+)
 
 
 class BaseException(Exception):

@@ -23,6 +23,6 @@ __version__ = "1.1.4"
 __display_version__ = __title__ + " " + __version__
 
 from .element import *
+from .errors import *
 from .infinitecraft import *
 from .logger import *
-from .errors import *

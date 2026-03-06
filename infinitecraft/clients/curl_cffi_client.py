@@ -1,8 +1,6 @@
 import json
 import curl_cffi
-
 from typing import Any, Callable
-
 from ..abc import AsyncAPIClientProtocol, AsyncAPIClientResponseProtocol
 
 

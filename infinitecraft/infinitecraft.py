@@ -116,10 +116,10 @@ class InfiniteCraft:
     def __init__(
         self,
         *,
-        api_url: str = "https://neal.fun",  # API to contact
+        api_url: str = "https://neal.fun",
         api_rate_limit: int = 400,  # 400 requests per minute
         manual_control: bool = False,
-        discoveries_storage: str = "discoveries.json",  # where to store the game data
+        discoveries_storage: str = "discoveries.json",  # game data file location
         encoding: str = "utf-8",
         do_reset: bool = False,
         make_file: bool = True,
