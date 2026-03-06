@@ -4,34 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release (e.g. 1.0.0)"
+        description: "Version to release (example: 1.4.0)"
         required: true
         type: string
 
 jobs:
-  build-package:
-    name: Build Python 🐍 package 📦
+  release:
+    name: Build, Sign and Publish Release 📦
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
-
-    outputs:
-      tag: ${{ steps.tag.outputs.tag }}
+      id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Create tag
-        id: tag
-        run: |
-          TAG=${{ inputs.version }}
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions@users.noreply.github.com"
-          git tag "$TAG"
-          git push origin "$TAG"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -40,52 +28,28 @@ jobs:
         run: uv python install 3.14
 
       - name: Install project with dev dependencies
-        run: |
-          uv pip install --system ".[dev]"
+        run: uv pip install --system ".[dev]"
 
       - name: Build package
         run: python -m build
 
-      - name: Check distributions with twine
+      - name: Check distributions
         run: twine check dist/*
 
-      - name: Store the distribution packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-  github-release:
-    name: >
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
-    needs: build-package
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      id-token: write
-
-    steps:
-      - name: Download all distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-      - name: Sign the dists with Sigstore
+      - name: Sign distributions with Sigstore
         uses: sigstore/gh-action-sigstore-python@v3.0.0
         with:
           inputs: |
             ./dist/*.tar.gz
             ./dist/*.whl
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release and upload artifacts
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          gh release create \
-          "${{ needs.build-package.outputs.tag }}" \
-          dist/*.tar.gz dist/*.whl \
-          --repo "${{ github.repository }}" \
-          --notes ""
+          VERSION="v${{ inputs.version }}"
+          gh release create "$VERSION" \
+            dist/*.tar.gz dist/*.whl \
+            --repo "${{ github.repository }}" \
+            --title "$VERSION" \
+            --notes ""
