@@ -15,7 +15,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/p/<your-project-name>
+      url: https://pypi.org/p/infinite-craft
 
     permissions:
       contents: read
