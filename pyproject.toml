@@ -1,16 +1,11 @@
 [build-system]
-requires = [
-    "setuptools",
-    "wheel"
-]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "infinite-craft"
 version = "1.1.4"
-authors = [
-    { name = "sqdnoises" }
-]
+authors = [{ name = "sqdnoises" }]
 description = "An API Wrapper for Neal's Infinite Craft game in Python."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -18,11 +13,14 @@ requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent"
+    "Operating System :: OS Independent",
 ]
 dependencies = [
     "aiohttp",
-    "fastapi", "uvicorn" # for mock api
+
+    # mock api
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.urls]
@@ -40,9 +38,20 @@ infinitecraft = "infinitecraft.__main__:parse"
 # ]
 
 dev = [
-    "pytest", "pytest-asyncio", # for testing
-    "bumpver", # for controlling version 
-    "pip-tools", "build", "twine" # for tools
+    # code formatting
+    "black",
+
+    # testing
+    "pytest",
+    "pytest-asyncio",
+
+    # version control
+    "bumpver",
+
+    # tools
+    "pip-tools",
+    "build",
+    "twine",
 ]
 
 [tool.bumpver]
@@ -62,5 +71,5 @@ push = true
 "infinitecraft/__init__.py" = ['__version__ = "{version}"']
 "README.md" = [
     "# infinite-craft `{version}`",
-    "https://img.shields.io/badge/infinite--craft_version-{version}-red"
+    "https://img.shields.io/badge/infinite--craft_version-{version}-red",
 ]
