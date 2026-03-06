@@ -31,14 +31,17 @@ jobs:
       - name: Install Python 3.14
         run: uv python install 3.14
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Install project with dev dependencies
-        run: uv pip install --system ".[dev]"
+        run: uv pip install ".[dev]"
 
       - name: Build package
-        run: python -m build
+        run: uv run python -m build
 
       - name: Verify distributions
-        run: twine check dist/*
+        run: uv run twine check dist/*
 
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
