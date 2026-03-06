@@ -15,13 +15,13 @@ import copy
 import json
 import time
 import asyncio
-from typing import Any, Callable, MutableMapping
+import logging
+from typing import Optional, Any, Callable, MutableMapping
 
 from . import utils
-from .logger import Logger
 from .element import Element
 from .clients import CurlCffiClient
-from .abc import LoggerProtocol, ElementProtocol, AsyncAPIClientProtocol
+from .abc import ElementProtocol, AsyncAPIClientProtocol
 from .constants import starting_discoveries
 from .types import ResultDict, Discovery
 
@@ -67,8 +67,14 @@ class InfiniteCraft:
             Default: True
         headers (MutableMapping[str, str], optional): Custom headers for API requests.
             Default: {}
-        logger (LoggerProtocol, optional): Custom logger for the class.
-            Default: Logger()
+        log_handler (Optional[logging.Handler], optional): Custom log handler.
+            Default: MISSING
+        log_formatter (Optional[logging.Formatter], optional): Custom log formatter.
+            Default: None
+        log_level (Optional[int], optional): Custom log level.
+            Default: None
+        root_logger (bool, optional): Whether to configure the root logger.
+            Default: False
         element_cls (type[ElementProtocol], optional): Class for creating elements.
             Must subclass Element. Default: Element
         session_cls (type[AsyncAPIClientProtocol], optional): Class for API client session.
@@ -103,7 +109,7 @@ class InfiniteCraft:
     _manual_control: bool
     _discoveries_location: str
     _encoding: str
-    _logger: LoggerProtocol
+    _logger: logging.Logger
     _element_cls: type[ElementProtocol]
     _requests: list[float]
     _session_cls: type[AsyncAPIClientProtocol]
@@ -124,7 +130,10 @@ class InfiniteCraft:
         do_reset: bool = False,
         make_file: bool = True,
         headers: MutableMapping[str, str] = {},
-        logger: LoggerProtocol = Logger(),
+        log_handler: Optional[logging.Handler] = utils.MISSING,
+        log_formatter: Optional[logging.Formatter] = None,
+        log_level: Optional[int] = None,
+        root_logger: bool = False,
         element_cls: type[ElementProtocol] = Element,
         session_cls: type[AsyncAPIClientProtocol] = CurlCffiClient,
         debug: bool = False,
@@ -132,13 +141,29 @@ class InfiniteCraft:
         if not api_rate_limit >= 0:
             raise ValueError("api_rate_limit must be greater than or equal to 0")
 
-        dsreset = False
+        if log_handler is not None:
+            if log_handler is utils.MISSING:
+                log_handler = None
 
+            if debug:
+                log_level = logging.DEBUG
+
+            utils.setup_logging(
+                handler=log_handler,
+                formatter=log_formatter,
+                level=log_level,
+                root=root_logger,
+            )
+
+        library, _, _ = __name__.partition(".")
+        self._logger = logging.getLogger(library)
+
+        dsreset = False
         if not utils.check_file(discoveries_storage):
             if not make_file:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
 
-            logger.warn(
+            self._logger.warning(
                 f"Resetting discoveries storage JSON file ({discoveries_storage})"
             )
             self.reset(
@@ -154,18 +179,13 @@ class InfiniteCraft:
         self._discoveries_location = discoveries_storage
         self._encoding = encoding
 
-        self._logger = logger
-        if debug and isinstance(
-            logger, LoggerProtocol
-        ):  # pyright: ignore[reportUnnecessaryIsInstance]
-            self._logger.log_level = 5
         self._element_cls = element_cls
         self._session_cls = session_cls
 
         self._requests = []
 
         if do_reset and not dsreset:
-            self._logger.warn(
+            self._logger.warning(
                 f"Resetting discoveries JSON file ({discoveries_storage})"
             )
             self.reset(discoveries_storage=discoveries_storage, encoding=encoding)
@@ -327,7 +347,7 @@ class InfiniteCraft:
             f"element_cls={repr(self._element_cls)}, "
             f"session_cls={repr(self._session_cls)}, "
             f"logger={repr(self._logger)}, "
-            f"debug={repr(self._logger.log_level == 5)}"
+            f"debug={repr(self._logger.level == logging.DEBUG)}"
             f")"
         )
 
@@ -341,7 +361,6 @@ class InfiniteCraft:
             self._logger.debug(
                 "Not starting session automatically because manual control is ON"
             )
-
         return self
 
     async def __aexit__(self, *args: Any) -> None:
@@ -692,7 +711,7 @@ class InfiniteCraft:
             len(self._requests) > self.api_rate_limit
             and self._requests[0] + 60 > time.monotonic()
         ):
-            self._logger.warn(
+            self._logger.warning(
                 f"We are getting ratelimited! Retrying in {(self._requests[0] + 60) - time.monotonic()}s..."
             )
             await asyncio.sleep((self._requests[0] + 60) - time.monotonic())

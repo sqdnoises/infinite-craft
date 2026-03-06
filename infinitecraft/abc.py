@@ -9,7 +9,6 @@ __all__ = (
     "ElementProtocol",
     "AsyncAPIClientProtocol",
     "AsyncAPIClientResponseProtocol",
-    "LoggerProtocol",
 )
 
 
@@ -242,46 +241,3 @@ class AsyncAPIClientResponseProtocol(Protocol):
 
     async def __aenter__(self) -> "AsyncAPIClientResponseProtocol": ...
     async def __aexit__(self, *args: Any) -> None: ...
-
-
-@runtime_checkable
-class LoggerProtocol(Protocol):
-    """
-    Protocol for logger classes.
-
-    Attributes:
-        log_level (int): The current logging level.
-
-    Methods:
-        debug: Logs a debug message.
-        info: Logs an informational message.
-        warn: Logs a warning message.
-        error: Logs an error message.
-        critical: Logs a critical message.
-
-    Example:
-        >>> logger = LoggerProtocol(log_level=10)
-        >>> logger.debug("This is a debug message.")
-    """
-
-    log_level: int
-
-    def debug(self, message: str | Any) -> None:
-        """Log a debug message."""
-        ...
-
-    def info(self, message: str | Any) -> None:
-        """Log an info message."""
-        ...
-
-    def warn(self, message: str | Any) -> None:
-        """Log a warning message."""
-        ...
-
-    def error(self, message: str | Any) -> None:
-        """Log an error message."""
-        ...
-
-    def critical(self, message: str | Any) -> None:
-        """Log a critical message."""
-        ...

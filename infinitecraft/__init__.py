@@ -25,4 +25,3 @@ __display_version__ = __title__ + " " + __version__
 from .element import *
 from .errors import *
 from .infinitecraft import *
-from .logger import *

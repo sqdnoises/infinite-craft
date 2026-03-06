@@ -1,11 +1,26 @@
 import os
+import sys
 import json
 import inspect
-from typing import Any, Mapping, Callable, Coroutine, TypeVar
+import logging
+from typing import Optional, Any, Mapping, Callable, Coroutine, TypeVar, cast
 from fastapi import FastAPI
-from . import errors
 
-__all__ = ("reify", "check_file", "dump_json", "maybe_coroutine", "mock_server")
+from . import errors
+from .termcolors import *
+
+__all__ = (
+    "reify",
+    "check_file",
+    "dump_json",
+    "maybe_coroutine",
+    "mock_server",
+    "MISSING",
+    "is_docker",
+    "stream_supports_colour",
+    "ColourFormatter",
+    "setup_logging",
+)
 
 _T = TypeVar("_T")
 
@@ -157,3 +172,128 @@ def mock_server() -> FastAPI:
         return {"result": "???", "emoji": "🌌", "isNew": False}
 
     return app
+
+
+# the following code is heavily inspired from discord.utils from discord.py
+
+
+class _MissingSentinel:
+    __slots__ = ()
+
+    def __eq__(self, other) -> bool:  # type: ignore
+        return False
+
+    def __bool__(self) -> bool:
+        return False
+
+    def __hash__(self) -> int:
+        return 0
+
+    def __repr__(self):
+        return "..."
+
+
+MISSING: Any = _MissingSentinel()
+
+
+def is_docker() -> bool:
+    path = "/proc/self/cgroup"
+    return os.path.exists("/.dockerenv") or (
+        os.path.isfile(path) and any("docker" in line for line in open(path))
+    )
+
+
+def stream_supports_colour(stream: Any) -> bool:
+    is_a_tty = hasattr(stream, "isatty") and stream.isatty()
+
+    # Pycharm and VSCode support colour in their inbuilt editors
+    if "PYCHARM_HOSTED" in os.environ or os.environ.get("TERM_PROGRAM") == "vscode":
+        return is_a_tty
+
+    if sys.platform != "win32":
+        # Docker does not consistently have a tty attached to it
+        return is_a_tty or is_docker()
+
+    # ANSICON checks for things like ConEmu
+    # WT_SESSION checks if this is Windows Terminal
+    return is_a_tty and ("ANSICON" in os.environ or "WT_SESSION" in os.environ)
+
+
+class ColourFormatter(logging.Formatter):
+    LEVEL_COLORS = [
+        (logging.DEBUG, bold + bg_black),
+        (logging.INFO, bold + blue),
+        (logging.WARNING, bold + yellow),
+        (logging.ERROR, bold + red),
+        (logging.CRITICAL, bg_rgb(200, 0, 0) + white),
+    ]
+
+    def __init__(
+        self, *args: Any, name_color: Optional[str] = None, **kwargs: Any
+    ) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.FORMATS = {
+            level: logging.Formatter(
+                f"{bold + black}%(asctime)s{reset} {color}%(levelname)-8s{reset} {name_color or red}%(name)s{reset} %(message)s",
+                "%Y-%m-%d %H:%M:%S",
+            )
+            for level, color in self.LEVEL_COLORS
+        }
+
+    def format(self, record: logging.LogRecord) -> str:
+        formatter = self.FORMATS.get(record.levelno)
+        if formatter is None:
+            formatter = self.FORMATS[logging.DEBUG]
+
+        # Override the traceback to always print in red
+        if record.exc_info:
+            text = formatter.formatException(record.exc_info)
+            record.exc_text = f"\x1b[31m{text}\x1b[0m"
+
+        output = formatter.format(record)
+
+        # Remove the cache layer
+        record.exc_text = None
+        return output
+
+
+def setup_logging(
+    *,
+    name_color: Optional[str] = None,
+    handler: Optional[logging.Handler] = None,
+    formatter: Optional[logging.Formatter] = None,
+    level: Optional[int] = None,
+    root: bool = True,
+) -> None:
+    if level is None:
+        level = logging.INFO
+
+    if handler is None:
+        handler = logging.StreamHandler(sys.stderr)
+
+    if formatter is None:
+        # Cast to Any to suppress 'Unknown' generic type argument warnings
+        stream = cast(Any, getattr(handler, "stream", None))
+        if isinstance(handler, logging.StreamHandler) and stream_supports_colour(
+            stream
+        ):
+            formatter = ColourFormatter(name_color=name_color)
+        else:
+            dt_fmt = "%Y-%m-%d %H:%M:%S"
+            formatter = logging.Formatter(
+                "[{asctime}] [{levelname:<8}] {name}: {message}", dt_fmt, style="{"
+            )
+
+    if root:
+        logger = logging.getLogger()
+    else:
+        library, _, _ = __name__.partition(".")
+        logger = logging.getLogger(library)
+
+    handler.setLevel(level)
+    handler.setFormatter(formatter)
+    logger.setLevel(logging.DEBUG)
+
+    # Cast back to logging.Handler to strip the partially unknown type for strict mode
+    logger.addHandler(cast(logging.Handler, handler))

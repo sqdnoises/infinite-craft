@@ -72,7 +72,7 @@ class Element(ElementProtocol):
         Returns a string that shows how the Element object was constructed.
 
         Returns:
-            str: A string representation of the object’s creation.
+            str: A string representation of the object's creation.
 
         Example:
             >>> repr(Element(name="Fire", emoji="🔥"))

@@ -1,6 +1,9 @@
 from typing import TypedDict
 
-__all__ = ("ResultDict", "Discovery")
+__all__ = (
+    "ResultDict",
+    "Discovery",
+)
 
 
 class ResultDict(TypedDict):
