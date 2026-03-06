@@ -13,7 +13,7 @@ Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite
 __author__ = "SqdNoises"
 __license__ = "MIT"
 __copyright__ = "Copyright 2024-present SqdNoises"
-__version__ = "1.2.0a"
+__version__ = "1.2.0"
 
 from typing import NamedTuple, Literal
 
@@ -30,4 +30,4 @@ class VersionInfo(NamedTuple):
     serial: int
 
 
-version_info = VersionInfo(major=1, minor=2, micro=0, releaselevel="alpha", serial=0)
+version_info = VersionInfo(major=1, minor=2, micro=0, releaselevel="final", serial=0)
