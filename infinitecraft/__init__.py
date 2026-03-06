@@ -1,7 +1,7 @@
 """
 An API Wrapper for Neal's Infinite Craft game in Python.
-Copyright (C) 2024-present SqdNoises, Neal Agarwal
-License: MIT License
+Copyright 2024-present SqdNoises
+License: MIT
 To view the full license, visit https://github.com/sqdnoises/infinite-craft#license
 
 Need help with something?
@@ -10,18 +10,24 @@ Join our Discord server -> https://discord.gg/EPr4T2F8bq
 Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/
 """
 
-__title__ = "infinite-craft"
-__full_title__ = "Infinite Craft"
-__description__ = "An API Wrapper for Neal's Infinite Craft game in Python."
-__cli_description__ = "Infinite Craft Utilities"
 __author__ = "SqdNoises"
-__license__ = "MIT License"
-__copyright__ = "Copyright (C) 2024-present SqdNoises, Neal Agarwal"
-__github__ = "https://github.com/sqdnoises/infinite-craft"
-__discord__ = "https://discord.gg/EPr4T2F8bq"
-__version__ = "1.1.4"
-__display_version__ = __title__ + " " + __version__
+__license__ = "MIT"
+__copyright__ = "Copyright 2024-present SqdNoises"
+__version__ = "1.2.0a"
+
+from typing import NamedTuple, Literal
 
 from .element import *
 from .errors import *
 from .infinitecraft import *
+
+
+class VersionInfo(NamedTuple):
+    major: int
+    minor: int
+    micro: int
+    releaselevel: Literal["alpha", "beta", "candidate", "final"]
+    serial: int
+
+
+version_info = VersionInfo(major=1, minor=2, micro=0, releaselevel="alpha", serial=0)

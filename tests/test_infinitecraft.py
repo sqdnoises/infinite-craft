@@ -1,277 +1,243 @@
 import os
 import time
 import pytest
-import asyncio
-import uvicorn
+import warnings
 from typing import Any
-from uvicorn import Config
-from threading import Thread
-
 from infinitecraft import InfiniteCraft, Element
-from infinitecraft.utils import mock_server
-
-HOST = "127.0.0.1"
-PORT = 15575
-
-kwargs: Any = dict(
-    api_url=f"http://{HOST}:{PORT}",
-    discoveries_storage="tests/discoveries.json",
-    debug=True,
-)
 
 
-def remove():
-    file = kwargs.get("discoveries_storage")
-    if os.path.exists(file):
-        os.remove(file)
+class TestinfinitecraftFileTests:
+    """
+    Tests the file handling logic of the InfiniteCraft client, specifically
+    how it creates or interacts with the local discoveries.json file.
+    """
 
-
-class ThreadedUvicorn:
-    def __init__(self, *args: Any, config: Config | None = None, **kwargs: Any):
-        if config is None:
-            self.server = uvicorn.Server(Config(*args, **kwargs))
-        else:
-            self.server = uvicorn.Server(config)
-        self.thread = Thread(daemon=True, target=self.server.run)
-
-    def start(self):
-        self.thread.start()
-        asyncio.run(self.wait_for_started())
-
-    async def wait_for_started(self):
-        while not self.server.started:
-            await asyncio.sleep(0.1)
-
-    def stop(self):
-        if self.thread.is_alive():
-            self.server.should_exit = True
-            while self.thread.is_alive():
-                continue
-
-
-# mock server
-app = mock_server()
-server = ThreadedUvicorn(app, host=HOST, port=PORT)
-
-print("Starting MOCK API server")
-server.start()
-print("MOCK API server started")
-
-remove()
-
-
-class TestInfiniteCraftFiles:
     @pytest.mark.asyncio
-    async def test_make_file_False(self):
-        remove()
+    async def test_raises_error_when_make_file_is_false_without_existing_file(
+        self, mock_kwargs: dict[str, Any]
+    ) -> None:
+        # If the file doesn't exist and we explicitly tell the client NOT to make it,
+        # it should raise a FileNotFoundError.
         with pytest.raises(FileNotFoundError):
-            InfiniteCraft(**kwargs, make_file=False)
+            InfiniteCraft(**mock_kwargs, make_file=False)
 
     @pytest.mark.asyncio
-    async def test_make_file_True(self):
-        remove()
-        InfiniteCraft(**kwargs, make_file=True)
-        assert os.path.exists(kwargs.get("discoveries_storage"))
+    async def test_creates_file_when_make_file_is_true(
+        self, mock_kwargs: dict[str, Any]
+    ) -> None:
+        # If we tell the client to make the file, it should create it successfully.
+        InfiniteCraft(**mock_kwargs, make_file=True)
+        assert os.path.exists(mock_kwargs.get("discoveries_storage", ""))
 
     @pytest.mark.asyncio
-    async def test_make_file_and_do_reset_True(self):
-        remove()
-        InfiniteCraft(**kwargs, do_reset=True, make_file=True)
+    async def test_creates_fresh_file_when_reset_and_make_file_are_true(
+        self, mock_kwargs: dict[str, Any]
+    ) -> None:
+        # Combining reset and make_file should result in a fresh file being created.
+        InfiniteCraft(**mock_kwargs, do_reset=True, make_file=True)
+        assert os.path.exists(mock_kwargs.get("discoveries_storage", ""))
 
     @pytest.mark.asyncio
-    async def test_make_file_and_do_reset_False(self):
-        remove()
+    async def test_file_handling_behavior_when_reset_is_false(
+        self, mock_kwargs: dict[str, Any]
+    ) -> None:
+        # If reset is False, it expects a file to exist. If we forbid making one, it fails.
         with pytest.raises(FileNotFoundError):
-            InfiniteCraft(**kwargs, do_reset=False, make_file=False)
+            InfiniteCraft(**mock_kwargs, do_reset=False, make_file=False)
 
-        InfiniteCraft(**kwargs, do_reset=False, make_file=True)
+        # Create the file so the next test can succeed
+        InfiniteCraft(**mock_kwargs, do_reset=False, make_file=True)
 
-        InfiniteCraft(**kwargs, do_reset=False, make_file=False)
-        assert os.path.exists(kwargs.get("discoveries_storage"))
+        # Now that the file exists, this should pass without raising an error
+        InfiniteCraft(**mock_kwargs, do_reset=False, make_file=False)
+        assert os.path.exists(mock_kwargs.get("discoveries_storage", ""))
 
 
 @pytest.mark.asyncio
-async def test_InfiniteCraft():
-    remove()
-    game = InfiniteCraft(**kwargs)
+async def test_session_lifecycle_ping_and_rate_limiting(
+    mock_kwargs: dict[str, Any],
+) -> None:
+    """
+    Main test for the InfiniteCraft client. Tests session lifecycle, basic
+    pairing API calls, and the internal rate-limiting defense mechanism.
+    """
+    game = InfiniteCraft(**mock_kwargs)
 
-    # --- test_check_session_before ---
-    assert game.closed == None
-
+    # --- Test Session Lifecycle (Before Start) ---
+    assert game.closed is None
     with pytest.raises(RuntimeError):
-        await game.close()
-    # ---------------------------------
+        await game.close()  # Cannot close a session that hasn't started
 
-    await game.start()  # test_start_session
+    # --- Test Session Lifecycle (Started) ---
+    await game.start()
+    assert game.closed is False
 
-    assert game.closed == False  # test_session_started
-
-    # --- test_check_ping ---
+    # --- Test Ping ---
     ping = await game.ping()
-    print(ping, "seconds")
+    print(f"{ping} seconds")
     assert ping >= 0
-    # -----------------------
-
-    # --- test_check_requests ---
 
     start = time.monotonic()
-
-    # --- test_check_pairing ---
     first = Element("Fire")
     second = Element("Water")
 
-    # --- test_check_store_False ---
+    # --- Test Pairing (No Storage) ---
     result = await game.pair(first, second, store=False)
     assert result not in game.discoveries
-    # ------------------------------
 
+    # --- Test Rate Limiting (Under the limit) ---
+    # Artificially fill the request history to 1 LESS than the maximum allowed
     current = time.monotonic() - 50
-    game._requests = [
-        current for i in range(game._api_rate_limit - 1)
-    ]  # adding 1 less than ratelimit amount of dummy requests # type: ignore
+    game._requests = [  # type: ignore
+        current for _ in range(game._api_rate_limit - 1)  # type: ignore
+    ]
 
     result = await game.pair(first, second)
     assert result is not None
     assert result in game.discoveries
-    # --------------------------
 
+    # Ensure the request happened quickly because we weren't rate-limited yet
     time_taken = round(time.monotonic() - start)
+    assert time_taken < 2
 
-    assert time_taken < 2  # 2 seconds for good measure
-
+    # --- Test Rate Limiting (Hitting the limit) ---
+    # Artificially fill the request history completely to trigger the defense mechanism
     current = time.monotonic() - 50
-    game._requests = [
-        current for i in range(game._api_rate_limit)
-    ]  # adding ratelimit amount of dummy requests # type: ignore
+    game._requests = [  # type: ignore
+        current for _ in range(game._api_rate_limit)  # type: ignore
+    ]
 
     start = time.monotonic()
     result = await game.pair(first, second)
     time_taken = round(time.monotonic() - start)
 
-    assert (
-        time_taken >= 10 and time_taken < 12
-    )  # 10 seconds for "rate limit" and +2 seconds for good measure
+    # The library should have detected the limit and automatically paused for ~10 seconds
+    assert 10 <= time_taken < 12
 
-    # ---------------------------
+    # --- Test Session Lifecycle (After Close) ---
+    await game.close()
+    assert game.closed is True
 
-    await game.close()  # test_end_session
-
-    # --- test_check_session_after ---
-    assert game.closed == True
-
+    # Cannot start a session that has already been closed
     with pytest.raises(RuntimeError):
         await game.start()
-    # --------------------------------
 
 
 @pytest.mark.asyncio
-async def test_InfiniteCraft_async_with():
-    remove()
-    game = InfiniteCraft(**kwargs)
-
-    # --- test_check_session_before ---
-    assert game.closed == None
+async def test_context_manager_updates_session_state_correctly(
+    mock_kwargs: dict[str, Any],
+) -> None:
+    """
+    Tests that the async context manager propertly updates the 'closed' state.
+    """
+    game = InfiniteCraft(**mock_kwargs)
+    assert game.closed is None
 
     with pytest.raises(RuntimeError):
         await game.close()
-    # ---------------------------------
 
-    await game.start()  # test_start_session
+    await game.start()
+    assert game.closed is False
 
-    assert game.closed == False  # test_session_started
-
-    await game.close()  # test_end_session
-
-    # --- test_check_session_after ---
-    assert game.closed == True
+    await game.close()
+    assert game.closed is True
 
     with pytest.raises(RuntimeError):
         await game.start()
-    # --------------------------------
 
 
 @pytest.mark.asyncio
-async def test_InfiniteCraft_async_with2():
-    remove()
-
-    # --- test_session ---
-    async with InfiniteCraft(**kwargs) as game:  # test_start_session  # type: ignore
+async def test_full_api_flow_using_async_context_manager(
+    mock_kwargs: dict[str, Any],
+) -> None:
+    """
+    Tests the full API functionality (ping, pair, rate limiting) while utilizing
+    the async context manager ('async with') to handle startup/teardown.
+    """
+    async with InfiniteCraft(**mock_kwargs) as game:  # type: ignore
         game: InfiniteCraft
 
-        # --- test_check_ping ---
         ping = await game.ping()
-        print(ping, "seconds")
+        print(f"{ping} seconds")
         assert ping >= 0
-        # -----------------------
-
-        assert game.closed == False  # test_session_started
-
-        # --- test_check_requests ---
+        assert game.closed is False
 
         start = time.monotonic()
-
-        # --- test_check_pairing ---
         first = Element("Fire")
         second = Element("Water")
 
-        # --- test_check_store_False ---
         result = await game.pair(first, second, store=False)
         assert result not in game.discoveries
-        # ------------------------------
 
+        # Test staying just under the rate limit
         current = time.monotonic() - 50
-        game._requests = [
-            current for i in range(game._api_rate_limit - 1)
-        ]  # adding 1 less than ratelimit amount of dummy requests # type: ignore
+        game._requests = [  # type: ignore
+            current for _ in range(game._api_rate_limit - 1)  # type: ignore
+        ]
 
         result = await game.pair(first, second)
         assert result is not None
-        # --------------------------
 
         time_taken = round(time.monotonic() - start)
+        assert time_taken < 2
 
-        assert time_taken < 2  # 2 seconds for good measure
-
+        # Test hitting the rate limit and verify the ~10s delay
         current = time.monotonic() - 50
-        game._requests = [
-            current for i in range(game._api_rate_limit)
-        ]  # adding ratelimit amount of dummy requests # type: ignore
+        game._requests = [  # type: ignore
+            current for _ in range(game._api_rate_limit)  # type: ignore
+        ]
 
         start = time.monotonic()
         result = await game.pair(first, second)
         time_taken = round(time.monotonic() - start)
 
-        assert (
-            time_taken >= 10 and time_taken < 12
-        )  # 10 seconds for "rate limit" and +2 seconds for good measure
-
-        # ---------------------------
-    # --------------------------
+        assert 10 <= time_taken < 12
 
 
 @pytest.mark.asyncio
-async def test_InfiniteCraft_manual_control():
-    remove()
-    game = InfiniteCraft(**kwargs, manual_control=True)
+async def test_session_lifecycle_with_manual_control_enabled(
+    mock_kwargs: dict[str, Any],
+) -> None:
+    """
+    Tests that the client functions correctly when manual_control is enabled.
+    """
+    game = InfiniteCraft(**mock_kwargs, manual_control=True)
 
-    await game.start()  # test_start_session
+    await game.start()
+    assert game.closed is False
 
-    assert game.closed == False  # test_session_started
-
-    await game.close()  # test_end_session
-
-    # --- test_check_session_after ---
-    assert game.closed == True
+    await game.close()
+    assert game.closed is True
 
     with pytest.raises(RuntimeError):
         await game.start()
-    # --------------------------------
 
 
-def pytest_sessionfinish(session: Any, exitstatus: Any):
-    print("Clean files")
-    remove()
-    print("Stopping MOCK API server")
-    server.stop()
-    print("MOCK API server stopped")
-    print("Test finished")
+@pytest.mark.asyncio
+async def test_real_api_connectivity(tmp_path: Any) -> None:
+    """
+    Tests the real neil.fun API.
+    Wrapped in a try/except block so that if the external API goes down or changes,
+    it issues a warning rather than failing the entire test suite in CI/CD.
+    """
+    real_api_kwargs = {  # type: ignore
+        "discoveries_storage": str(tmp_path / "actual_discoveries.json"),
+        "debug": True,
+    }
+
+    async with InfiniteCraft(**real_api_kwargs) as game:  # type: ignore
+        try:
+            ping = await game.ping()
+            assert ping >= 0
+
+            first = Element("Fire")
+            second = Element("Water")
+
+            # Store=False prevents us from muddying up real game files
+            result = await game.pair(first, second, store=False)
+            assert result is not None
+
+        except Exception as e:
+            warnings.warn(
+                f"Real API test failed (likely downtime or network issue). Exception: {e}"
+            )

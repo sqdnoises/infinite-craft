@@ -1,30 +1,12 @@
-"""
-An API Wrapper for Neal's Infinite Craft game in Python.
-Copyright (C) 2024-present SqdNoises, Neal Agarwal
-License: MIT License
-To view the full license, visit https://github.com/sqdnoises/infinite-craft#license
-
-Need help with something?
-Join our Discord server -> https://discord.gg/EPr4T2F8bq
-
-Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/
-"""
-
 import os
-import uvicorn
 import argparse
 
 from . import (
-    __title__,
     __license__,
     __copyright__,
-    __cli_description__,
-    __display_version__,
-    __github__,
-    __discord__,
+    __version__,
     InfiniteCraft,
 )
-from .utils import mock_server
 
 # TODO: implement in future
 # if os.name == "nt":
@@ -39,20 +21,23 @@ from .utils import mock_server
 # else:
 #     import readline
 
+library, _, _ = __name__.partition(".")
+version = f"{library} {__version__}"
+
 
 def main(args: argparse.Namespace) -> None:
     if args.version:
-        print(__display_version__)
+        print(version)
     elif args.information:
-        print(__display_version__)
-        print(__copyright__)
-        print("License: " + __license__)
-        print(f"For more information, see: {__github__}#license")
-        print()
-        print("Need help?")
-        print(f"Join our coummunity server! {__discord__}")
-        print()
         print(
+            f"{version}\n"
+            f"{__copyright__}\n"
+            f"License: {__license__}\n"
+            "For more information, see: https://github.com/sqdnoises/infinite-craft#license\n"
+            "\n"
+            "Need help?\n"
+            "Join our coummunity server! https://discord.gg/EPr4T2F8bq\n"
+            "\n"
             "Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/"
         )
     else:
@@ -68,20 +53,19 @@ def reset_subcommand(args: argparse.Namespace) -> None:
     print(f'"{discoveries_storage}" file contents reset successfully.')
 
 
-def mock_subcommand(args: argparse.Namespace) -> None:
-    app = mock_server()
-    uvicorn.run(app, host=args.host, port=args.port)
-
-
 parser = argparse.ArgumentParser(
-    prog=__title__,
-    description=f"{__display_version__}\n"
-    f"{__copyright__}\n"
-    f"License: {__license__}\n"
-    f"For more information, see: {__github__}#license\n"
-    "\n"
-    f"Need help?\n"
-    f"Join our coummunity server! {__discord__}",
+    prog=library,
+    description=(
+        f"{version}\n"
+        f"{__copyright__}\n"
+        f"License: {__license__}\n"
+        "For more information, see: https://github.com/sqdnoises/infinite-craft#license\n"
+        "\n"
+        "Need help?\n"
+        "Join our coummunity server! https://discord.gg/EPr4T2F8bq\n"
+        "\n"
+        "Play Infinite Craft by Neal Agarwal on your browser -> https://neal.fun/infinite-craft/"
+    ),
     allow_abbrev=False,
     formatter_class=argparse.RawDescriptionHelpFormatter,
 )
@@ -114,34 +98,6 @@ reset.add_argument(
 )
 
 reset.set_defaults(func=reset_subcommand)
-
-mock = subparser.add_parser(
-    "mock",
-    prog="mock",
-    description="mock server for testing purposes",
-    allow_abbrev=False,
-)
-
-mock.add_argument(
-    "-H",
-    "--host",
-    action="store",
-    type=str,
-    help="Hostname to host at",
-    default="127.0.0.1",
-)
-
-mock.add_argument(
-    "-p",
-    "-P",
-    "--port",
-    action="store",
-    type=int,
-    help="Port to host at",
-    default=15575,
-)
-
-mock.set_defaults(func=mock_subcommand)
 
 
 def parse() -> None:

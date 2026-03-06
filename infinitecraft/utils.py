@@ -4,7 +4,6 @@ import json
 import inspect
 import logging
 from typing import Optional, Any, Mapping, Callable, Coroutine, TypeVar, cast
-from fastapi import FastAPI
 
 from . import errors
 from .termcolors import *
@@ -14,7 +13,6 @@ __all__ = (
     "check_file",
     "dump_json",
     "maybe_coroutine",
-    "mock_server",
     "MISSING",
     "is_docker",
     "stream_supports_colour",
@@ -132,46 +130,6 @@ async def maybe_coroutine(
         return await __func(*args, **kwargs)
     else:
         return __func(*args, **kwargs)
-
-
-def mock_server() -> FastAPI:
-    """
-    Create and configure a mock FastAPI server for testing purposes.
-
-    This function sets up a FastAPI application with a single endpoint that simulates
-    the behavior of an infinite craft pairing API.
-
-    Returns:
-        FastAPI: A configured FastAPI application instance with the following endpoint:
-            - GET /api/infinite-craft/pair: Simulates pairing two items.
-
-    Endpoint details:
-        GET /api/infinite-craft/pair:
-            - Parameters:
-                - first (str): The name of the first item to pair.
-                - second (str): The name of the second item to pair.
-            - Returns:
-                A dictionary with the following keys:
-                - result (str): Always returns "???" to simulate an unknown result.
-                - emoji (str): Always returns "🌌" as the result emoji.
-                - isNew (bool): Always returns False, indicating the result is not new.
-
-    Note:
-        This mock server prints debugging information to the console for each request,
-        including the paired items and the mock result.
-    """
-    app = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
-
-    @app.get("/api/infinite-craft/pair")
-    async def pair(  # pyright: ignore[reportUnusedFunction]
-        first: str, second: str
-    ) -> dict[str, str | bool]:
-        print(f"[MOCK API] PAIR: {first} + {second}")
-        print(f"[MOCK API] RESULT: 🌌 ???")
-
-        return {"result": "???", "emoji": "🌌", "isNew": False}
-
-    return app
 
 
 # the following code is heavily inspired from discord.utils from discord.py
