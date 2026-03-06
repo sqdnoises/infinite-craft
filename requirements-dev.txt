@@ -5,181 +5,113 @@
 #    pip-compile --extra=dev --output-file='.\requirements-dev.txt' pyproject.toml
 #
 aiohappyeyeballs==2.6.1
-    # via
-    #   aiohttp
-    #   infinite-craft (pyproject.toml)
+    # via aiohttp
 aiohttp==3.13.3
     # via infinite-craft (pyproject.toml)
 aiosignal==1.4.0
-    # via
-    #   aiohttp
-    #   infinite-craft (pyproject.toml)
+    # via aiohttp
 annotated-doc==0.0.4
-    # via
-    #   fastapi
-    #   infinite-craft (pyproject.toml)
+    # via fastapi
 annotated-types==0.7.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   pydantic
+    # via pydantic
 anyio==4.12.1
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   starlette
+    # via starlette
 attrs==25.4.0
-    # via
-    #   aiohttp
-    #   infinite-craft (pyproject.toml)
+    # via aiohttp
 black==26.1.0
     # via infinite-craft (pyproject.toml)
 build==1.4.0
     # via
     #   infinite-craft (pyproject.toml)
     #   pip-tools
-bumpver==2025.1131
-    # via infinite-craft (pyproject.toml)
 certifi==2026.2.25
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   requests
+    # via requests
 charset-normalizer==3.4.5
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   requests
+    # via requests
 click==8.3.1
     # via
     #   black
-    #   bumpver
-    #   infinite-craft (pyproject.toml)
     #   pip-tools
     #   uvicorn
 colorama==0.4.6
     # via
     #   build
-    #   bumpver
     #   click
-    #   infinite-craft (pyproject.toml)
     #   pytest
 docutils==0.22.4
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   readme-renderer
+    # via readme-renderer
 fastapi==0.135.1
     # via infinite-craft (pyproject.toml)
 frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-    #   infinite-craft (pyproject.toml)
 h11==0.16.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   uvicorn
+    # via uvicorn
 id==1.6.1
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
+    # via twine
 idna==3.11
     # via
     #   anyio
-    #   infinite-craft (pyproject.toml)
     #   requests
     #   yarl
 iniconfig==2.3.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   pytest
+    # via pytest
 jaraco-classes==3.4.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   keyring
+    # via keyring
 jaraco-context==6.1.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   keyring
+    # via keyring
 jaraco-functools==4.4.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   keyring
+    # via keyring
 keyring==25.7.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
-lexid==2021.1006
-    # via
-    #   bumpver
-    #   infinite-craft (pyproject.toml)
+    # via twine
 markdown-it-py==4.0.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   rich
+    # via rich
 mdurl==0.1.2
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   markdown-it-py
+    # via markdown-it-py
 more-itertools==10.8.0
     # via
-    #   infinite-craft (pyproject.toml)
     #   jaraco-classes
     #   jaraco-functools
 multidict==6.7.1
     # via
     #   aiohttp
-    #   infinite-craft (pyproject.toml)
     #   yarl
 mypy-extensions==1.1.0
-    # via
-    #   black
-    #   infinite-craft (pyproject.toml)
+    # via black
 nh3==0.3.3
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   readme-renderer
+    # via readme-renderer
 packaging==26.0
     # via
     #   black
     #   build
-    #   infinite-craft (pyproject.toml)
     #   pytest
     #   twine
     #   wheel
 pathspec==1.0.4
-    # via
-    #   black
-    #   infinite-craft (pyproject.toml)
+    # via black
 pip-tools==7.5.3
     # via infinite-craft (pyproject.toml)
 platformdirs==4.9.4
-    # via
-    #   black
-    #   infinite-craft (pyproject.toml)
+    # via black
 pluggy==1.6.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   pytest
+    # via pytest
 propcache==0.4.1
     # via
     #   aiohttp
-    #   infinite-craft (pyproject.toml)
     #   yarl
 pydantic==2.12.5
-    # via
-    #   fastapi
-    #   infinite-craft (pyproject.toml)
+    # via fastapi
 pydantic-core==2.41.5
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   pydantic
+    # via pydantic
 pygments==2.19.2
     # via
-    #   infinite-craft (pyproject.toml)
     #   pytest
     #   readme-renderer
     #   rich
 pyproject-hooks==1.2.0
     # via
     #   build
-    #   infinite-craft (pyproject.toml)
     #   pip-tools
 pytest==9.0.2
     # via
@@ -188,72 +120,46 @@ pytest==9.0.2
 pytest-asyncio==1.3.0
     # via infinite-craft (pyproject.toml)
 pytokens==0.4.1
-    # via
-    #   black
-    #   infinite-craft (pyproject.toml)
+    # via black
 pywin32-ctypes==0.2.3
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   keyring
+    # via keyring
 readme-renderer==44.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
+    # via twine
 requests==2.32.5
     # via
-    #   infinite-craft (pyproject.toml)
     #   requests-toolbelt
     #   twine
 requests-toolbelt==1.0.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
+    # via twine
 rfc3986==2.0.0
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
+    # via twine
 rich==14.3.3
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   twine
+    # via twine
 starlette==0.52.1
-    # via
-    #   fastapi
-    #   infinite-craft (pyproject.toml)
-toml==0.10.2
-    # via
-    #   bumpver
-    #   infinite-craft (pyproject.toml)
+    # via fastapi
 twine==6.2.0
     # via infinite-craft (pyproject.toml)
 typing-extensions==4.15.0
     # via
     #   fastapi
-    #   infinite-craft (pyproject.toml)
     #   pydantic
     #   pydantic-core
     #   typing-inspection
 typing-inspection==0.4.2
     # via
     #   fastapi
-    #   infinite-craft (pyproject.toml)
     #   pydantic
 urllib3==2.6.3
     # via
     #   id
-    #   infinite-craft (pyproject.toml)
     #   requests
     #   twine
 uvicorn==0.41.0
     # via infinite-craft (pyproject.toml)
 wheel==0.46.3
-    # via
-    #   infinite-craft (pyproject.toml)
-    #   pip-tools
+    # via pip-tools
 yarl==1.23.0
-    # via
-    #   aiohttp
-    #   infinite-craft (pyproject.toml)
+    # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
