@@ -14,9 +14,6 @@ An API Wrapper for Neal's Infinite Craft game in Python.
 [![Publish Package to PyPI](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/publish-package-to-pypi.yml)
 [![Create GitHub Release](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml/badge.svg)](https://github.com/sqdnoises/infinite-craft/actions/workflows/create-github-release.yml)
 
-> [!IMPORTANT]  
-> The library is currently broken. If you pair two elements you get a [`403 Forbidden` error](https://github.com/sqdnoises/infinite-craft/issues/2). A fix for this is currently being made.
-
 # Key Features:
 - Stores elements in a neatly indented JSON file
 - Starts with the four main elements: Water, Fire, Wind, Earth
@@ -100,7 +97,7 @@ asyncio.run(main())
 You can find more examples in the **[documentation](#documentation-)**.
 
 # Documentation 📚
-Documentation is *coming soon*.
+Documentation is still in development.
 
 While the documentation is not ready, everything is documented well in the code with docstrings which you can see in an IDE like Visual Studio Code.
 
@@ -108,9 +105,9 @@ While the documentation is not ready, everything is documented well in the code 
 
 # How does it work?
 This library contacts the URL:
-> https://neal.fun/api/infinite-craft/pair?first=element+name&second=element+name
+> https://neal.fun/api/infinite-craft/pair?first=Fire&second=Water
 
-where `element+name` in `first=` parameter is the first element you want to pair and the `element+name` in `second=` parameter is the second element.
+Where `Fire` in `first=` parameter is the first element you want to pair and the `Water` in `second=` parameter is the second element.
 
 Everything is handled in a user-friendly manner and asynchronously, so it should be really easy to use it in your programs.
 
@@ -119,8 +116,8 @@ Everything is handled in a user-friendly manner and asynchronously, so it should
 - [x] ~~Make a discord server for support~~ Join our community! https://discord.gg/FF2fSN2sJd
 - [x] ~~Add a runnable and configurable CLI mock API server~~
 - [x] ~~Make a documentation page~~
-- [ ] Fix [403 Forbidden Error](https://github.com/sqdnoises/infinite-craft/issues/2)
-- [ ] Add a synchronous class
+- [x] Fix [403 Forbidden Error](https://github.com/sqdnoises/infinite-craft/issues/2)
+- [ ] Finish todos in code
 - [ ] Finish documentation page
 - [ ] Make a playable & interactive Infinite Craft CLI game
 

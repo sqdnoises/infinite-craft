@@ -8,12 +8,21 @@ version = "1.1.4"
 authors = [{ name = "sqdnoises" }]
 description = "An API Wrapper for Neal's Infinite Craft game in Python."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT"
 requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Games/Entertainment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "aiohttp",
@@ -53,6 +62,9 @@ dev = [
     "build",
     "twine",
 ]
+
+[tool.setuptools]
+packages = ["infinitecraft"]
 
 [tool.bumpver]
 current_version = "1.1.4"
