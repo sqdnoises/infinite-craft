@@ -22,7 +22,7 @@ __discord__ = "https://discord.gg/EPr4T2F8bq"
 __version__ = "1.1.4"
 __display_version__ = __title__ + " " + __version__
 
-from .element       import *
+from .element import *
 from .infinitecraft import *
-from .logger        import *
-from .errors        import *
+from .logger import *
+from .errors import *

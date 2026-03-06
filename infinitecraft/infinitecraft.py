@@ -15,29 +15,18 @@ import copy
 import json
 import time
 import asyncio
-from typing import (
-    Any, Callable,
-    MutableMapping
-)
+from typing import Any, Callable, MutableMapping
 
-from .          import utils
-from .logger    import Logger
-from .element   import Element
-from .clients   import CurlCffiClient
-from .abc       import (
-    LoggerProtocol,
-    ElementProtocol,
-    AsyncAPIClientProtocol
-)
+from . import utils
+from .logger import Logger
+from .element import Element
+from .clients import CurlCffiClient
+from .abc import LoggerProtocol, ElementProtocol, AsyncAPIClientProtocol
 from .constants import starting_discoveries
-from .types     import (
-    ResultDict,
-    Discovery
-)
+from .types import ResultDict, Discovery
 
-__all__ = (
-    "InfiniteCraft",
-)
+__all__ = ("InfiniteCraft",)
+
 
 class InfiniteCraft:
     """
@@ -62,29 +51,29 @@ class InfiniteCraft:
         session (AsyncAPIClientProtocol | None): The current API client session, if active.
 
     Args:
-        api_url (str, optional): The API URL to contact. 
+        api_url (str, optional): The API URL to contact.
             Default: "https://neal.fun/api/infinite-craft"
-        api_rate_limit (int, optional): Requests per minute before rate limiting. 
+        api_rate_limit (int, optional): Requests per minute before rate limiting.
             Set to 0 for no limit. Default: 400. Must be >= 0.
-        manual_control (bool, optional): Manually control session start/stop. 
+        manual_control (bool, optional): Manually control session start/stop.
             Useful for multiple `async with` usage. Default: False
-        discoveries_storage (str, optional): Path to discoveries storage JSON. 
+        discoveries_storage (str, optional): Path to discoveries storage JSON.
             Default: "discoveries.json"
-        encoding (str, optional): Encoding for reading/saving JSON files. 
+        encoding (str, optional): Encoding for reading/saving JSON files.
             Default: "utf-8"
-        do_reset (bool, optional): Reset discoveries storage and emoji cache. 
+        do_reset (bool, optional): Reset discoveries storage and emoji cache.
             Default: False
-        make_file (bool, optional): Create storage file if it doesn't exist. 
+        make_file (bool, optional): Create storage file if it doesn't exist.
             Default: True
-        headers (MutableMapping[str, str], optional): Custom headers for API requests. 
+        headers (MutableMapping[str, str], optional): Custom headers for API requests.
             Default: {}
-        logger (LoggerProtocol, optional): Custom logger for the class. 
+        logger (LoggerProtocol, optional): Custom logger for the class.
             Default: Logger()
-        element_cls (type[ElementProtocol], optional): Class for creating elements. 
+        element_cls (type[ElementProtocol], optional): Class for creating elements.
             Must subclass Element. Default: Element
-        session_cls (type[AsyncAPIClientProtocol], optional): Class for API client session. 
+        session_cls (type[AsyncAPIClientProtocol], optional): Class for API client session.
             Default: CurlCffiClient
-        debug (bool, optional): Enable debug logging. 
+        debug (bool, optional): Enable debug logging.
             Sets logger to Logger(log_level=5). Default: False
 
     Raises:
@@ -95,22 +84,22 @@ class InfiniteCraft:
     Example:
         >>> import asyncio
         >>> import infinitecraft
-        >>> 
+        >>>
         >>> async def main():
         ...     game = InfiniteCraft()
         ...     await game.start()
         ...     result = await game.pair(Element("Water"), Element("Fire"))
         ...     print(result)
         ...     await game.close()
-        >>> 
+        >>>
         >>> asyncio.run(main())
 
     Note:
         For assistance, join our Discord server: https://discord.gg/EPr4T2F8bq
     """
-    
+
     _api_url: str
-    _api_rate_limit : int
+    _api_rate_limit: int
     _manual_control: bool
     _discoveries_location: str
     _encoding: str
@@ -123,59 +112,63 @@ class InfiniteCraft:
     discoveries: list[ElementProtocol]
     _session: AsyncAPIClientProtocol | None
     _headers: MutableMapping[str, str]
-    
+
     def __init__(
-        self, *,
-        api_url: str                              = "https://neal.fun", # API to contact
-        api_rate_limit: int                       = 400,                # 400 requests per minute
-        manual_control: bool                      = False,
-        discoveries_storage: str                  = "discoveries.json", # where to store the game data
-        encoding: str                             = "utf-8",
-        do_reset: bool                            = False,
-        make_file: bool                           = True,
-        headers: MutableMapping[str, str]         = {},
-        logger: LoggerProtocol                    = Logger(),
-        element_cls: type[ElementProtocol]        = Element,
+        self,
+        *,
+        api_url: str = "https://neal.fun",  # API to contact
+        api_rate_limit: int = 400,  # 400 requests per minute
+        manual_control: bool = False,
+        discoveries_storage: str = "discoveries.json",  # where to store the game data
+        encoding: str = "utf-8",
+        do_reset: bool = False,
+        make_file: bool = True,
+        headers: MutableMapping[str, str] = {},
+        logger: LoggerProtocol = Logger(),
+        element_cls: type[ElementProtocol] = Element,
         session_cls: type[AsyncAPIClientProtocol] = CurlCffiClient,
-        debug: bool                               = False
+        debug: bool = False,
     ) -> None:
         if not api_rate_limit >= 0:
             raise ValueError("api_rate_limit must be greater than or equal to 0")
-        
+
         dsreset = False
-                
+
         if not utils.check_file(discoveries_storage):
             if not make_file:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
-            
-            logger.warn(f"Resetting discoveries storage JSON file ({discoveries_storage})")
+
+            logger.warn(
+                f"Resetting discoveries storage JSON file ({discoveries_storage})"
+            )
             self.reset(
                 discoveries_storage=discoveries_storage,
                 encoding=encoding,
-                make_file=make_file
+                make_file=make_file,
             )
             dsreset = True
-        
+
         self._api_url = api_url
         self._api_rate_limit = api_rate_limit
         self._manual_control = manual_control
         self._discoveries_location = discoveries_storage
         self._encoding = encoding
-        
+
         self._logger = logger
-        if debug and isinstance(logger, LoggerProtocol): # pyright: ignore[reportUnnecessaryIsInstance]
+        if debug and isinstance(
+            logger, LoggerProtocol
+        ):  # pyright: ignore[reportUnnecessaryIsInstance]
             self._logger.log_level = 5
         self._element_cls = element_cls
         self._session_cls = session_cls
-        
+
         self._requests = []
-        
+
         if do_reset and not dsreset:
-            self._logger.warn(f"Resetting discoveries JSON file ({discoveries_storage})")
-            self.reset(
-                discoveries_storage=discoveries_storage,
-                encoding=encoding
+            self._logger.warn(
+                f"Resetting discoveries JSON file ({discoveries_storage})"
             )
+            self.reset(discoveries_storage=discoveries_storage, encoding=encoding)
 
         self._discoveries = []
         self.discoveries = copy.deepcopy(self._discoveries)
@@ -194,15 +187,17 @@ class InfiniteCraft:
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
-            "Origin":"https://neal.fun",
+            "Origin": "https://neal.fun",
             "Referer": "https://neal.fun/infinite-craft/",
             "Referrer-Policy": "strict-origin-when-cross-origin",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
         }
         self._headers.update(headers)
 
         self._logger.debug("InfiniteCraft has been initialised.")
-        self._logger.debug("Need help? Join the community server -> https://discord.gg/EPr4T2F8bq")
+        self._logger.debug(
+            "Need help? Join the community server -> https://discord.gg/EPr4T2F8bq"
+        )
 
     @property
     def api_url(self) -> str:
@@ -223,7 +218,7 @@ class InfiniteCraft:
             int: The maximum number of requests allowed per minute.
         """
         return self._api_rate_limit
-    
+
     @property
     def manual_control(self) -> bool:
         """
@@ -233,7 +228,7 @@ class InfiniteCraft:
             bool: True if manual control is enabled, False otherwise.
         """
         return self._manual_control
-    
+
     @property
     def discoveries_location(self) -> str:
         """
@@ -243,7 +238,7 @@ class InfiniteCraft:
             str: The path to the discoveries storage JSON file.
         """
         return self._discoveries_location
-    
+
     @property
     def encoding(self) -> str:
         """
@@ -263,7 +258,7 @@ class InfiniteCraft:
             dict[str, str]: A dictionary of headers sent with each API request.
         """
         return self._headers
-    
+
     @property
     def element_cls(self) -> type[ElementProtocol]:
         """
@@ -273,7 +268,7 @@ class InfiniteCraft:
             type[ElementProtocol]: The class (subclass of ElementProtocol) used to instantiate new elements.
         """
         return self._element_cls
-    
+
     @property
     def session_cls(self) -> type[AsyncAPIClientProtocol]:
         """
@@ -283,7 +278,7 @@ class InfiniteCraft:
             type[AsyncAPIClientProtocol]: The class used to create API client sessions.
         """
         return self._session_cls
-    
+
     @property
     def session(self) -> AsyncAPIClientProtocol | None:
         """
@@ -293,7 +288,7 @@ class InfiniteCraft:
             AsyncAPIClientProtocol | None: The active API client session, or None if no session is active.
         """
         return self._session
-    
+
     @property
     def closed(self) -> bool | None:
         """
@@ -303,7 +298,7 @@ class InfiniteCraft:
             bool | None: True if the session is closed, False if it's open, or None if no session has been started.
         """
         return self._session.closed if self._session is not None else None
-    
+
     def __str__(self) -> str:
         """
         Returns a string representation of the InfiniteCraft instance.
@@ -335,23 +330,31 @@ class InfiniteCraft:
             f"debug={repr(self._logger.log_level == 5)}"
             f")"
         )
-    
+
     async def __aenter__(self) -> "InfiniteCraft":
         if not self.manual_control:
-            self._logger.debug("Starting session automatically because manual control is OFF")
+            self._logger.debug(
+                "Starting session automatically because manual control is OFF"
+            )
             await self.start()
         else:
-            self._logger.debug("Not starting session automatically because manual control is ON")
-        
+            self._logger.debug(
+                "Not starting session automatically because manual control is ON"
+            )
+
         return self
 
     async def __aexit__(self, *args: Any) -> None:
         if not self.manual_control:
-            self._logger.debug("Stopping session automatically because manual control is OFF")
+            self._logger.debug(
+                "Stopping session automatically because manual control is OFF"
+            )
             await self.close()
         else:
-            self._logger.debug("Not stopping session automatically because manual control is ON")
-    
+            self._logger.debug(
+                "Not stopping session automatically because manual control is ON"
+            )
+
     async def _build_session(self) -> None:
         """
         Build the API client session.
@@ -362,10 +365,7 @@ class InfiniteCraft:
         Note:
             This method is intended for internal use only.
         """
-        self._session = self._session_cls(
-            base_url = self.api_url,
-            headers = self._headers
-        )
+        self._session = self._session_cls(base_url=self.api_url, headers=self._headers)
         await self._session.start()
 
     async def start(self) -> None:
@@ -417,7 +417,7 @@ class InfiniteCraft:
             RuntimeError: If the session has not been started or is already closed.
         """
         await self.close()
-    
+
     async def ping(self) -> float:
         """
         Ping the API and return the latency.
@@ -434,26 +434,31 @@ class InfiniteCraft:
         """
         if self._session is None:
             raise RuntimeError("Session has not been started yet")
-        
-        self._logger.debug(f"Pinging API route: {self.api_url}/api/infinite-craft/pair with Fire + Water")
-        
-        params = {
-            "first":  "Fire",
-            "second": "Water"
-        }
-        
-        request = await self._wait_for_request() # wait for ratelimit requests to finish
-        
+
+        self._logger.debug(
+            f"Pinging API route: {self.api_url}/api/infinite-craft/pair with Fire + Water"
+        )
+
+        params = {"first": "Fire", "second": "Water"}
+
+        request = (
+            await self._wait_for_request()
+        )  # wait for ratelimit requests to finish
+
         start = time.monotonic()
-        async with await self._session.get(f"/api/infinite-craft/pair", params=params) as response:
-            self._done_with_request(request) # mark request as done
+        async with await self._session.get(
+            f"/api/infinite-craft/pair", params=params
+        ) as response:
+            self._done_with_request(request)  # mark request as done
             end = time.monotonic() - start
             self._logger.debug(f"API response time: {end}s")
             response.raise_for_status()
-        
+
         return end
 
-    async def pair(self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True) -> ElementProtocol:
+    async def pair(
+        self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True
+    ) -> ElementProtocol:
         """
         Pair two elements and return the resulting element.
 
@@ -475,70 +480,74 @@ class InfiniteCraft:
         """
         if self._session is None:
             raise RuntimeError("Session has not been started yet")
-        
+
         self._logger.debug(f"Pairing {first} and {second}...")
-        
-        params = {
-            "first":  first.name,
-            "second": second.name
-        }
-        
-        request = await self._wait_for_request() # wait for ratelimit requests to finish
-        
-        async with await self._session.get(f"/api/infinite-craft/pair", params=params) as response:
-            self._done_with_request(request) # mark request as done
+
+        params = {"first": first.name, "second": second.name}
+
+        request = (
+            await self._wait_for_request()
+        )  # wait for ratelimit requests to finish
+
+        async with await self._session.get(
+            f"/api/infinite-craft/pair", params=params
+        ) as response:
+            self._done_with_request(request)  # mark request as done
             # Request & Response Info
-            self._logger.debug(f"{response.request_method} {response.request_url}\n"
-                               f"Request Headers: {json.dumps(dict(response.request_headers), indent=4)}\n"
-                               f"Response Status: {response.status}\n"
-                               f"Response Content Type: {response.content_type}\n"
-                               f"Response Headers: {json.dumps(dict(response.headers), indent=4)}\n"
-                               f"Response Body: {await response.text()}")
-            
+            self._logger.debug(
+                f"{response.request_method} {response.request_url}\n"
+                f"Request Headers: {json.dumps(dict(response.request_headers), indent=4)}\n"
+                f"Response Status: {response.status}\n"
+                f"Response Content Type: {response.content_type}\n"
+                f"Response Headers: {json.dumps(dict(response.headers), indent=4)}\n"
+                f"Response Body: {await response.text()}"
+            )
+
             response.raise_for_status()
             result_data: ResultDict = await response.json()
-        
-        if result_data == {
-            "result": "Nothing",
-            "emoji": "",
-            "isNew": False
-        }:
+
+        if result_data == {"result": "Nothing", "emoji": "", "isNew": False}:
             self._logger.debug(f"Unable to mix {first} + {second}")
             return self._element_cls(name=None, emoji=None, is_first_discovery=None)
-        
+
         result = self._element_cls(
-            name               = result_data.get("result"),
-            emoji              = result_data.get("emoji"),
-            is_first_discovery = result_data.get("isNew")
+            name=result_data.get("result"),
+            emoji=result_data.get("emoji"),
+            is_first_discovery=result_data.get("isNew"),
         )
 
         if not result.is_first_discovery:
             self._logger.debug(f"Result: {result} (first: {first} + second: {second})")
         else:
-            self._logger.debug(f"Result: {result} (First Discovery) (first: {first} + second: {second})")
+            self._logger.debug(
+                f"Result: {result} (First Discovery) (first: {first} + second: {second})"
+            )
 
         if store:
             self._update_discoveries(
-                name = result.name,
-                emoji = result.emoji,
-                is_first_discovery = result.is_first_discovery
+                name=result.name,
+                emoji=result.emoji,
+                is_first_discovery=result.is_first_discovery,
             )
-            
+
             raw_discoveries: list[Discovery] = self._get_raw_discoveries()
             discoveries: list[ElementProtocol] = [
                 self._element_cls(
-                    name = rd.get("name"),
-                    emoji = rd.get("emoji"),
-                    is_first_discovery = rd.get("is_first_discovery")
-                ) for rd in raw_discoveries
+                    name=rd.get("name"),
+                    emoji=rd.get("emoji"),
+                    is_first_discovery=rd.get("is_first_discovery"),
+                )
+                for rd in raw_discoveries
             ]
-            
+
             self._discoveries = discoveries
             self.discoveries = self._discoveries.copy()
 
         return result
 
-    async def merge(self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True) -> ElementProtocol | None:
+    async def merge(
+        self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True
+    ) -> ElementProtocol | None:
         """
         Pair two elements and return the resulting element.
 
@@ -561,8 +570,10 @@ class InfiniteCraft:
             RuntimeError: If the session has not been started yet.
         """
         return await self.pair(first=first, second=second, store=store)
-    
-    async def combine(self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True) -> ElementProtocol | None:
+
+    async def combine(
+        self, first: ElementProtocol, second: ElementProtocol, *, store: bool = True
+    ) -> ElementProtocol | None:
         """
         Pair two elements and return the resulting element.
 
@@ -586,7 +597,12 @@ class InfiniteCraft:
         """
         return await self.pair(first=first, second=second, store=store)
 
-    def get_discoveries(self, *, set_value: bool = False, check: Callable[[ElementProtocol], bool] | None = None) -> list[ElementProtocol]:
+    def get_discoveries(
+        self,
+        *,
+        set_value: bool = False,
+        check: Callable[[ElementProtocol], bool] | None = None,
+    ) -> list[ElementProtocol]:
         """
         Get a list containing all discovered elements.
 
@@ -607,9 +623,9 @@ class InfiniteCraft:
         discoveries: list[ElementProtocol] = []
         for discovery in raw_discoveries:
             element = self._element_cls(
-                name = discovery.get("name"),
-                emoji = discovery.get("emoji"),
-                is_first_discovery = discovery.get("is_first_discovery")
+                name=discovery.get("name"),
+                emoji=discovery.get("emoji"),
+                is_first_discovery=discovery.get("is_first_discovery"),
             )
 
             if check is not None:
@@ -621,10 +637,12 @@ class InfiniteCraft:
         if set_value:
             self._discoveries = discoveries
             self.discoveries = self._discoveries.copy()
-        
+
         return discoveries
-    
-    def get_discovery(self, name: str, *, from_file: bool = False) -> ElementProtocol | None:
+
+    def get_discovery(
+        self, name: str, *, from_file: bool = False
+    ) -> ElementProtocol | None:
         """
         Get a specific discovered Element by its name.
 
@@ -646,8 +664,12 @@ class InfiniteCraft:
             discovery = self.get_discoveries(check=lambda e: e.name == dummy)
             return discovery[0] if discovery else None
 
-        return self._discoveries[self._discoveries.index(dummy)] if dummy in self._discoveries else None
-    
+        return (
+            self._discoveries[self._discoveries.index(dummy)]
+            if dummy in self._discoveries
+            else None
+        )
+
     async def _wait_for_request(self) -> float:
         """
         Manage request timing to adhere to the API rate limit.
@@ -665,13 +687,18 @@ class InfiniteCraft:
         await asyncio.sleep(0)
         current = time.monotonic()
         self._requests.append(current)
-        
-        while len(self._requests) > self.api_rate_limit and self._requests[0] + 60 > time.monotonic():
-            self._logger.warn(f"We are getting ratelimited! Retrying in {(self._requests[0] + 60) - time.monotonic()}s...")
+
+        while (
+            len(self._requests) > self.api_rate_limit
+            and self._requests[0] + 60 > time.monotonic()
+        ):
+            self._logger.warn(
+                f"We are getting ratelimited! Retrying in {(self._requests[0] + 60) - time.monotonic()}s..."
+            )
             await asyncio.sleep((self._requests[0] + 60) - time.monotonic())
-        
+
         return current
-    
+
     def _done_with_request(self, request: float) -> None:
         """
         Mark a request as completed and remove it from the tracking queue.
@@ -687,7 +714,9 @@ class InfiniteCraft:
         """
         self._requests.remove(request)
 
-    def _update_discoveries(self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None) -> list[Discovery] | None:
+    def _update_discoveries(
+        self, *, name: str | None, emoji: str | None, is_first_discovery: bool | None
+    ) -> list[Discovery] | None:
         """
         Update the discoveries JSON file with a new element.
 
@@ -709,18 +738,18 @@ class InfiniteCraft:
         element: Discovery = {
             "name": name,
             "emoji": emoji,
-            "is_first_discovery": is_first_discovery
+            "is_first_discovery": is_first_discovery,
         }
 
         discoveries = self._get_raw_discoveries()
         if element["name"] in [e["name"] for e in discoveries]:
             return None
-        
+
         discoveries.append(element)
 
         with open(self.discoveries_location, "w", encoding=self.encoding) as f:
             json.dump(discoveries, f, indent=2)
-        
+
         return discoveries
 
     def _get_raw_discoveries(self) -> list[Discovery]:
@@ -738,14 +767,14 @@ class InfiniteCraft:
         """
         with open(self.discoveries_location, encoding=self.encoding) as f:
             return json.load(f)
-    
+
     @staticmethod
     def reset(
         *,
         discoveries_storage: str = "discoveries.json",
         encoding: str = "utf-8",
         indent: int = 2,
-        make_file: bool = False
+        make_file: bool = False,
     ) -> None:
         """
         Reset the discoveries storage file to its initial state.
@@ -770,5 +799,7 @@ class InfiniteCraft:
                 utils.check_file(discoveries_storage)
             else:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
-        
-        utils.dump_json(discoveries_storage, starting_discoveries, encoding=encoding, indent=indent)
+
+        utils.dump_json(
+            discoveries_storage, starting_discoveries, encoding=encoding, indent=indent
+        )

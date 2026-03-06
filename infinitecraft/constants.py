@@ -1,8 +1,6 @@
 from .types import Discovery
 
-__all__ = (
-    "starting_discoveries",
-)
+__all__ = ("starting_discoveries",)
 
 starting_discoveries: list[Discovery] = [
     {
@@ -24,5 +22,5 @@ starting_discoveries: list[Discovery] = [
         "name": "Earth",
         "emoji": "🌍",
         "is_first_discovery": False,
-    }
+    },
 ]

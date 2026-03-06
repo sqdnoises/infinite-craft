@@ -1,18 +1,17 @@
 from dataclasses import dataclass
 from .abc import ElementProtocol
 
-__all__ = (
-    "Element",
-)
+__all__ = ("Element",)
+
 
 @dataclass(frozen=True)
 class Element(ElementProtocol):
     """
     Represents an element in the Infinite Craft system.
 
-    This class provides attributes for an element's name, emoji, and whether 
-    it was a first discovery. It also implements several special methods 
-    (`__str__`, `__repr__`, `__eq__`, `__bool__`) for more user-friendly 
+    This class provides attributes for an element's name, emoji, and whether
+    it was a first discovery. It also implements several special methods
+    (`__str__`, `__repr__`, `__eq__`, `__bool__`) for more user-friendly
     object representations and comparisons.
 
     Attributes:
@@ -38,25 +37,25 @@ class Element(ElementProtocol):
         "Element(name='Fire', emoji='🔥', is_first_discovery=False)"
         >>> fire == water
         False
-    
+
     Note:
-        The `emoji` attribute is not fetched upon creation of the class. 
-        If the emoji is not provided, it must be fetched manually, such as by reading 
+        The `emoji` attribute is not fetched upon creation of the class.
+        If the emoji is not provided, it must be fetched manually, such as by reading
         a discoveries JSON file or other data source.
     """
-    
+
     name: str | None = None
     emoji: str | None = None
     is_first_discovery: bool | None = None
-    
+
     def __str__(self) -> str:
         """
-        Returns a string representation of the element, combining the emoji (if it exists) 
+        Returns a string representation of the element, combining the emoji (if it exists)
         and the name.
 
         Returns:
             str: The emoji and name combined or just the name if no emoji is present.
-        
+
         Example:
             >>> str(Element(name="Fire", emoji="🔥"))
             '🔥 Fire'
@@ -67,14 +66,14 @@ class Element(ElementProtocol):
             return str(self.emoji) + " " + str(self.name)
         else:
             return str(self.name)
-    
+
     def __repr__(self) -> str:
         """
         Returns a string that shows how the Element object was constructed.
 
         Returns:
             str: A string representation of the object’s creation.
-        
+
         Example:
             >>> repr(Element(name="Fire", emoji="🔥"))
             "Element(name='Fire', emoji='🔥', is_first_discovery=None)"
@@ -86,7 +85,7 @@ class Element(ElementProtocol):
             f"is_first_discovery={repr(self.is_first_discovery)}"
             f")"
         )
-    
+
     def __eq__(self, other: ElementProtocol | None) -> bool:
         """
         Compares this element with another element based on the name.
@@ -95,9 +94,9 @@ class Element(ElementProtocol):
             other (ElementProtocol | None): Another element to compare to.
 
         Returns:
-            bool: True if the names of the two elements are the same, or if both elements are None. 
+            bool: True if the names of the two elements are the same, or if both elements are None.
             False otherwise.
-        
+
         Example:
             >>> fire1 = Element(name="Fire", emoji="🔥")
             >>> fire2 = Element(name="Fire", emoji="❤️‍🔥")
@@ -112,23 +111,25 @@ class Element(ElementProtocol):
             return True
         else:
             return False
-    
+
     def __bool__(self) -> bool:
         """
         Returns whether the element is considered "truthy" or not.
 
-        The element is considered True if all attributes (name, emoji, and is_first_discovery) are 
+        The element is considered True if all attributes (name, emoji, and is_first_discovery) are
         defined (not None). If any of these are None, it returns False.
 
         Returns:
             bool: True if all attributes are not None, False otherwise.
-        
+
         Example:
             >>> bool(Element(name="Fire", emoji="🔥"))
             True
             >>> bool(Element(name=None, emoji=None))
             False
         """
-        return self.name               is not None \
-           and self.emoji              is not None \
-           and self.is_first_discovery is not None
+        return (
+            self.name is not None
+            and self.emoji is not None
+            and self.is_first_discovery is not None
+        )

@@ -1,23 +1,14 @@
 import os
 import json
 import inspect
-from typing import (
-    Any, Mapping,
-    Callable, Coroutine,
-    TypeVar
-)
+from typing import Any, Mapping, Callable, Coroutine, TypeVar
 from fastapi import FastAPI
 from . import errors
 
-__all__ = (
-    "reify",
-    "check_file",
-    "dump_json",
-    "maybe_coroutine",
-    "mock_server"
-)
+__all__ = ("reify", "check_file", "dump_json", "maybe_coroutine", "mock_server")
 
 _T = TypeVar("_T")
+
 
 class reify:
     """
@@ -42,6 +33,7 @@ class reify:
         instance.__dict__[self.name] = value
         return value
 
+
 def check_file(path: str) -> bool:
     """
     Check if a file exists and is writable, or if it can be created.
@@ -58,7 +50,7 @@ def check_file(path: str) -> bool:
         NotDirectoryError: If the parent directory is not a directory.
     """
     path = os.path.abspath(path)
-    
+
     if os.path.exists(path):
         if os.path.isfile(path):
             if not os.access(path, os.W_OK):
@@ -66,25 +58,26 @@ def check_file(path: str) -> bool:
             return True
         else:
             raise errors.NotFileError(f"path '{path}' is not a file")
-    
+
     dir = os.path.dirname(path)
     if not os.access(dir, os.R_OK):
         return False
-    
+
     if os.path.isdir(dir):
         os.makedirs(dir, exist_ok=True)
     else:
         raise errors.NotDirectoryError(f"path '{dir}' is not a directory")
-    
+
     return False
-    
+
+
 def dump_json(
     file: str,
     data: Any,
     encoding: str = "utf-8",
     indent: int = 2,
     open_kwargs: Mapping[str, Any] = {},
-    dump_kwargs: Mapping[str, Any] = {}
+    dump_kwargs: Mapping[str, Any] = {},
 ) -> None:
     """
     Dump JSON data into a file.
@@ -100,7 +93,10 @@ def dump_json(
     with open(file, "w", encoding=encoding, **open_kwargs) as f:
         json.dump(data, f, indent=indent, **dump_kwargs)
 
-async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args: Any, **kwargs: Any) -> Any | None:
+
+async def maybe_coroutine(
+    __func: Callable[..., Coroutine[Any, Any, Any]], *args: Any, **kwargs: Any
+) -> Any | None:
     """
     Execute a callable or coroutine with given arguments.
 
@@ -121,6 +117,7 @@ async def maybe_coroutine(__func: Callable[..., Coroutine[Any, Any, Any]], *args
         return await __func(*args, **kwargs)
     else:
         return __func(*args, **kwargs)
+
 
 def mock_server() -> FastAPI:
     """
@@ -151,14 +148,12 @@ def mock_server() -> FastAPI:
     app = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
 
     @app.get("/api/infinite-craft/pair")
-    async def pair(first: str, second: str) -> dict[str, str | bool]: # pyright: ignore[reportUnusedFunction]
+    async def pair(
+        first: str, second: str
+    ) -> dict[str, str | bool]:  # pyright: ignore[reportUnusedFunction]
         print(f"[MOCK API] PAIR: {first} + {second}")
         print(f"[MOCK API] RESULT: 🌌 ???")
-        
-        return {
-            "result": "???",
-            "emoji": "🌌",
-            "isNew": False
-        }
-    
+
+        return {"result": "???", "emoji": "🌌", "isNew": False}
+
     return app

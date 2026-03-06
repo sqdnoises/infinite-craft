@@ -1,19 +1,17 @@
 import json
-from typing import (
-    Any, Callable,
-    Protocol, runtime_checkable
-)
+from typing import Any, Callable, Protocol, runtime_checkable
 
-from .types          import *
-from .utils          import reify
-from .errors.clients  import ClientResponseError
+from .types import *
+from .utils import reify
+from .errors.clients import ClientResponseError
 
 __all__ = (
     "ElementProtocol",
     "AsyncAPIClientProtocol",
     "AsyncAPIClientResponseProtocol",
-    "LoggerProtocol"
+    "LoggerProtocol",
 )
+
 
 @runtime_checkable
 class ElementProtocol(Protocol):
@@ -25,31 +23,33 @@ class ElementProtocol(Protocol):
         emoji (str | None): The emoji representing the element.
         is_first_discovery (bool | None): Indicates if the element was the first discovery.
     """
-    
+
     name: str | None
     emoji: str | None
     is_first_discovery: bool | None
-    
+
     def __init__(
         self,
-        name:               str  | None = None,
-        emoji:              str  | None = None,
-        is_first_discovery: bool | None = None
+        name: str | None = None,
+        emoji: str | None = None,
+        is_first_discovery: bool | None = None,
     ) -> None:
         self.name = name
         self.emoji = emoji
         self.is_first_discovery = is_first_discovery
-    
+
     def __str__(self) -> str: ...
     def __repr__(self) -> str: ...
     def __eq__(self, other: Any) -> bool: ...
     def __bool__(self) -> bool: ...
+
 
 # TODO: Complete sync APIClientProtocol
 # @runtime_checkable
 # class APIClientProtocol(Protocol):
 #     """Protocol for API client classes."""
 #     ...
+
 
 @runtime_checkable
 class AsyncAPIClientProtocol(Protocol):
@@ -71,34 +71,37 @@ class AsyncAPIClientProtocol(Protocol):
         >>> response = await client.get("/data")
         >>> await client.close()
     """
-    
+
     _base_url: str
-    
+
     def __init__(self, base_url: str, *args: Any, **kwargs: Any) -> None: ...
     async def __aenter__(self) -> "AsyncAPIClientProtocol": ...
     async def __aexit__(self, *args: Any) -> None: ...
-    
+
     @property
     def base_url(self) -> str:
         """The base URL for the client."""
         return self._base_url
-    
+
     @property
     def closed(self) -> bool:
         """Check if the session is closed."""
         ...
-    
+
     async def start(self) -> None:
         """Start the session."""
         ...
-    
-    async def get(self, url: str, *args: Any, **kwargs: Any) -> "AsyncAPIClientResponseProtocol":
+
+    async def get(
+        self, url: str, *args: Any, **kwargs: Any
+    ) -> "AsyncAPIClientResponseProtocol":
         """Perform a GET request to the given URL."""
         ...
-    
+
     async def close(self, *args: Any, **kwargs: Any) -> Any:
         """Close the session."""
         ...
+
 
 @runtime_checkable
 class AsyncAPIClientResponseProtocol(Protocol):
@@ -124,18 +127,18 @@ class AsyncAPIClientResponseProtocol(Protocol):
         >>> response = await client.get("/data")
         >>> await response.json()
     """
-    
+
     _content: str | None
-    
+
     _request_url: str
     _request_method: str
     _request_headers: dict[str, str | None]
-    
+
     _url: str
     _status: int
     _content_type: str
     _headers: dict[str, str | None]
-    
+
     @reify
     def request_url(self) -> str:
         """
@@ -145,7 +148,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         It allows clients to access the exact URL that was called for the response.
         """
         return self._request_url
-    
+
     @reify
     def request_method(self) -> str:
         """
@@ -155,7 +158,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         when making the request. It provides insight into how the request was executed.
         """
         return self._request_method
-    
+
     @reify
     def request_headers(self) -> dict[str, str | None]:
         """
@@ -165,7 +168,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         in the request. It can be useful for debugging or logging purposes.
         """
         return self._request_headers
-    
+
     @reify
     def url(self) -> str:
         """
@@ -176,7 +179,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         the final URL from which the response was obtained.
         """
         return self._url
-    
+
     @reify
     def status(self) -> int:
         """
@@ -186,7 +189,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         Common status codes include 200 for success and 404 for not found.
         """
         return self._status
-    
+
     @reify
     def ok(self) -> bool:
         """
@@ -196,7 +199,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         It can be used to quickly determine if the request was processed successfully.
         """
         return self._status < 400
-    
+
     @reify
     def content_type(self) -> str:
         """
@@ -206,7 +209,7 @@ class AsyncAPIClientResponseProtocol(Protocol):
         which indicates the media type of the resource returned (e.g., application/json).
         """
         return self._content_type
-    
+
     @reify
     def headers(self) -> dict[str, str | None]:
         """
@@ -216,20 +219,17 @@ class AsyncAPIClientResponseProtocol(Protocol):
         in the response. It can be useful for accessing metadata about the response.
         """
         return self._headers
-    
+
     async def text(self) -> str:
         """Returns the response content as a string."""
         ...
-    
+
     async def json(
-        self,
-        *,
-        loads: Callable[[str], Any] = json.loads,
-        **kwargs: Any
+        self, *, loads: Callable[[str], Any] = json.loads, **kwargs: Any
     ) -> Any:
         """Parses the response content as JSON."""
         ...
-    
+
     def raise_for_status(self) -> None:
         """
         Raises an exception if the response status is 400 or higher.
@@ -239,9 +239,10 @@ class AsyncAPIClientResponseProtocol(Protocol):
         """
         if not self.ok:
             raise ClientResponseError(f"Request failed with status code {self.status}")
-    
+
     async def __aenter__(self) -> "AsyncAPIClientResponseProtocol": ...
     async def __aexit__(self, *args: Any) -> None: ...
+
 
 @runtime_checkable
 class LoggerProtocol(Protocol):
@@ -262,24 +263,25 @@ class LoggerProtocol(Protocol):
         >>> logger = LoggerProtocol(log_level=10)
         >>> logger.debug("This is a debug message.")
     """
+
     log_level: int
-    
+
     def debug(self, message: str | Any) -> None:
         """Log a debug message."""
         ...
-    
+
     def info(self, message: str | Any) -> None:
         """Log an info message."""
         ...
-    
+
     def warn(self, message: str | Any) -> None:
         """Log a warning message."""
         ...
-    
+
     def error(self, message: str | Any) -> None:
         """Log an error message."""
         ...
-    
+
     def critical(self, message: str | Any) -> None:
         """Log a critical message."""
         ...
