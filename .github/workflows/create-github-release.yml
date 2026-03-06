@@ -27,14 +27,17 @@ jobs:
       - name: Install Python 3.14
         run: uv python install 3.14
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Install project with dev dependencies
-        run: uv pip install --system ".[dev]"
+        run: uv pip install ".[dev]"
 
       - name: Build package
-        run: python -m build
+        run: uv run python -m build
 
       - name: Check distributions
-        run: twine check dist/*
+        run: uv run twine check dist/*
 
       - name: Sign distributions with Sigstore
         uses: sigstore/gh-action-sigstore-python@v3.0.0
