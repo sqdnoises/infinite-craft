@@ -6,12 +6,13 @@ import asyncio
 import logging
 from typing import Optional, Any, Callable, MutableMapping
 
-from . import utils
+from . import __version__
+from .abc import ElementProtocol, AsyncAPIClientProtocol
+from .types import ResultDict, Discovery
+from .utils import MISSING, setup_logging, check_file, dump_json
 from .element import Element
 from .clients import CurlCffiClient
-from .abc import ElementProtocol, AsyncAPIClientProtocol
 from .constants import starting_discoveries
-from .types import ResultDict, Discovery
 
 __all__ = ("InfiniteCraft",)
 
@@ -118,7 +119,7 @@ class InfiniteCraft:
         do_reset: bool = False,
         make_file: bool = True,
         headers: MutableMapping[str, str] = {},
-        log_handler: Optional[logging.Handler] = utils.MISSING,
+        log_handler: Optional[logging.Handler] = MISSING,
         log_formatter: Optional[logging.Formatter] = None,
         log_level: Optional[int] = None,
         root_logger: bool = False,
@@ -126,17 +127,16 @@ class InfiniteCraft:
         session_cls: type[AsyncAPIClientProtocol] = CurlCffiClient,
         debug: bool = False,
     ) -> None:
-        if not api_rate_limit >= 0:
-            raise ValueError("api_rate_limit must be greater than or equal to 0")
+        # Set up logger
 
         if log_handler is not None:
-            if log_handler is utils.MISSING:
+            if log_handler is MISSING:
                 log_handler = None
 
             if debug:
                 log_level = logging.DEBUG
 
-            utils.setup_logging(
+            setup_logging(
                 handler=log_handler,
                 formatter=log_formatter,
                 level=log_level,
@@ -146,8 +146,18 @@ class InfiniteCraft:
         library, _, _ = __name__.partition(".")
         self._logger = logging.getLogger(library)
 
+        self._logger.debug(f"infinitecraft v{__version__}")
+        self._logger.debug(
+            "Need help? Join the community server -> https://discord.gg/EPr4T2F8bq"
+        )
+
+        # Now initialize everything else
+
+        if not api_rate_limit >= 0:
+            raise ValueError("api_rate_limit must be greater than or equal to 0")
+
         dsreset = False
-        if not utils.check_file(discoveries_storage):
+        if not check_file(discoveries_storage):
             if not make_file:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
 
@@ -201,11 +211,6 @@ class InfiniteCraft:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
         }
         self._headers.update(headers)
-
-        self._logger.debug("InfiniteCraft has been initialised.")
-        self._logger.debug(
-            "Need help? Join the community server -> https://discord.gg/EPr4T2F8bq"
-        )
 
     @property
     def api_url(self) -> str:
@@ -803,10 +808,10 @@ class InfiniteCraft:
         """
         if not os.path.exists(discoveries_storage):
             if make_file:
-                utils.check_file(discoveries_storage)
+                check_file(discoveries_storage)
             else:
                 raise FileNotFoundError(f"File '{discoveries_storage}' not found")
 
-        utils.dump_json(
+        dump_json(
             discoveries_storage, starting_discoveries, encoding=encoding, indent=indent
         )

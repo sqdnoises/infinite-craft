@@ -22,7 +22,7 @@ from . import (
 #     import readline
 
 library, _, _ = __name__.partition(".")
-version = f"{library} {__version__}"
+version = f"{library} v{__version__}"
 
 
 def main(args: argparse.Namespace) -> None:

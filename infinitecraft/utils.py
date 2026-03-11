@@ -5,7 +5,7 @@ import inspect
 import logging
 from typing import Optional, Any, Mapping, Callable, Coroutine, TypeVar, cast
 
-from . import errors
+from .errors import NotWritableError, NotFileError, NotDirectoryError
 from .termcolors import *
 
 __all__ = (
@@ -67,10 +67,10 @@ def check_file(path: str) -> bool:
     if os.path.exists(path):
         if os.path.isfile(path):
             if not os.access(path, os.W_OK):
-                raise errors.NotWritableError(f"path '{path}' is not writable")
+                raise NotWritableError(f"path '{path}' is not writable")
             return True
         else:
-            raise errors.NotFileError(f"path '{path}' is not a file")
+            raise NotFileError(f"path '{path}' is not a file")
 
     dir = os.path.dirname(path)
     if not os.access(dir, os.R_OK):
@@ -79,7 +79,7 @@ def check_file(path: str) -> bool:
     if os.path.isdir(dir):
         os.makedirs(dir, exist_ok=True)
     else:
-        raise errors.NotDirectoryError(f"path '{dir}' is not a directory")
+        raise NotDirectoryError(f"path '{dir}' is not a directory")
 
     return False
 

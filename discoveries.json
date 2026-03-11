@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Water",
+    "emoji": "\ud83d\udca7",
+    "is_first_discovery": false
+  },
+  {
+    "name": "Fire",
+    "emoji": "\ud83d\udd25",
+    "is_first_discovery": false
+  },
+  {
+    "name": "Wind",
+    "emoji": "\ud83c\udf2c\ufe0f",
+    "is_first_discovery": false
+  },
+  {
+    "name": "Earth",
+    "emoji": "\ud83c\udf0d",
+    "is_first_discovery": false
+  },
+  {
+    "name": "Steam",
+    "emoji": "\ud83d\udca8",
+    "is_first_discovery": false
+  }
+]
