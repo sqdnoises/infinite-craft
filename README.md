@@ -1,8 +1,8 @@
 [![](https://github.com/sqdnoises/infinite-craft/raw/main/docs/.gitbook/assets/cover.png)](https://github.com/sqdnoises/infinite-craft)
 
 # infinite-craft
-[![](https://img.shields.io/pypi/v/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
-[![](https://img.shields.io/pypi/dm/infinite-craft.svg)](https://pypi.org/project/infinite-craft/)
+[![](https://img.shields.io/pypi/v/infinite-craft)](https://pypi.org/project/infinite-craft/)
+[![](https://img.shields.io/pypi/dm/infinite-craft)](https://pypi.org/project/infinite-craft/)
 [![](https://img.shields.io/badge/License-MIT-red?labelColor=black)](LICENSE)
 [![](https://img.shields.io/badge/Python_Version-3.10+-blue)](https://python.org)
 \
