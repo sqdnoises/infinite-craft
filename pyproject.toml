@@ -25,8 +25,8 @@ classifiers = [
 ]
 dynamic = ["version", "dependencies"]
 
-[tool.setuptools]
-packages = ["infinitecraft"]
+[tool.setuptools.packages.find]
+include = ["infinitecraft*"]
 
 [tool.setuptools.dynamic]
 dependencies = { file = "requirements.txt" }
